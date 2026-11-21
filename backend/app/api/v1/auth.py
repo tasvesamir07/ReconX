@@ -57,13 +57,15 @@ def login(data: LoginRequest, request: Request, response: Response, db: Session 
     user, session_token = AuthService.login(db, data.email, data.password, client_ip, user_agent)
 
     # Set secure HTTP-only SameSite cookie
+    # Cross-subdomain deployments (e.g. *.onrender.com or *.vercel.app) require SameSite=None + Secure
+    samesite_val = "none" if settings.SESSION_COOKIE_SECURE else "lax"
     response.set_cookie(
         key=settings.SESSION_COOKIE_NAME,
         value=session_token,
         max_age=settings.SESSION_IDLE_TIMEOUT_MINUTES * 60,
         httponly=True,
         secure=settings.SESSION_COOKIE_SECURE,
-        samesite="lax",
+        samesite=samesite_val,
         path="/"
     )
     AuditService.log(db, "user.login", "user", str(user.id), actor_id=user.id, ip_address=client_ip)
@@ -73,7 +75,13 @@ def login(data: LoginRequest, request: Request, response: Response, db: Session 
 def logout(response: Response, token: Optional[str] = Depends(get_session_token), db: Session = Depends(get_db)):
     if token:
         AuthService.logout(db, token)
-    response.delete_cookie(settings.SESSION_COOKIE_NAME, path="/")
+    samesite_val = "none" if settings.SESSION_COOKIE_SECURE else "lax"
+    response.delete_cookie(
+        settings.SESSION_COOKIE_NAME,
+        path="/",
+        secure=settings.SESSION_COOKIE_SECURE,
+        samesite=samesite_val
+    )
     return {"message": "Logged out successfully."}
 
 @router.post("/forgot-password")

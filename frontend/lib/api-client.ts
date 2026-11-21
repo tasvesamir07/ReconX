@@ -37,11 +37,34 @@ export async function apiRequest<T = any>(
     headers.set("Content-Type", "application/json");
   }
 
-  const res = await fetch(url, {
-    ...options,
-    headers,
-    credentials: "include",
-  });
+  const controller = new AbortController();
+  const timeoutMs = 15000;
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      ...options,
+      headers,
+      credentials: "include",
+      signal: options.signal || controller.signal,
+    });
+  } catch (fetchErr: any) {
+    if (fetchErr.name === "AbortError") {
+      throw new ReconXApiError(
+        504,
+        "BACKEND_TIMEOUT",
+        `Backend request timed out (15s) contacting: ${url}. Please verify your Render backend service is awake and running.`
+      );
+    }
+    throw new ReconXApiError(
+      503,
+      "BACKEND_UNREACHABLE",
+      `Unable to connect to backend at: ${url}. Please verify your Render backend service URL and CORS configuration.`
+    );
+  } finally {
+    clearTimeout(timeoutId);
+  }
 
   if (res.status === 204) {
     return undefined as T;
