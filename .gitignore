@@ -1,0 +1,92 @@
+# ==============================================================================
+# ReconX Root Git Ignore Policy
+# Excludes virtual environments, compiled caches, secrets, and transient scan data
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Environment Variables & Secrets (CRITICAL SECURITY)
+# ------------------------------------------------------------------------------
+*.env
+*.env.*
+!.env.example
+!.env.production.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+*.pem
+*.key
+*.cert
+
+# ------------------------------------------------------------------------------
+# 2. Python Virtual Environments & Packages
+# ------------------------------------------------------------------------------
+venv/
+.venv/
+env/
+ENV/
+backend/venv/
+backend/.venv/
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# ------------------------------------------------------------------------------
+# 3. Python Caches & Bytecode
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# ------------------------------------------------------------------------------
+# 4. Node.js & Next.js Build Outputs
+# ------------------------------------------------------------------------------
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+out/
+frontend/out/
+*.tsbuildinfo
+frontend/tsconfig.tsbuildinfo
+.npm/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ------------------------------------------------------------------------------
+# 5. Scan Execution Jobs, IPC Telemetry & Reports Storage
+# ------------------------------------------------------------------------------
+backend/app/workers/jobs/*
+!backend/app/workers/jobs/.gitkeep
+backend/storage/*
+!backend/storage/.gitkeep
+*.log
+
+# ------------------------------------------------------------------------------
+# 6. Operating System & IDE Specific
+# ------------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ------------------------------------------------------------------------------
+# 7. Agent & LLM Tool Cache
+# ------------------------------------------------------------------------------
+.agents/
+skills-lock.json
