@@ -138,3 +138,72 @@ def test_deterministic_summary_mentions_kev():
     s = deterministic_summary(build_payload(_findings()), "t.example", "Coverage: all checks completed.")
     text = " ".join(x["text"] for x in s["paragraphs"])
     assert "Known Exploited" in text and "[F1]" in text and s["source"] == "deterministic"
+
+
+def test_ai_findings_analyzer_calibration(monkeypatch):
+    import json
+    from app.ai.findings_analyzer import AIFindingsAnalyzer
+    from app.services.findings_engine import Draft
+
+    mock_resp = json.dumps({
+        "calibrated_findings": [
+            {
+                "key": "VULN_CORS",
+                "severity": "critical",
+                "impact": "Exfiltrates session cookies via cross-origin reflection.",
+                "remediation": "Restrict Access-Control-Allow-Origin to trusted origins.",
+                "reasoning": "Credentialed reflection with session cookies enables instant account takeover."
+            }
+        ],
+        "attack_chains": [
+            {
+                "title": "Account Takeover via CORS + Insecure Cookies",
+                "severity": "critical",
+                "description": "Attacker triggers cross-origin request to read sensitive response.",
+                "impact": "Full account takeover.",
+                "remediation": "Fix CORS origin validation and enforce SameSite=Lax.",
+                "involved_keys": ["VULN_CORS"]
+            }
+        ]
+    })
+
+    monkeypatch.setattr("app.ai.findings_analyzer._call_groq", lambda *args, **kwargs: (mock_resp, "groq:llama-3.3-70b-versatile"))
+    monkeypatch.setattr("app.config.settings.GROQ_API_KEY", "mock-groq-key")
+
+    drafts = [Draft(key="VULN_CORS", title="CORS Reflection", category="vuln", severity="high",
+                    finding_class="vulnerability", description="CORS issue", impact="Old impact",
+                    remediation="Old rem", evidence_ids=["e1"])]
+
+    updated, telemetry = AIFindingsAnalyzer.analyze_and_calibrate(drafts, [], "example.com", [])
+    assert telemetry["success"] is True
+    assert telemetry["calibrated_count"] == 1
+    assert telemetry["attack_chains_count"] == 1
+    # Check calibrated severity
+    assert updated[0].severity == "critical"
+    assert "exfiltrates session cookies" in updated[0].impact.lower()
+    assert "account takeover" in updated[0].description.lower()
+    # Check synthesized attack chain
+    assert len(updated) == 2
+    assert updated[1].category == "attack_chain"
+    assert updated[1].source == "ai"
+    assert updated[1].severity == "critical"
+    assert "account takeover" in updated[1].title.lower()
+
+
+def test_ai_findings_analyzer_fallback(monkeypatch):
+    from app.ai.findings_analyzer import AIFindingsAnalyzer
+    from app.services.findings_engine import Draft
+
+    # Mock both providers failing
+    monkeypatch.setattr("app.ai.findings_analyzer._call_groq", lambda *args, **kwargs: (None, ""))
+    monkeypatch.setattr("app.ai.findings_analyzer._call_gemini", lambda *args, **kwargs: (None, ""))
+    monkeypatch.setattr("app.config.settings.GROQ_API_KEY", "mock-key")
+
+    drafts = [Draft(key="VULN_1", title="Vuln 1", category="vuln", severity="medium",
+                    finding_class="vulnerability", description="desc", impact="impact",
+                    remediation="rem", evidence_ids=["e1"])]
+
+    updated, telemetry = AIFindingsAnalyzer.analyze_and_calibrate(drafts, [], "example.com", [])
+    assert telemetry["success"] is False
+    assert len(updated) == 1
+    assert updated[0].severity == "medium"

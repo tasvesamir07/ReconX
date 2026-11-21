@@ -88,6 +88,39 @@ class EvidenceAnalysisService:
                     log("intel", "warning", f"{kev} finding(s) are listed in the CISA Known Exploited Vulnerabilities catalog.")
             except Exception as exc:
                 log("intel", "warning", f"KEV/EPSS enrichment failed: {exc}")
+
+        # AI-driven findings analysis, severity calibration, and attack chain synthesis
+        if drafts:
+            try:
+                from app.ai.findings_analyzer import AIFindingsAnalyzer
+                from app.models.audit import AIProviderEvent
+                from app.models.base import utc_now
+                log("ai_decision", "info", f"AI Security Analyst reviewing {len(drafts)} candidate finding(s) and target evidence.")
+                drafts, telemetry = await asyncio.to_thread(
+                    AIFindingsAnalyzer.analyze_and_calibrate, drafts, views, asset, components
+                )
+                if telemetry.get("provider"):
+                    db.add(AIProviderEvent(
+                        scan_id=scan_id,
+                        provider=telemetry["provider"].split(":")[0],
+                        model=telemetry["provider"].split(":", 1)[-1],
+                        operation="findings_analysis",
+                        status="success" if telemetry["success"] else "failed",
+                        latency_ms=telemetry.get("latency_ms") or 0,
+                        error_code=(telemetry.get("error") or None) and telemetry["error"][:100],
+                        created_at=utc_now(),
+                    ))
+                    db.commit()
+                if telemetry.get("success"):
+                    log("ai_decision", "info",
+                        f"AI analysis completed via {telemetry.get('provider')}: calibrated {telemetry.get('calibrated_count')} finding(s), "
+                        f"{telemetry.get('attack_chains_count')} attack chain(s) identified ({telemetry.get('latency_ms')}ms).")
+                elif telemetry.get("error"):
+                    log("ai_decision", "info", f"AI analysis fallback: {telemetry['error']}")
+            except Exception as exc:
+                logger.warning("AI findings analysis error: %s", exc)
+                log("ai_decision", "warning", f"AI findings analysis fallback: {exc}")
+
         return EvidenceAnalysisService.record(db, scan_id, asset, drafts)
 
     @staticmethod

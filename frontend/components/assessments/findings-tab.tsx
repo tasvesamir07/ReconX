@@ -64,6 +64,7 @@ const SOURCE_LABEL: Record<string, string> = {
   nuclei: "Nuclei",
   "nvd+nuclei": "NVD + Nuclei",
   "osv+nuclei": "OSV + Nuclei",
+  ai: "AI Security Analyst",
 };
 
 const sevRank = (s: string) => {
