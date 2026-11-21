@@ -84,15 +84,28 @@ class Context:
 
 
 def find_tool(name: str, configured: Optional[str] = None) -> Optional[str]:
-    if configured and os.path.isfile(configured):
-        return configured
-    found = shutil.which(name)
-    if found:
-        return found
-    for d in ("/usr/bin", "/usr/local/bin", os.path.expanduser("~/go/bin"), os.path.expanduser("~/.local/bin")):
-        p = os.path.join(d, name)
-        if os.path.isfile(p) and os.access(p, os.X_OK):
-            return p
+    names = [name]
+    if os.name == "nt" and not name.endswith(".exe"):
+        names.append(name + ".exe")
+
+    for n in names:
+        if configured and os.path.isfile(configured):
+            return configured
+        found = shutil.which(n)
+        if found:
+            return found
+        search_dirs = [
+            os.path.join(os.getcwd(), "bin"),
+            os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "bin")),
+            os.path.expanduser("~/.local/bin"),
+            os.path.expanduser("~/go/bin"),
+            "/usr/local/bin",
+            "/usr/bin",
+        ]
+        for d in search_dirs:
+            p = os.path.join(d, n)
+            if os.path.isfile(p) and (os.name == "nt" or os.access(p, os.X_OK)):
+                return p
     return None
 
 
@@ -783,20 +796,92 @@ def check_subdomain_takeover(ctx: Context, opts: dict) -> Tuple[dict, str]:
         f"CNAMEs: {', '.join(cnames) or 'none'}; takeover-prone: {len(vulnerable)}"
 
 
+def _probe_tcp_port(ip: str, port: int, timeout: float = 0.8) -> Optional[Dict[str, object]]:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(timeout)
+    try:
+        if s.connect_ex((ip, port)) != 0:
+            return None
+        banner = ""
+        PORT_MAP = {
+            21: "ftp", 22: "ssh", 25: "smtp", 53: "dns", 80: "http", 110: "pop3",
+            143: "imap", 443: "https", 465: "smtps", 587: "submission", 993: "imaps",
+            995: "pop3s", 1433: "ms-sql", 1521: "oracle", 2082: "cpanel", 2083: "cpanel-ssl",
+            3000: "http-node", 3306: "mysql", 3389: "rdp", 5000: "http-flask",
+            5432: "postgresql", 6379: "redis", 8000: "http-alt", 8080: "http-proxy",
+            8443: "https-alt", 8888: "http-alt", 9000: "http-mgmt", 9200: "elasticsearch",
+            27017: "mongodb"
+        }
+        service = PORT_MAP.get(port, "unknown")
+        try:
+            s.settimeout(0.5)
+            if port in (80, 443, 3000, 5000, 8000, 8080, 8443, 8888, 9000):
+                s.sendall(b"HEAD / HTTP/1.0\r\nHost: " + ip.encode() + b"\r\n\r\n")
+            elif port == 6379:
+                s.sendall(b"PING\r\n")
+            data = s.recv(256)
+            banner = data.decode("utf-8", "replace").strip()
+        except Exception:
+            pass
+        return {
+            "port": port,
+            "protocol": "tcp",
+            "service": service,
+            "product": None,
+            "version": None,
+            "extrainfo": banner[:100] if banner else None,
+            "banner": banner[:150] if banner else None,
+        }
+    except Exception:
+        return None
+    finally:
+        s.close()
+
+
 def check_service_scan(ctx: Context, opts: dict) -> Tuple[dict, str]:
     if ctx.cdn:
         return {"skipped": True, "skip_reason": f"Target is served through {ctx.cdn}; a port scan would probe shared provider infrastructure, not the target."}, "skipped (CDN)"
     nmap = ctx.tools.get("nmap")
-    if not nmap:
-        return {"skipped": True, "skip_reason": "nmap is not installed"}, "skipped (nmap missing)"
-    timeout = min(float(opts.get("timeout", 90)), max(10.0, ctx.remaining() - 20))
-    args = [nmap, "-Pn", "-sV", "--version-intensity", "5", "-T4", "--max-retries", "1",
-            "--host-timeout", f"{int(timeout)}s", "--top-ports", str(opts.get("top_ports", 100)), "-oX", "-", ctx.resolved_ip]
-    code, out, err, e = run_tool(args, timeout=timeout + 15)
-    ports, comps = fp.parse_nmap_xml(out)
+    if nmap:
+        timeout = min(float(opts.get("timeout", 90)), max(10.0, ctx.remaining() - 20))
+        args = [nmap, "-Pn", "-sV", "--version-intensity", "5", "-T4", "--max-retries", "1",
+                "--host-timeout", f"{int(timeout)}s", "--top-ports", str(opts.get("top_ports", 100)), "-oX", "-", ctx.resolved_ip]
+        code, out, err, e = run_tool(args, timeout=timeout + 15)
+        ports, comps = fp.parse_nmap_xml(out)
+        ctx.components = fp.dedupe(ctx.components + comps)
+        data = {"command": " ".join(args[1:]), "open_ports": ports, "components": comps, "error": e or (err.strip()[:200] if code not in (0, None) else None)}
+        return data, f"{len(ports)} open port(s): {', '.join(str(p['port']) + '/' + str(p['service']) for p in ports) or 'none'}"
+
+    # Pure-Python fallback socket scanner when nmap is not installed on the system
+    import concurrent.futures
+    TOP_PORTS = [21, 22, 25, 53, 80, 110, 143, 443, 465, 587, 993, 995, 1433, 1521, 2082, 2083, 3000, 3306, 3389, 5000, 5432, 6379, 8000, 8080, 8443, 8888, 9000, 9200, 27017]
+    open_ports = []
+    comps = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+        futures = {executor.submit(_probe_tcp_port, ctx.resolved_ip, p): p for p in TOP_PORTS}
+        for fut in concurrent.futures.as_completed(futures):
+            res = fut.result()
+            if res:
+                open_ports.append(res)
+                banner = res.get("banner") or ""
+                if "OpenSSH" in banner:
+                    m = re.search(r"OpenSSH[_-](\d+[\.\d\w]+)", banner)
+                    comps.append(fp._component(name="OpenSSH", version=m.group(1) if m else None, source="tcp.banner", evidence=banner[:100], location=f"{res['port']}/tcp"))
+                elif "Server:" in banner:
+                    for line in banner.splitlines():
+                        if line.lower().startswith("server:"):
+                            srv = line.split(":", 1)[1].strip()
+                            for c in fp.parse_product_header(srv, "server"):
+                                comps.append(c)
+    open_ports.sort(key=lambda x: x["port"])
     ctx.components = fp.dedupe(ctx.components + comps)
-    data = {"command": " ".join(args[1:]), "open_ports": ports, "components": comps, "error": e or (err.strip()[:200] if code not in (0, None) else None)}
-    return data, f"{len(ports)} open port(s): {', '.join(str(p['port']) + '/' + str(p['service']) for p in ports) or 'none'}"
+    data = {
+        "command": "python-socket-tcp-scanner",
+        "open_ports": open_ports,
+        "components": comps,
+        "mode": "socket_fallback",
+    }
+    return data, f"{len(open_ports)} open port(s) (socket scan): {', '.join(str(p['port']) + '/' + str(p['service']) for p in open_ports) or 'none'}"
 
 
 def check_websocket_origin(ctx: Context, opts: dict) -> Tuple[dict, str]:

@@ -52,6 +52,15 @@ def build_command(binary: str, target_url: str, profile: str, out_path: str, rat
     ]
     if p["tags"]:
         cmd += ["-tags", p["tags"]]
+    t_dirs = [
+        os.path.expanduser("~/nuclei-templates"),
+        os.path.expanduser("~/.local/nuclei-templates"),
+        os.path.join(os.getcwd(), "nuclei-templates"),
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "nuclei-templates")),
+    ]
+    custom_t = next((d for d in t_dirs if os.path.isdir(d)), None)
+    if custom_t:
+        cmd += ["-t", custom_t]
     return cmd
 
 

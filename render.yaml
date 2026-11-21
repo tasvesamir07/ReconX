@@ -12,7 +12,7 @@ services:
     region: oregon
     plan: free
     rootDir: backend
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt && bash scripts/install_scanner_tools.sh || true
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: APP_ENV
@@ -34,9 +34,9 @@ services:
       - key: GEMINI_API_KEYS
         sync: false
       - key: GEMINI_MODEL
-        value: gemini-2.5-flash
+        value: gemini-2.0-flash
       - key: CORS_ALLOWED_ORIGINS
-        value: "https://reconx-frontend.onrender.com"
+        value: "https://reconx-frontend.onrender.com,https://reconx-frontend-wyrk.onrender.com"
 
   # ----------------------------------------------------------------------------
   # 2. ReconX Web Dashboard (Next.js 16 + Node 20)
@@ -53,4 +53,4 @@ services:
       - key: NODE_VERSION
         value: 20.18.0
       - key: NEXT_PUBLIC_API_URL
-        value: "https://reconx-backend.onrender.com/api/v1"
+        value: "https://reconx-backend-ljsn.onrender.com/api/v1"
