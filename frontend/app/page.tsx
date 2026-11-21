@@ -24,7 +24,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div id="top" className="min-h-screen flex flex-col bg-white text-slate-900 font-sans selection:bg-emerald-500/20 antialiased scroll-smooth">
+    <div id="top" className="route-enter min-h-screen flex flex-col bg-white text-slate-900 font-sans selection:bg-emerald-500/20 antialiased scroll-smooth">
       {/* 1. Top Navigation Bar */}
       <header className="border-b border-slate-200/80 bg-white/95 backdrop-blur sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 h-16 flex items-center justify-between">
@@ -215,7 +215,7 @@ export default function LandingPage() {
       </section>
 
       {/* 3. Seven-Step Evidence Traceability */}
-      <section id="pipeline" className="py-20 px-6 sm:px-8 lg:px-12 max-w-7xl mx-auto w-full border-b border-slate-200/80">
+      <section id="pipeline" className="reveal-on-scroll py-20 px-6 sm:px-8 lg:px-12 max-w-7xl mx-auto w-full border-b border-slate-200/80">
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-12">
           <div>
             <span className="text-xs font-mono uppercase font-bold text-slate-400 tracking-wider">
@@ -310,7 +310,7 @@ export default function LandingPage() {
       </section>
 
       {/* 4. Safety & Scope Controls */}
-      <section id="safety" className="py-20 px-6 sm:px-8 lg:px-12 max-w-7xl mx-auto w-full border-b border-slate-200/80">
+      <section id="safety" className="reveal-on-scroll py-20 px-6 sm:px-8 lg:px-12 max-w-7xl mx-auto w-full border-b border-slate-200/80">
         <div className="mb-10">
           <span className="text-xs font-mono uppercase font-bold text-slate-400 tracking-wider">
             HARD TECHNICAL GUARDRAILS
@@ -401,7 +401,7 @@ export default function LandingPage() {
       </section>
 
       {/* 5. Platform Architecture (High-Contrast Dark Section) */}
-      <section id="architecture" className="bg-[#090D14] text-white py-20 px-6 sm:px-8 lg:px-12 border-t border-slate-800">
+      <section id="architecture" className="reveal-on-scroll bg-[#090D14] text-white py-20 px-6 sm:px-8 lg:px-12 border-t border-slate-800">
         <div className="max-w-7xl mx-auto w-full space-y-12">
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
             <div>

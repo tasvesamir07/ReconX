@@ -65,8 +65,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4 sm:p-6 relative">
-      <div className="w-full max-w-md bg-surface border border-border rounded-2xl p-6 sm:p-8 space-y-6">
+    <div className="aurora min-h-screen flex items-center justify-center bg-background p-4 sm:p-6 relative">
+      <div className="route-enter w-full max-w-md bg-surface/95 backdrop-blur border border-border rounded-2xl p-6 sm:p-8 space-y-6 shadow-[0_24px_60px_-28px_rgb(15_23_42/0.25)]">
         {/* Navigation to Landing Page */}
         <div className="flex items-center justify-between pb-3 border-b border-border/60">
           <Link

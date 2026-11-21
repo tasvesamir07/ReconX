@@ -68,7 +68,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4 sm:p-6 antialiased">
+    <div className="aurora min-h-screen flex items-center justify-center bg-slate-50 p-4 sm:p-6 antialiased">
       <div className="w-full max-w-xl bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm">
         {/* Navigation to Landing Page */}
         <div className="flex items-center justify-between pb-3 border-b border-slate-100">

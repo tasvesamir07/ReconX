@@ -7,7 +7,7 @@ type ButtonSize = "sm" | "md" | "lg" | "icon";
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    "bg-accent text-text-inverse hover:bg-accent-hover active:bg-accent-pressed shadow-glow-subtle",
+    "btn-sheen bg-accent text-text-inverse hover:bg-accent-hover active:bg-accent-pressed shadow-glow-subtle",
   secondary:
     "bg-surface-elevated text-text border border-border hover:bg-surface-pressed hover:border-border-strong",
   ghost: "text-text-muted hover:text-text hover:bg-surface",
@@ -65,7 +65,7 @@ export function buttonVariants({
   className?: string;
 } = {}) {
   return cn(
-    "inline-flex select-none items-center justify-center whitespace-nowrap rounded-lg font-medium transition-all duration-150",
+    "inline-flex select-none items-center justify-center whitespace-nowrap rounded-lg font-medium transition-all duration-200",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     "disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
     "active:scale-[0.98]",

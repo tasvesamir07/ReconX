@@ -172,7 +172,7 @@ function VerifyEmailContent() {
 
 export default function VerifyEmailPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4 sm:p-6">
+    <div className="aurora route-enter min-h-screen flex items-center justify-center bg-background p-4 sm:p-6">
       <Suspense fallback={<div className="text-text-muted text-body-sm">Loading verification...</div>}>
         <VerifyEmailContent />
       </Suspense>

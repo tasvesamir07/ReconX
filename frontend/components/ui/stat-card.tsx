@@ -29,7 +29,7 @@ export function StatCard({
   className?: string;
 }) {
   return (
-    <Card className={cn("p-5 border border-line bg-surface hover:border-line-strong transition-colors", className)}>
+    <Card className={cn("lift p-5 border border-line bg-surface", className)}>
       <div className="flex items-start justify-between gap-3">
         <p className="text-xs font-medium text-muted">
           {label}

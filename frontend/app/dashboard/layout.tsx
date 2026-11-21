@@ -90,6 +90,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     setOrgDropdownOpen(false);
   }, [pathname]);
 
+  // Mobile drawer: lock background scroll and close on Escape
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [mobileMenuOpen]);
+
   useEffect(() => {
     const handleQueueSync = () => {
       fetchPendingQueue();
@@ -111,11 +126,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   };
 
   if (loading) {
+    // Skeleton shell mirrors the real layout so the page feels instant
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white text-slate-600 font-sans">
-        <div className="flex items-center space-x-3">
-          <ShieldCheck className="w-7 h-7 animate-pulse text-emerald-600" />
-          <span className="text-base font-semibold text-slate-800">Loading ReconX Session...</span>
+      <div className="min-h-screen flex bg-slate-50/50" aria-busy="true" aria-label="Loading workspace">
+        <aside className="hidden md:flex w-72 flex-col shrink-0 h-screen sticky top-0 bg-white border-r border-slate-200 p-5 space-y-5">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl skeleton" />
+            <div className="h-5 w-28 rounded-md skeleton" />
+          </div>
+          <div className="h-14 rounded-xl skeleton" />
+          <div className="space-y-2 pt-2">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <div key={index} className="h-10 rounded-xl skeleton" />
+            ))}
+          </div>
+        </aside>
+        <div className="flex-1 min-w-0">
+          <div className="h-16 border-b border-slate-200/80 bg-white px-4 sm:px-8 flex items-center">
+            <div className="h-4 w-56 rounded-md skeleton" />
+          </div>
+          <div className="p-4 sm:p-6 lg:p-8 space-y-6 route-enter">
+            <div className="h-8 w-72 rounded-lg skeleton" />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {[0, 1, 2].map((index) => (
+                <div key={index} className="h-28 rounded-xl skeleton" />
+              ))}
+            </div>
+            <div className="h-72 rounded-xl skeleton" />
+          </div>
         </div>
       </div>
     );
@@ -298,10 +336,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
               <Link
                 href="/dashboard"
-                className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition duration-150 ${
+                className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm nav-item ${
                   pathname === "/dashboard"
-                    ? "bg-slate-900 text-white font-semibold shadow-sm"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium"
+                    ? "nav-item-active"
+                    : "nav-item-idle"
                 }`}
               >
                 <LayoutDashboard className="w-4 h-4 shrink-0" />
@@ -309,10 +347,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </Link>
               <Link
                 href="/dashboard/assessments/new"
-                className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition duration-150 ${
+                className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm nav-item ${
                   pathname === "/dashboard/assessments/new"
-                    ? "bg-slate-900 text-white font-semibold shadow-sm"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium"
+                    ? "nav-item-active"
+                    : "nav-item-idle"
                 }`}
               >
                 <Scan className="w-4 h-4 shrink-0" />
@@ -326,10 +364,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
               <Link
                 href="/dashboard/authorizations"
-                className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition duration-150 ${
+                className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm nav-item ${
                   pathname === "/dashboard/authorizations"
-                    ? "bg-slate-900 text-white font-semibold shadow-sm"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium"
+                    ? "nav-item-active"
+                    : "nav-item-idle"
                 }`}
               >
                 <FileCheck2 className="w-4 h-4 shrink-0" />
@@ -337,10 +375,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </Link>
               <Link
                 href="/dashboard/reports"
-                className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition duration-150 ${
+                className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm nav-item ${
                   pathname === "/dashboard/reports"
-                    ? "bg-slate-900 text-white font-semibold shadow-sm"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium"
+                    ? "nav-item-active"
+                    : "nav-item-idle"
                 }`}
               >
                 <FileText className="w-4 h-4 shrink-0" />
@@ -358,10 +396,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
             <Link
               href="/dashboard"
-              className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition duration-150 ${
+              className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm nav-item ${
                 pathname === "/dashboard" || pathname === "/dashboard/moderator"
-                  ? "bg-slate-900 text-white font-semibold shadow-sm"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium"
+                  ? "nav-item-active"
+                  : "nav-item-idle"
               }`}
             >
               <div className="flex items-center space-x-3 min-w-0">
@@ -388,10 +426,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </Link>
             <Link
               href="/dashboard/authorizations"
-              className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition duration-150 ${
+              className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm nav-item ${
                 pathname === "/dashboard/authorizations"
-                  ? "bg-slate-900 text-white font-semibold shadow-sm"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium"
+                  ? "nav-item-active"
+                  : "nav-item-idle"
               }`}
             >
               <FileCheck2 className="w-4 h-4 shrink-0" />
@@ -399,10 +437,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </Link>
             <Link
               href="/dashboard/reports"
-              className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition duration-150 ${
+              className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm nav-item ${
                 pathname === "/dashboard/reports"
-                  ? "bg-slate-900 text-white font-semibold shadow-sm"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium"
+                  ? "nav-item-active"
+                  : "nav-item-idle"
               }`}
             >
               <FileText className="w-4 h-4 shrink-0" />
@@ -419,10 +457,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
             <Link
               href="/dashboard"
-              className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition duration-150 ${
+              className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm nav-item ${
                 pathname === "/dashboard" || pathname === "/dashboard/admin"
-                  ? "bg-slate-900 text-white font-semibold shadow-sm"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium"
+                  ? "nav-item-active"
+                  : "nav-item-idle"
               }`}
             >
               <HardDrive className="w-4 h-4 shrink-0" />
@@ -430,10 +468,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </Link>
             <Link
               href="/dashboard/admin/logs"
-              className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition duration-150 ${
+              className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm nav-item ${
                 pathname === "/dashboard/admin/logs"
-                  ? "bg-slate-900 text-white font-semibold shadow-sm"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium"
+                  ? "nav-item-active"
+                  : "nav-item-idle"
               }`}
             >
               <Terminal className="w-4 h-4 shrink-0" />
@@ -441,10 +479,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </Link>
             <Link
               href="/dashboard/admin/organizations"
-              className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition duration-150 ${
+              className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm nav-item ${
                 pathname === "/dashboard/admin/organizations"
-                  ? "bg-slate-900 text-white font-semibold shadow-sm"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium"
+                  ? "nav-item-active"
+                  : "nav-item-idle"
               }`}
             >
               <Building className="w-4 h-4 shrink-0" />
@@ -452,10 +490,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </Link>
             <Link
               href="/dashboard/admin/users"
-              className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition duration-150 ${
+              className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm nav-item ${
                 pathname === "/dashboard/admin/users"
-                  ? "bg-slate-900 text-white font-semibold shadow-sm"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium"
+                  ? "nav-item-active"
+                  : "nav-item-idle"
               }`}
             >
               <Users className="w-4 h-4 shrink-0" />
@@ -472,10 +510,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
             <Link
               href="/dashboard/team"
-              className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition duration-150 ${
+              className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm nav-item ${
                 pathname === "/dashboard/team"
-                  ? "bg-slate-900 text-white font-semibold shadow-sm"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium"
+                  ? "nav-item-active"
+                  : "nav-item-idle"
               }`}
             >
               <Users className="w-4 h-4 shrink-0" />
@@ -491,10 +529,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
           <Link
             href="/dashboard/profile"
-            className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition duration-150 ${
+            className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm nav-item ${
               pathname === "/dashboard/profile"
-                ? "bg-slate-900 text-white font-semibold shadow-sm"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium"
+                ? "nav-item-active"
+                : "nav-item-idle"
             }`}
           >
             <UserIcon className="w-4 h-4 shrink-0" />
@@ -550,7 +588,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             className="fixed inset-0 bg-black/40 backdrop-blur-sm animate-in"
             onClick={() => setMobileMenuOpen(false)}
           />
-          <div className="relative w-80 max-w-full h-full flex flex-col z-10 bg-white shadow-2xl">
+          <div className="drawer-enter relative w-80 max-w-full h-full flex flex-col z-10 bg-white shadow-2xl">
             <SidebarContent />
           </div>
         </div>
@@ -628,7 +666,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Page Content Viewport */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto overflow-x-hidden">
-          {children}
+          {/* Keyed by route so every page transition plays the same enter animation */}
+          <div key={pathname} className="route-enter">
+            {children}
+          </div>
         </main>
       </div>
 
