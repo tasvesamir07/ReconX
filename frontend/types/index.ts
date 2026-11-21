@@ -119,7 +119,17 @@ export interface Scan {
   created_at: string;
   finding_count: number;
   has_report: boolean;
+  executive_summary?: ExecutiveSummary | null;
 }
+
+export interface ExecutiveSummary {
+  source: "ai" | "deterministic";
+  provider?: string;
+  paragraphs: { text: string; refs: string[] }[];
+  refs?: Record<string, string>; // "F1" -> finding id
+}
+
+export type FindingClass = "vulnerability" | "hardening" | "inventory";
 
 export interface ScanEvent {
   id: string;
@@ -147,6 +157,16 @@ export interface Finding {
   remediation: string;
   references?: string[];
   evidence_ids?: string[];
+  finding_class?: FindingClass;
+  source?: string; // check | nvd | osv | nuclei | nvd+nuclei | osv+nuclei
+  component?: string | null;
+  cve_ids?: string[] | null;
+  cwe_ids?: string[] | null;
+  cvss_score?: number | null;
+  cvss_vector?: string | null;
+  epss_score?: number | null;
+  epss_percentile?: number | null;
+  is_kev?: boolean;
   created_at: string;
 }
 

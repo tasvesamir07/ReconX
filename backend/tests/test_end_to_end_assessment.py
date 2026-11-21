@@ -94,18 +94,22 @@ async def test_full_autonomous_scan_and_report_generation(client, db):
     # Verify Check Runs
     check_runs = db.query(CheckRun).filter(CheckRun.scan_id == scan_id).all()
     assert len(check_runs) >= 1
-    for cr in check_runs:
-        assert cr.status == "success"
+    # Checks either complete or are explicitly recorded as skipped (e.g. tool not installed)
+    assert all(cr.status in ("success", "skipped") for cr in check_runs)
+    assert any(cr.status == "success" for cr in check_runs)
 
-    # Verify Evidence Items
+    # Verify Evidence Items, including the coverage manifest
     evidence_items = db.query(Evidence).filter(Evidence.scan_id == scan_id).all()
     assert len(evidence_items) >= 1
+    assert any(e.evidence_type == "engine.manifest" for e in evidence_items)
 
     # Verify Findings Generated
     findings = db.query(Finding).filter(Finding.scan_id == scan_id).all()
     assert len(findings) >= 1
-    # Check that finding has remediation
-    assert len(findings[0].remediation) > 10
+    # Every finding is classified and has remediation
+    assert all(f.finding_class in ("vulnerability", "hardening", "inventory") for f in findings)
+    assert all(len(f.remediation) > 10 for f in findings)
+    assert completed_scan.executive_summary and completed_scan.executive_summary["paragraphs"]
 
     # Verify Report & PDF Generation
     report = db.query(Report).filter(Report.scan_id == scan_id).first()

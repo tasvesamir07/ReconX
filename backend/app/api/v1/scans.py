@@ -334,12 +334,10 @@ def get_scan_events(scan_id: UUID, user: User = Depends(get_current_user), db: S
 @router.get("/{scan_id}/findings", response_model=List[FindingResponse])
 def get_scan_findings(scan_id: UUID, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     _get_scan_or_404(db, scan_id, user)
-    return (
-        db.query(Finding)
-        .filter(Finding.scan_id == scan_id)
-        .order_by(Finding.created_at.desc())
-        .all()
-    )
+    from app.services.findings_engine import sort_key
+    findings = db.query(Finding).filter(Finding.scan_id == scan_id).all()
+    # Risk order: vulnerabilities > hardening > inventory, then severity, KEV, EPSS, CVSS
+    return sorted(findings, key=sort_key)
 
 
 @router.get("/{scan_id}/evidence", response_model=List[EvidenceResponse])

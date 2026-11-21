@@ -12,7 +12,10 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_test_db():
+    import app.models  # noqa: F401  (register all tables, including intel_cache)
+    from app.schema_upgrade import upgrade_schema
     Base.metadata.create_all(bind=engine)
+    upgrade_schema(engine)
     yield
     # Keep data or clean up if needed
 

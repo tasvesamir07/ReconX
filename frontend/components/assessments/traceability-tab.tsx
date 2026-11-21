@@ -36,10 +36,9 @@ export function TraceabilityTab({
     {
       step: 3,
       icon: Cpu,
-      title: "AI Assessment Planner (Groq / Gemini)",
-      status: "Synthesized",
-      description:
-        "Planned non-destructive capabilities: DNS resolution, TLS certificate validation, security headers (CSP, HSTS), cookie flags, and server banner analysis.",
+      title: "Fixed Check Plan",
+      status: "Deterministic",
+      description: `The ${scan.preset} preset runs the same ordered, non-destructive checks every time (Normal ⊂ Moderate ⊂ Ultimate). No AI chooses what is tested.`,
       badgeColor: "border-emerald-200 bg-emerald-50 text-emerald-800",
     },
     {
@@ -62,10 +61,10 @@ export function TraceabilityTab({
     {
       step: 6,
       icon: CheckCircle2,
-      title: "Normalized Observation Synthesis",
+      title: "Rules & Vulnerability Database Matching",
       status: "Validated",
       description:
-        "Raw network responses transformed into canonical schemas, verified against target boundaries, and deduplicated.",
+        "Deterministic rules classify evidence; detected versions are matched against NVD and OSV, enriched with CISA KEV and FIRST EPSS, and merged with active Nuclei verifications.",
       badgeColor: "border-emerald-200 bg-emerald-50 text-emerald-800",
     },
     {
@@ -86,7 +85,7 @@ export function TraceabilityTab({
           <h3 className="font-semibold text-ink text-base">Seven-Step Evidence Traceability Chain</h3>
         </div>
         <p className="text-xs text-muted mt-1 leading-relaxed">
-          Every reported vulnerability in ReconX is strictly traceable from the initial AI planner proposal down to the cryptographic SHA-256 hash of raw network evidence.
+          Every reported finding in ReconX is traceable from the check that produced it down to the SHA-256 hash of the raw evidence it was derived from.
         </p>
       </div>
 

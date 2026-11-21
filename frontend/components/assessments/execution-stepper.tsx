@@ -49,7 +49,7 @@ export function ExecutionStepper({
     },
     {
       id: 3,
-      name: "AI Planning",
+      name: "Check Plan",
       active: scan.status === "running" && eventsCount < 3,
       completed: eventsCount >= 3 || scan.status === "completed",
     },

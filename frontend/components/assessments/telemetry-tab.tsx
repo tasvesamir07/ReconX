@@ -87,7 +87,7 @@ export function TelemetryTab({ events, isLive = true }: TelemetryTabProps) {
         <div className="font-mono text-xs text-slate-400 text-center py-16 space-y-2">
           <div className="inline-block w-3 h-3 rounded-full bg-emerald-500/50 animate-ping mb-2" />
           <p className="text-slate-300">Connecting to Kali Linux execution engine IPC stream...</p>
-          <p className="text-slate-500 text-[11px]">Worker events and autonomous AI tactical decisions will stream live here.</p>
+          <p className="text-slate-500 text-[11px]">Worker events and check results will stream live here.</p>
         </div>
       ) : (
         <div className="p-4 space-y-2 font-mono text-xs max-h-[560px] overflow-y-auto scrollbar-thin pr-2 bg-slate-950/90 select-text">

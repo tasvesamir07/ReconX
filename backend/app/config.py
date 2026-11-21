@@ -52,6 +52,16 @@ class Settings(BaseSettings):
     AI_REQUEST_TIMEOUT_SECONDS: int = 30
     AI_MAX_RETRIES: int = 2
 
+    # Vulnerability intelligence (NVD / OSV / CISA KEV / FIRST EPSS)
+    INTEL_ENABLED: bool = True
+    NVD_API_KEY: str = ""  # Free key from https://nvd.nist.gov/developers/request-an-api-key (raises rate limit 10x)
+    INTEL_CACHE_TTL_HOURS: int = 24
+    INTEL_HTTP_TIMEOUT_SECONDS: int = 30
+
+    # Active verification (Nuclei, optional). Auto-detected on PATH when empty.
+    NUCLEI_PATH: str = ""
+    NUCLEI_RATE_LIMIT: int = 50
+
     # Worker
     WORKER_MAX_CONCURRENCY: int = 3
     WORKER_DEFAULT_TIMEOUT_SECONDS: int = 300

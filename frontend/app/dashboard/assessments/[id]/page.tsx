@@ -175,7 +175,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
         ))}
       </div>
 
-      {activeTab === "findings" && <FindingsTab findings={findings} />}
+      {activeTab === "findings" && (
+        <FindingsTab findings={findings} evidence={evidenceList} summary={scan.executive_summary} />
+      )}
       {activeTab === "activity" && <TelemetryTab events={events} isLive={!isTerminal} />}
       {activeTab === "evidence" && <EvidenceTab evidenceList={evidenceList} />}
       {activeTab === "traceability" && (

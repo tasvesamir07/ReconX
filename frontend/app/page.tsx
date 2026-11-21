@@ -163,7 +163,7 @@ export default function LandingPage() {
                 </div>
                 <div className="flex items-center space-x-1.5 text-emerald-400">
                   <span className="text-[10px]">✓</span>
-                  <span>AI Plan</span>
+                  <span>Plan</span>
                 </div>
                 <div className="flex items-center space-x-1.5 text-emerald-400 font-bold">
                   <span className="text-[10px]">⚡</span>
@@ -257,9 +257,9 @@ export default function LandingPage() {
                 <span className="text-xs font-mono font-bold text-slate-400">STEP 03 - 04</span>
                 <Compass className="w-5 h-5 text-slate-400 shrink-0" />
               </div>
-              <h3 className="font-bold text-slate-900 text-base">Policy Guard & AI Plan</h3>
+              <h3 className="font-bold text-slate-900 text-base">Policy Guard & Fixed Check Plan</h3>
               <p className="text-slate-600 text-sm leading-relaxed">
-                Pre-execution DNS checks block private IPs while dual-AI planners select only permitted probe categories.
+                Pre-execution DNS checks block private IPs, then a fixed, preset-specific check plan runs. The same scan always runs the same checks.
               </p>
             </div>
             <div className="pt-3 border-t border-slate-100">

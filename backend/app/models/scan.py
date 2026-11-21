@@ -46,6 +46,18 @@ class Scan(Base):
     def has_report(self) -> bool:
         return bool(self.reports)
 
+    @property
+    def executive_summary(self):
+        """Structured summary stored as JSON in summary_notes (see app.ai.summary)."""
+        if not self.summary_notes:
+            return None
+        import json
+        try:
+            value = json.loads(self.summary_notes)
+            return value if isinstance(value, dict) else None
+        except ValueError:
+            return None
+
 class ScanEvent(Base):
     __tablename__ = "scan_events"
 

@@ -29,6 +29,7 @@ class ScanResponse(BaseModel):
     created_at: datetime
     finding_count: int = 0
     has_report: bool = False
+    executive_summary: Optional[Dict[str, Any]] = None
 
 
 class ScanEventResponse(BaseModel):
@@ -75,6 +76,16 @@ class FindingResponse(BaseModel):
     remediation: str
     references: Optional[List[str]] = None
     evidence_ids: Optional[List[str]] = None
+    finding_class: str = "vulnerability"
+    source: str = "check"
+    component: Optional[str] = None
+    cve_ids: Optional[List[str]] = None
+    cwe_ids: Optional[List[str]] = None
+    cvss_score: Optional[float] = None
+    cvss_vector: Optional[str] = None
+    epss_score: Optional[float] = None
+    epss_percentile: Optional[float] = None
+    is_kev: bool = False
     created_at: datetime
 
 

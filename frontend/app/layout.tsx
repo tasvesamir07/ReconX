@@ -43,6 +43,13 @@ export const metadata: Metadata = {
   creator: "ReconX",
   publisher: "ReconX",
   robots: "index, follow",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.svg",    type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.ico",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",

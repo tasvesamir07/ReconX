@@ -27,6 +27,8 @@ async def lifespan(app: FastAPI):
         from app.database import engine
         from app.models import Base
         Base.metadata.create_all(bind=engine)
+        from app.schema_upgrade import upgrade_schema
+        upgrade_schema(engine)
         logger.info("Database tables verified/created successfully.")
         seed_demo_data()
     except Exception as e:

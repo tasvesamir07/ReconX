@@ -30,8 +30,13 @@ export function SeverityStrip({
     info: 0,
   };
 
-  if (findings) {
-    findings.forEach((f) => {
+  // Inventory items (technologies, ports, login pages) are context, not risks.
+  const riskFindings = findings?.filter((f) => (f.finding_class ?? "vulnerability") !== "inventory");
+  const inventoryCount = findings ? findings.length - (riskFindings?.length ?? 0) : 0;
+  const kevCount = findings?.filter((f) => f.is_kev).length ?? 0;
+
+  if (riskFindings) {
+    riskFindings.forEach((f) => {
       if (f.severity === "critical") counts.critical++;
       else if (f.severity === "high") counts.high++;
       else if (f.severity === "medium") counts.medium++;
@@ -42,15 +47,23 @@ export function SeverityStrip({
     counts = rawCounts;
   }
 
-  const total = rawTotal ?? (findings ? findings.length : Object.values(counts).reduce((a, b) => a + b, 0));
+  const total = rawTotal ?? (riskFindings ? riskFindings.length : Object.values(counts).reduce((a, b) => a + b, 0));
 
   return (
     <Card className="p-5 space-y-3 border border-line bg-surface">
-      <div className="flex items-center justify-between text-xs">
+      <div className="flex flex-col gap-2 text-xs sm:flex-row sm:items-center sm:justify-between">
         <span className="font-semibold text-ink">
-          Identified Security Findings: <strong className="font-mono text-ink">{total}</strong>
+          Security findings: <strong className="font-mono text-ink">{total}</strong>
+          {kevCount > 0 && (
+            <span className="ml-2 rounded border border-rose-300 bg-rose-50 px-1.5 py-0.5 text-[11px] font-semibold text-rose-700">
+              {kevCount} known exploited
+            </span>
+          )}
+          {inventoryCount > 0 && (
+            <span className="ml-2 font-normal text-muted">+ {inventoryCount} inventory</span>
+          )}
         </span>
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="flex items-center space-x-1 text-[#dc2626] font-mono">
             <span className="w-2 h-2 rounded-full bg-[#dc2626]" />
             <span>{counts.critical} Critical</span>

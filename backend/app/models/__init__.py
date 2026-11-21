@@ -8,6 +8,7 @@ from app.models.evidence import Evidence
 from app.models.finding import Finding
 from app.models.report import Report
 from app.models.audit import AuditEvent, AIProviderEvent, WorkerInstance
+from app.models.intel import IntelCache
 
 __all__ = [
     "Base",
@@ -32,4 +33,5 @@ __all__ = [
     "AuditEvent",
     "AIProviderEvent",
     "WorkerInstance",
+    "IntelCache",
 ]

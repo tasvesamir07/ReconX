@@ -209,13 +209,13 @@ export default function NewAssessmentPage() {
               >
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-base text-ink">Normal (Basic Recon)</span>
-                  <Badge variant="outline" className="font-mono text-[10px]">120s · 4 AI Cycles</Badge>
+                  <Badge variant="outline" className="font-mono text-[10px]">120s · 8 checks</Badge>
                 </div>
                 <p className="text-xs text-muted mt-2 leading-relaxed">
-                  Fast perimeter recon: AI autonomously inspects surface assets, domain DNS, and server headers within the target scope.
+                  Version fingerprinting with CVE matching (NVD / OSV), sensitive-file exposure, TLS, CORS, security headers, cookies and email spoofing protection.
                 </p>
                 <div className="mt-3 text-[11px] font-mono text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-200/60">
-                  ⚡ 4 Autonomous AI Cycles · Fast (~45s)
+                  ⚡ Passive-first · Fast (~30s)
                 </div>
               </div>
 
@@ -233,13 +233,13 @@ export default function NewAssessmentPage() {
                 </span>
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-base text-ink">Moderate (Standard Pentest)</span>
-                  <Badge variant="outline" className="font-mono text-[10px]">300s · 10 AI Cycles</Badge>
+                  <Badge variant="outline" className="font-mono text-[10px]">300s · 17 checks</Badge>
                 </div>
                 <p className="text-xs text-muted mt-2 leading-relaxed">
-                  Standard penetration test: AI dynamically probes protocol security, cookies, headers, and exposed endpoints within scope.
+                  Everything in Normal, plus error disclosure, directory listing, admin and API exposure, open redirect, service versions (nmap -sV) and active CVE verification (Nuclei).
                 </p>
                 <div className="mt-3 text-[11px] font-mono text-emerald-700 bg-emerald-50 p-2 rounded-lg border border-emerald-200/60">
-                  🛡️ 10 Autonomous Pentest Cycles · In-Depth
+                  🛡️ Active verification · In-Depth
                 </div>
               </div>
 
@@ -257,13 +257,13 @@ export default function NewAssessmentPage() {
                 </span>
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-base text-purple-700">Ultimate (God Mode Pentest)</span>
-                  <Badge variant="outline" className="font-mono text-[10px] text-purple-700 border-purple-300">600s · 25 AI Cycles</Badge>
+                  <Badge variant="outline" className="font-mono text-[10px] text-purple-700 border-purple-300">600s · 22 checks</Badge>
                 </div>
                 <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                  Unrestricted autonomous penetration test: AI acts like an offensive ethical hacker, relentlessly digging into endpoints, fuzzing paths, testing parameters, correlating CVEs, and hunting vulnerabilities across the full target scope.
+                  Everything in Moderate, at full depth: top-1000 port service scan, every safe Nuclei template, deeper JavaScript library analysis, cache poisoning, WebSocket origin, SRI and WHOIS.
                 </p>
                 <div className="mt-3 text-[11px] font-mono text-purple-700 bg-purple-100/50 p-2 rounded-lg border border-purple-200">
-                  🔥 25 Autonomous Pentest Cycles · Full Depth
+                  🔥 Full Depth · Still non-destructive
                 </div>
               </div>
             </div>
