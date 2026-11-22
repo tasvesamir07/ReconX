@@ -4,17 +4,17 @@ import { useEffect } from "react";
 import { warmBackend } from "@/lib/api-client";
 
 /**
- * BackendWarmer keeps the Render free-tier backend awake and pre-warms it
- * the millisecond any visitor lands on any page.
- * Also runs an 8-minute heartbeat so the instance does not spin down while
- * the user has the browser tab open.
+ * BackendWarmer triggers only on-demand:
+ * 1. The moment the frontend is loaded by a user.
+ * 2. When the user switches back to this active tab.
+ * Does NOT run background periodic cron pings to preserve Render free hours and bandwidth.
  */
 export function BackendWarmer() {
   useEffect(() => {
-    // 1. Initial immediate pre-warm
+    // 1. Initial on-demand pre-warm when the visitor loads the site
     warmBackend();
 
-    // 2. Pre-warm when user switches back to this tab
+    // 2. Pre-warm when user focuses back on the tab
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
         warmBackend();
@@ -22,14 +22,8 @@ export function BackendWarmer() {
     };
     document.addEventListener("visibilitychange", handleVisibility);
 
-    // 3. Heartbeat every 8 minutes (Render spins down after 15m)
-    const intervalId = setInterval(() => {
-      warmBackend();
-    }, 8 * 60 * 1000);
-
     return () => {
       document.removeEventListener("visibilitychange", handleVisibility);
-      clearInterval(intervalId);
     };
   }, []);
 
