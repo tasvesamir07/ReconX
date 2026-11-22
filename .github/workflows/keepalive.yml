@@ -1,0 +1,24 @@
+name: ReconX Cloud Keep-Alive
+
+on:
+  schedule:
+    # Runs every 12 minutes (Render free tier spins down after 15 minutes)
+    - cron: '*/12 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  ping-services:
+    name: Keep Render Services Hot
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Ping Backend Health
+        run: |
+          echo "Pinging ReconX Backend on Render..."
+          curl -fsSL --max-time 30 https://reconx-backend-ljsn.onrender.com/health || echo "Backend ping attempted"
+
+      - name: Ping Frontend Health
+        run: |
+          echo "Pinging ReconX Frontend on Render..."
+          curl -fsSL --max-time 30 https://reconx-frontend-wyrk.onrender.com/ || echo "Frontend ping attempted"

@@ -105,7 +105,14 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://api.reconx.dev" />
+        <link rel="preconnect" href="https://reconx-backend-ljsn.onrender.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://reconx-backend-ljsn.onrender.com" />
+        {/* Instant backend pre-warm trigger on first byte of frontend page load */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var u=(window.location.hostname==="localhost"?"http://localhost:8000/api/v1":"https://reconx-backend-ljsn.onrender.com/api/v1").replace(/\\/api\\/v1\\/?$/,"")+"/api/v1/health";if(navigator.sendBeacon){navigator.sendBeacon(u)}else{fetch(u,{mode:"no-cors",cache:"no-store"}).catch(function(){})}}catch(e){}})();`,
+          }}
+        />
       </head>
       <body className="min-h-screen bg-background font-sans text-text antialiased">
         <a href="#main-content" className="skip-link">

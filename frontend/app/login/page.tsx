@@ -16,11 +16,15 @@ export default function LoginPage() {
   const [loggingInRole, setLoggingInRole] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [autoFilledRole, setAutoFilledRole] = useState<string | null>(null);
+  const [isWarmingUp, setIsWarmingUp] = useState(false);
 
   const performLogin = async (loginEmail: string, loginPass: string, roleName?: string) => {
     setError(null);
     setLoading(true);
+    setIsWarmingUp(false);
     if (roleName) setLoggingInRole(roleName);
+
+    const warmTimer = setTimeout(() => setIsWarmingUp(true), 2500);
 
     try {
       await apiRequest("/auth/login", {
@@ -39,6 +43,8 @@ export default function LoginPage() {
         setError("Failed to connect to authentication server. Please verify backend status.");
       }
     } finally {
+      clearTimeout(warmTimer);
+      setIsWarmingUp(false);
       setLoading(false);
       setLoggingInRole(null);
     }
@@ -96,6 +102,14 @@ export default function LoginPage() {
           onAutofillOnly={handleAutofillOnly}
           onOneClickLogin={handleOneClickLogin}
         />
+
+        {/* Cold Start Indicator */}
+        {isWarmingUp && (
+          <div className="flex items-center justify-center gap-2 text-xs text-emerald-800 bg-emerald-50 border border-emerald-200/80 rounded-xl p-3 animate-pulse shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+            <span>Waking up cloud backend instance (Render free tier spin-up ~15s)...</span>
+          </div>
+        )}
 
         {/* 2. Manual Form */}
         <LoginForm

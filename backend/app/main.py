@@ -2,6 +2,7 @@ import logging
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from app.config import settings
 from app.core.exceptions import ReconXException
 from app.api.v1.auth import router as auth_router
@@ -54,6 +55,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# GZip Compression (cuts transfer size of JSON scan responses by 70-80%)
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+
 from fastapi.exceptions import RequestValidationError
 
 # Global Exception Handler for structured errors matching 19_API_CONTRACTS.md
@@ -104,5 +108,8 @@ def root():
     }
 
 @app.get("/health")
+@app.head("/health")
+@app.get("/api/v1/health")
+@app.head("/api/v1/health")
 def health():
-    return {"status": "ok"}
+    return {"status": "ok", "service": "ReconX"}

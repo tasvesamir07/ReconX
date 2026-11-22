@@ -5,6 +5,22 @@ export const API_BASE_URL =
 
 const API_BASE = API_BASE_URL;
 
+/**
+ * Pre-warms the backend by sending a lightweight, non-blocking ping.
+ * Triggers Render container spin-up immediately when frontend is loaded.
+ */
+export function warmBackend(): void {
+  if (typeof window === "undefined") return;
+  try {
+    const healthUrl = API_BASE.replace(/\/api\/v1\/?$/, "") + "/api/v1/health";
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(healthUrl);
+    } else {
+      fetch(healthUrl, { method: "GET", mode: "no-cors", cache: "no-store" }).catch(() => {});
+    }
+  } catch (_) {}
+}
+
 export class ReconXApiError extends Error {
   code: string;
   details?: Record<string, any>;
@@ -28,7 +44,8 @@ export class ReconXApiError extends Error {
 
 export async function apiRequest<T = any>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  retryCount = 1
 ): Promise<T> {
   const url = `${API_BASE}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
 
@@ -37,8 +54,8 @@ export async function apiRequest<T = any>(
     headers.set("Content-Type", "application/json");
   }
 
+  const timeoutMs = 45000; // 45s allows for Render free-tier cold starts
   const controller = new AbortController();
-  const timeoutMs = 15000;
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   let res: Response;
@@ -50,11 +67,19 @@ export async function apiRequest<T = any>(
       signal: options.signal || controller.signal,
     });
   } catch (fetchErr: any) {
+    clearTimeout(timeoutId);
+
+    // If server was waking up, retry once automatically
+    if (retryCount > 0 && (fetchErr.name === "AbortError" || fetchErr.message?.includes("Failed to fetch"))) {
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      return apiRequest<T>(endpoint, options, retryCount - 1);
+    }
+
     if (fetchErr.name === "AbortError") {
       throw new ReconXApiError(
         504,
         "BACKEND_TIMEOUT",
-        `Backend request timed out (15s) contacting: ${url}. Please verify your Render backend service is awake and running.`
+        `Backend request timed out (45s) contacting: ${url}. Please verify your Render backend service is awake and running.`
       );
     }
     throw new ReconXApiError(
