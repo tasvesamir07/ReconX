@@ -10,18 +10,11 @@ const inter = Inter({
   weight: ["400", "500", "600", "700"],
 });
 
-const interDisplay = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter-display",
-  display: "swap",
-  weight: ["600", "700"],
-});
-
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
   display: "swap",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -99,7 +92,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${interDisplay.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
       <head>
