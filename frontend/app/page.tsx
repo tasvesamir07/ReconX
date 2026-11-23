@@ -102,6 +102,41 @@ function TaglineReveal() {
   );
 }
 
+// Typewriter Text Component with Blinking Terminal Block Cursor
+function TypewriterText({ text, speed = 18 }: { text: string; speed?: number }) {
+  const [displayedText, setDisplayedText] = useState<string>("");
+  const [isTyping, setIsTyping] = useState<boolean>(true);
+
+  useEffect(() => {
+    setDisplayedText("");
+    setIsTyping(true);
+    let currentIdx = 0;
+    const interval = setInterval(() => {
+      currentIdx++;
+      if (currentIdx <= text.length) {
+        setDisplayedText(text.slice(0, currentIdx));
+      } else {
+        setIsTyping(false);
+        clearInterval(interval);
+      }
+    }, speed);
+
+    return () => clearInterval(interval);
+  }, [text, speed]);
+
+  return (
+    <span className="font-mono text-[11px] text-[#C6F432] inline-flex items-center tracking-tight select-none">
+      <span>{displayedText}</span>
+      <span
+        className={`inline-block w-1.5 h-3 ml-0.5 bg-[#C6F432] rounded-[1px] ${
+          isTyping ? "opacity-100" : "animate-cursor-blink"
+        }`}
+        aria-hidden="true"
+      />
+    </span>
+  );
+}
+
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
@@ -174,6 +209,27 @@ export default function LandingPage() {
     { x: 150, y: 28, time: "12:00", score: 92, label: "Active CVE verification confirmed" },
     { x: 200, y: 12, time: "13:00", score: autoFixOn ? 94 : 88, label: "Evidence sealed in ledger" },
   ];
+
+  // Full-width Magnetic Chart Scrubber (eliminates pixel hunting and hover jitter)
+  const handleChartMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const relativeX = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const svgX = relativeX * 200;
+    let closest = 0;
+    let minDistance = Infinity;
+    graphPoints.forEach((pt, idx) => {
+      const d = Math.abs(pt.x - svgX);
+      if (d < minDistance) {
+        minDistance = d;
+        closest = idx;
+      }
+    });
+    setHoverIndex(closest);
+  };
+
+  const handleChartMouseLeave = () => {
+    setHoverIndex(null);
+  };
 
   return (
     <div
@@ -522,7 +578,10 @@ export default function LandingPage() {
               </div>
 
               {/* Card 2: Review Score with Interactive SVG Graph & Interactive Toggle */}
-              <div className="dark-card rounded-2xl p-6 space-y-4 flex flex-col justify-between min-h-[320px] transition-all duration-300 hover:-translate-y-1.5 hover:border-[#C6F432]/40 hover:shadow-[0_20px_45px_-12px_rgba(0,0,0,0.95),0_0_24px_rgba(198,244,50,0.18)]">
+              <div
+                className="dark-card rounded-2xl p-6 space-y-4 flex flex-col justify-between min-h-[320px] transition-all duration-300 hover:-translate-y-1.5 hover:border-[#C6F432]/40 hover:shadow-[0_20px_45px_-12px_rgba(0,0,0,0.95),0_0_24px_rgba(198,244,50,0.18)]"
+                onMouseLeave={handleChartMouseLeave}
+              >
                 <div>
                   <div className="flex items-center justify-between pb-1 border-b border-white/5">
                     <div className="flex items-center space-x-2 text-xs font-mono text-zinc-400">
@@ -560,39 +619,50 @@ export default function LandingPage() {
                     <span className="text-xs font-mono text-zinc-400">/ 100 repo health</span>
                   </div>
 
-                  {hoverIndex !== null && (
-                    <div className="text-[11px] font-mono text-[#C6F432] pt-0.5 truncate">
-                      {graphPoints[hoverIndex].time}: {graphPoints[hoverIndex].label}
-                    </div>
-                  )}
+                  {/* Real-time Telemetry Status Line (Fixed height container prevents layout shift glitch) */}
+                  <div className="h-6 text-[11px] font-mono text-[#C6F432] pt-0.5 flex items-center overflow-hidden">
+                    <TypewriterText
+                      text={
+                        hoverIndex !== null
+                          ? `${graphPoints[hoverIndex].time}: ${graphPoints[hoverIndex].label}`
+                          : "11:00: CORS & Secret checks passed"
+                      }
+                      speed={18}
+                    />
+                  </div>
 
-                  {/* Interactive SVG Sparkline Chart with Mouse Hover Scrubber */}
-                  <div className="w-full h-28 relative mt-3 select-none">
+                  {/* Interactive SVG Sparkline Chart with Full Magnetic Scrubber */}
+                  <div
+                    className="w-full h-28 relative mt-3 select-none cursor-crosshair"
+                    onMouseMove={handleChartMouseMove}
+                    onMouseLeave={handleChartMouseLeave}
+                  >
                     <svg className="w-full h-full overflow-visible" viewBox="0 0 200 80" preserveAspectRatio="none">
                       <defs>
                         <linearGradient id="limeGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#C6F432" stopOpacity="0.30" />
+                          <stop offset="0%" stopColor="#C6F432" stopOpacity="0.35" />
                           <stop offset="100%" stopColor="#C6F432" stopOpacity="0.0" />
                         </linearGradient>
+
+                        <clipPath id="graphRevealClip">
+                          <rect x="0" y="0" width="200" height="80" className="animate-reveal-graph" />
+                        </clipPath>
                       </defs>
 
-                      {/* Main Sparkline Path */}
-                      <path
-                        d="M 0 65 Q 25 60 50 52 T 100 46 T 150 28 T 200 12"
-                        fill="none"
-                        stroke="#C6F432"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        className="animate-draw-line"
-                      />
-                      <path
-                        d="M 0 65 Q 25 60 50 52 T 100 46 T 150 28 T 200 12 L 200 80 L 0 80 Z"
-                        fill="url(#limeGradient)"
-                      />
-
-                      {/* Live Radar Beacon at the leading tip (200, 12) */}
-                      <circle cx="200" cy="12" r="3.5" fill="#C6F432" />
-                      <circle cx="200" cy="12" r="9" fill="#C6F432" className="animate-ping opacity-60 pointer-events-none" />
+                      {/* Animated Revealing Graph Group (both area gradient & line curve draw in together) */}
+                      <g clipPath="url(#graphRevealClip)">
+                        <path
+                          d="M 0 65 Q 25 60 50 52 T 100 46 T 150 28 T 200 12 L 200 80 L 0 80 Z"
+                          fill="url(#limeGradient)"
+                        />
+                        <path
+                          d="M 0 65 Q 25 60 50 52 T 100 46 T 150 28 T 200 12"
+                          fill="none"
+                          stroke="#C6F432"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                        />
+                      </g>
 
                       {/* Interactive Scrubber Vert Line on Hover */}
                       {hoverIndex !== null && (
@@ -603,25 +673,35 @@ export default function LandingPage() {
                           y2={80}
                           stroke="#C6F432"
                           strokeWidth="1.5"
-                          strokeDasharray="2,2"
+                          strokeDasharray="3,3"
+                          className="pointer-events-none"
                         />
                       )}
 
-                      {/* Interactive Dot Markers */}
+                      {/* Interactive Dot Markers popping in sequentially */}
                       {graphPoints.map((pt, i) => (
                         <circle
                           key={i}
                           cx={pt.x}
                           cy={pt.y}
-                          r={hoverIndex === i ? 5 : 3.5}
+                          r={hoverIndex === i ? 5.5 : 3.5}
                           fill="#C6F432"
                           stroke="#0B0B0C"
                           strokeWidth="1.5"
-                          className="cursor-pointer transition-all"
-                          onMouseEnter={() => setHoverIndex(i)}
-                          onMouseLeave={() => setHoverIndex(null)}
+                          className="pointer-events-none animate-dot-pop transition-transform"
+                          style={{ animationDelay: `${0.2 + i * 0.25}s` }}
                         />
                       ))}
+
+                      {/* Live Radar Beacon at the leading tip (200, 12) appearing after draw */}
+                      <circle cx="200" cy="12" r="3.5" fill="#C6F432" className="animate-delayed-beacon pointer-events-none" />
+                      <circle
+                        cx="200"
+                        cy="12"
+                        r="9"
+                        fill="#C6F432"
+                        className="animate-ping opacity-60 pointer-events-none animate-delayed-beacon"
+                      />
                     </svg>
                   </div>
                 </div>
@@ -631,9 +711,8 @@ export default function LandingPage() {
                     <span
                       key={i}
                       onMouseEnter={() => setHoverIndex(i)}
-                      onMouseLeave={() => setHoverIndex(null)}
-                      className={`cursor-pointer transition-colors ${
-                        hoverIndex === i ? "text-[#C6F432] font-bold" : "hover:text-zinc-300"
+                      className={`cursor-pointer transition-colors px-1 py-0.5 rounded ${
+                        hoverIndex === i ? "text-[#C6F432] font-bold bg-[#C6F432]/10" : "hover:text-zinc-300"
                       }`}
                     >
                       {pt.time}

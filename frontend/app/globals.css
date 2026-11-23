@@ -510,6 +510,48 @@
     }
   }
 
+  @keyframes revealGraphWidth {
+    from {
+      width: 0px;
+    }
+    to {
+      width: 200px;
+    }
+  }
+
+  @keyframes dotPopIn {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    70% {
+      transform: scale(1.35);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeInDelayed {
+    0%, 75% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes blinkCursor {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
   @keyframes playheadScan {
     0% {
       left: 12%;
@@ -550,6 +592,24 @@
     stroke-dasharray: 400;
     stroke-dashoffset: 400;
     animation: drawLine 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .animate-reveal-graph {
+    animation: revealGraphWidth 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .animate-dot-pop {
+    transform-origin: center;
+    transform-box: fill-box;
+    animation: dotPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  }
+
+  .animate-delayed-beacon {
+    animation: fadeInDelayed 1.5s ease-out forwards;
+  }
+
+  .animate-cursor-blink {
+    animation: blinkCursor 0.85s infinite;
   }
 
   .animate-float-slow {
