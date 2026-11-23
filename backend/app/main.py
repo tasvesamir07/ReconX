@@ -188,6 +188,36 @@ async def rate_limit_middleware(request: Request, call_next):
     return await call_next(request)
 
 
+# Admin IP allowlist middleware
+@app.middleware("http")
+async def admin_ip_allowlist_middleware(request: Request, call_next):
+    # Check if this is an admin route
+    admin_prefix = f"/api/v1/{settings.ADMIN_PATH_PREFIX}"
+    if request.url.path.startswith(admin_prefix):
+        if settings.admin_ip_allowlist_cidrs:
+            import ipaddress
+            client = client_ip(request)
+            try:
+                client_ip_obj = ipaddress.ip_address(client)
+                allowed = any(
+                    client_ip_obj in ipaddress.ip_network(cidr, strict=False)
+                    for cidr in settings.admin_ip_allowlist_cidrs
+                )
+                if not allowed:
+                    logger.warning(f"Admin access denied for IP {client} (not in allowlist)")
+                    return JSONResponse(
+                        status_code=403,
+                        content={"error": {"code": "IP_NOT_ALLOWED", "message": "Admin access restricted to allowed IP ranges."}}
+                    )
+            except ValueError:
+                # Invalid IP format, deny
+                return JSONResponse(
+                    status_code=403,
+                    content={"error": {"code": "IP_NOT_ALLOWED", "message": "Admin access restricted to allowed IP ranges."}}
+                )
+    return await call_next(request)
+
+
 # Global Exception Handler for structured errors matching 19_API_CONTRACTS.md
 @app.exception_handler(ReconXException)
 async def reconx_exception_handler(request: Request, exc: ReconXException):
@@ -223,7 +253,7 @@ app.include_router(org_router, prefix="/api/v1")
 app.include_router(authz_router, prefix="/api/v1")
 app.include_router(mod_router, prefix="/api/v1")
 app.include_router(scans_router, prefix="/api/v1")
-app.include_router(admin_router, prefix="/api/v1")
+app.include_router(admin_router, prefix=f"/api/v1/{settings.ADMIN_PATH_PREFIX}")
 app.include_router(dashboard_router, prefix="/api/v1")
 app.include_router(policy_router, prefix="/api/v1")
 

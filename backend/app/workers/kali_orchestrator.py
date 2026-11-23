@@ -7,7 +7,7 @@ import hashlib
 import asyncio
 import logging
 import subprocess
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from sqlalchemy.orm import Session
 
 from app.models.scan import Scan, ScanEvent, CheckRun
@@ -16,6 +16,7 @@ from app.models.authorization import ApprovedAsset
 from app.models.base import utc_now
 from app.config import settings
 from app.core.constants import PRESET_BUDGETS, ScanPreset
+from app.workers.secure_runner import execute_secure_scan, SecureWorkerRunner
 
 logger = logging.getLogger("reconx.worker.orchestrator")
 
@@ -57,6 +58,11 @@ class KaliWorkerOrchestrator:
       - Windows with a 'kali-linux' WSL distribution: runs inside Kali in a visible terminal
       - otherwise: runs the same engine natively with this Python interpreter
         (Linux hosts and Docker images include nmap / dig / nuclei; see Dockerfile)
+    
+    Security hardening:
+      - Linux: seccomp-bpf syscall filtering, capability dropping, resource limits
+      - Process isolation via new session and process group
+      - Filesystem isolation via job directory isolation
     """
 
     @staticmethod
@@ -119,6 +125,7 @@ class KaliWorkerOrchestrator:
 
         use_wsl = cls.is_wsl_kali_available()
         if use_wsl:
+            # WSL path - runs in Kali Linux terminal window (less isolated)
             cmd = [
                 "cmd.exe", "/c", "start",
                 f"ReconX Scan Engine [{short_id} - {canonical_host}]",
@@ -127,20 +134,62 @@ class KaliWorkerOrchestrator:
                 f"echo 'Scan complete. This window closes in 15s...'; read -t 15 || true",
             ]
             cls._log_event(db, scan.id, "lifecycle", "info", "Dispatching scan engine to Kali Linux worker (WSL2).")
+            logger.info(f"Launching scan engine for scan {short_id} ({canonical_host}) via WSL Kali")
+            
+            try:
+                proc = subprocess.Popen(cmd)
+            except Exception as e:
+                logger.error(f"Failed to start scan engine: {e}")
+                cls._log_event(db, scan.id, "error", "critical", f"Failed to start scan engine: {e}")
+                return False
+
+            # Monitor WSL process (limited isolation)
+            return await cls._monitor_wsl_process(
+                db, scan, proc, job_dir, events_path, evidence_path, status_path, cancel_path, time_budget, started_checks={}
+            )
         else:
-            cmd = [sys.executable, RUNNER_SCRIPT, job_dir]
-            cls._log_event(db, scan.id, "lifecycle", "info", "Dispatching scan engine to native worker runtime.")
+            # Native Linux path - use secure runner with hardening
+            cls._log_event(db, scan.id, "lifecycle", "info", 
+                          "Dispatching scan engine to native worker runtime with security hardening (seccomp, capabilities, resource limits).")
+            logger.info(f"Launching scan engine for scan {short_id} ({canonical_host}) via native secure runner")
 
-        logger.info(f"Launching scan engine for scan {short_id} ({canonical_host}) via {'WSL Kali' if use_wsl else 'native'}")
-        try:
-            proc = subprocess.Popen(cmd)
-        except Exception as e:
-            logger.error(f"Failed to start scan engine: {e}")
-            cls._log_event(db, scan.id, "error", "critical", f"Failed to start scan engine: {e}")
-            return False
+            # Use the secure runner for native execution
+            def log_event_fn(scan_id, event_type, severity, message):
+                cls._log_event(db, scan_id, event_type, severity, message)
 
+            success = await execute_secure_scan(
+                job_dir=job_dir,
+                runner_script=RUNNER_SCRIPT,
+                config=job_config,
+                time_budget=time_budget,
+                db_session=db,
+                scan_id=scan.id,
+                log_event_fn=log_event_fn,
+            )
+
+            if not success:
+                logger.warning(f"Secure scan execution failed for scan {short_id}")
+                return False
+
+            # Process results (same as before)
+            return await cls._process_scan_results(db, scan, job_dir, evidence_path, started_checks={})
+
+    @classmethod
+    async def _monitor_wsl_process(
+        cls,
+        db: Session,
+        scan: Scan,
+        proc: subprocess.Popen,
+        job_dir: str,
+        events_path: str,
+        evidence_path: str,
+        status_path: str,
+        cancel_path: str,
+        time_budget: int,
+        started_checks: Dict[str, CheckRun],
+    ) -> bool:
+        """Monitors WSL-based scan process (limited isolation)."""
         processed_lines = 0
-        started_checks: Dict[str, CheckRun] = {}
         start_time = time.time()
         max_wait_seconds = time_budget + 90
         exited_at = None
@@ -152,7 +201,7 @@ class KaliWorkerOrchestrator:
             if scan.status == "cancelled":
                 with open(cancel_path, "w", encoding="utf-8") as f:
                     f.write("cancel")
-                logger.info(f"Cancellation signal sent to scan engine for scan {short_id}")
+                logger.info(f"Cancellation signal sent to scan engine for scan {str(scan.id)[:8]}")
                 break
 
             if os.path.exists(events_path):
@@ -192,13 +241,25 @@ class KaliWorkerOrchestrator:
                     pass
 
             # Native runs: detect a worker that died without writing status.json
-            if not use_wsl and proc.poll() is not None:
+            if proc.poll() is not None:
                 exited_at = exited_at or time.time()
                 if time.time() - exited_at > 3:
                     cls._log_event(db, scan.id, "error", "critical",
                                    f"Scan engine exited unexpectedly (code {proc.returncode}) before completing.")
                     break
 
+        return await cls._process_scan_results(db, scan, job_dir, evidence_path, started_checks)
+
+    @classmethod
+    async def _process_scan_results(
+        cls,
+        db: Session,
+        scan: Scan,
+        job_dir: str,
+        evidence_path: str,
+        started_checks: Dict[str, CheckRun],
+    ) -> bool:
+        """Processes scan results from evidence.json."""
         if not os.path.exists(evidence_path):
             return False
         try:

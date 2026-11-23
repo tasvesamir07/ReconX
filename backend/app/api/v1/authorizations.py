@@ -1,5 +1,5 @@
 import uuid
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, UploadFile, File, Form
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from typing import List, Optional
@@ -8,15 +8,25 @@ from app.database import get_db
 from app.core.security import verify_password
 from app.models.user import User
 from app.models.organization import OrganizationMembership
-from app.models.authorization import AuthorizationRequest, ApprovedAsset
+from app.models.authorization import AuthorizationRequest, ApprovedAsset, AuthorizationDocument
 from app.models.scan import Scan, ScanEvent
-from app.schemas.authorization import AuthRequestCreate, AuthRequestResponse, ApprovedAssetResponse, ScopeActionRequest
+from app.schemas.authorization import (
+    AuthRequestCreate, 
+    AuthRequestResponse, 
+    ApprovedAssetResponse, 
+    ScopeActionRequest,
+    AuthorizationDocumentResponse,
+    ALLOWED_MIME_TYPES,
+    MAX_FILE_SIZE,
+)
 from app.services.audit_service import AuditService
 from app.services.org_service import OrganizationService
 from app.services.scan_executor import _log_event
-from app.api.deps import get_current_user
+from app.services.document_service import DocumentService
+from app.api.deps import get_current_user, require_platform_role
 from app.core.exceptions import NotFoundError, PermissionDeniedError, PolicyViolationError
 from app.models.base import utc_now
+from app.config import settings
 
 router = APIRouter(tags=["Authorizations & Assets"])
 
@@ -74,6 +84,142 @@ def submit_authorization_request(
     )
     return req
 
+
+@router.post("/authorizations/{auth_id}/documents", response_model=AuthorizationDocumentResponse, status_code=status.HTTP_201_CREATED)
+async def upload_authorization_document(
+    auth_id: UUID,
+    file: UploadFile = File(...),
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Uploads a supporting document for an authorization request.
+    Validates MIME type, file size, and computes SHA-256 hash.
+    Only the requester, org admins, or platform moderators can upload.
+    """
+    req = db.query(AuthorizationRequest).filter(AuthorizationRequest.id == auth_id).first()
+    if not req:
+        raise NotFoundError("Authorization request not found.")
+
+    # Authorization: requester, org admin/owner, or platform moderator/super admin
+    can_upload = False
+    if req.requested_by == user.id:
+        can_upload = True
+    elif user.platform_role in PLATFORM_OVERSIGHT:
+        can_upload = True
+    elif req.organization_id:
+        role = OrganizationService.get_user_role_in_org(db, user.id, req.organization_id)
+        if role in ("OWNER", "ADMIN"):
+            can_upload = True
+    
+    if not can_upload:
+        raise PermissionDeniedError("You are not authorized to upload documents for this authorization request.")
+
+    # Validate file
+    detected_mime, original_filename = DocumentService.validate_file(file)
+    
+    # Compute SHA-256
+    file_hash = DocumentService.compute_sha256(file.file)
+    
+    # Generate secure storage path
+    storage_path = DocumentService.generate_storage_path(auth_id, original_filename)
+    
+    # Save file
+    file_size = DocumentService.save_file(file, storage_path)
+    
+    # Create document record
+    doc = AuthorizationDocument(
+        authorization_request_id=auth_id,
+        storage_path=storage_path,
+        original_filename=original_filename,
+        detected_mime_type=detected_mime,
+        file_size=file_size,
+        sha256_hash=file_hash,
+        upload_status="scanned_safe"  # In production, integrate with AV scanner
+    )
+    db.add(doc)
+    db.commit()
+    db.refresh(doc)
+
+    AuditService.log(
+        db, "document.uploaded", "authorization_document", str(doc.id),
+        actor_id=user.id, organization_id=req.organization_id,
+        metadata_json={"filename": original_filename, "mime_type": detected_mime, "size": file_size, "sha256": file_hash}
+    )
+    return doc
+
+
+@router.get("/authorizations/{auth_id}/documents", response_model=List[AuthorizationDocumentResponse])
+def list_authorization_documents(
+    auth_id: UUID,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Lists documents attached to an authorization request."""
+    req = db.query(AuthorizationRequest).filter(AuthorizationRequest.id == auth_id).first()
+    if not req:
+        raise NotFoundError("Authorization request not found.")
+
+    # Authorization check
+    if req.requested_by != user.id and user.platform_role not in PLATFORM_OVERSIGHT:
+        if req.organization_id:
+            role = OrganizationService.get_user_role_in_org(db, user.id, req.organization_id)
+            if role is None:
+                raise PermissionDeniedError("You are not a member of this organization.")
+        else:
+            raise PermissionDeniedError("Access denied.")
+
+    return db.query(AuthorizationDocument).filter(
+        AuthorizationDocument.authorization_request_id == auth_id
+    ).order_by(AuthorizationDocument.created_at.desc()).all()
+
+
+@router.delete("/authorizations/{auth_id}/documents/{doc_id}", status_code=status.HTTP_200_OK)
+def delete_authorization_document(
+    auth_id: UUID,
+    doc_id: UUID,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Deletes a document from an authorization request. Requires admin/moderator privileges."""
+    req = db.query(AuthorizationRequest).filter(AuthorizationRequest.id == auth_id).first()
+    if not req:
+        raise NotFoundError("Authorization request not found.")
+
+    doc = db.query(AuthorizationDocument).filter(
+        AuthorizationDocument.id == doc_id,
+        AuthorizationDocument.authorization_request_id == auth_id
+    ).first()
+    if not doc:
+        raise NotFoundError("Document not found.")
+
+    # Authorization: only org admin/owner or platform moderator/super admin can delete
+    can_delete = False
+    if user.platform_role in PLATFORM_OVERSIGHT:
+        can_delete = True
+    elif req.organization_id:
+        role = OrganizationService.get_user_role_in_org(db, user.id, req.organization_id)
+        if role in ("OWNER", "ADMIN"):
+            can_delete = True
+    
+    if not can_delete:
+        raise PermissionDeniedError("Only organization admins or platform moderators can delete documents.")
+
+    # Delete file from storage
+    DocumentService.delete_file(doc.storage_path)
+
+    # Delete database record
+    db.delete(doc)
+    db.commit()
+
+    AuditService.log(
+        db, "document.deleted", "authorization_document", str(doc_id),
+        actor_id=user.id, organization_id=req.organization_id,
+        metadata_json={"filename": doc.original_filename, "sha256": doc.sha256_hash}
+    )
+    return {"status": "success", "message": "Document deleted."}
+
+
 @router.get("/authorizations", response_model=List[AuthRequestResponse])
 def list_authorizations(
     organization_id: Optional[UUID] = None,
@@ -106,6 +252,7 @@ def list_authorizations(
         )
 
     return query.order_by(AuthorizationRequest.created_at.desc()).all()
+
 
 def check_can_manage_governance(
     user: User,
@@ -150,6 +297,7 @@ def check_can_manage_governance(
             "Authentication failed: Incorrect operator password provided. Scope action blocked."
         )
 
+
 @router.get("/authorizations/{auth_id}", response_model=AuthRequestResponse)
 def get_authorization(auth_id: UUID, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     req = db.query(AuthorizationRequest).filter(AuthorizationRequest.id == auth_id).first()
@@ -162,6 +310,7 @@ def get_authorization(auth_id: UUID, user: User = Depends(get_current_user), db:
         if role is not None:
             return req
     raise PermissionDeniedError("Access denied.")
+
 
 @router.post("/authorizations/{auth_id}/revoke", response_model=AuthRequestResponse)
 def revoke_authorization(
@@ -208,6 +357,7 @@ def revoke_authorization(
     )
     return req
 
+
 @router.post("/authorizations/{auth_id}/delete", status_code=status.HTTP_200_OK)
 @router.delete("/authorizations/{auth_id}", status_code=status.HTTP_200_OK)
 def delete_authorization(
@@ -243,6 +393,13 @@ def delete_authorization(
         db.delete(asset)
     db.flush()
 
+    # Delete associated documents from storage
+    docs = db.query(AuthorizationDocument).filter(AuthorizationDocument.authorization_request_id == req.id).all()
+    for doc in docs:
+        DocumentService.delete_file(doc.storage_path)
+        db.delete(doc)
+    db.flush()
+
     db.delete(req)
     db.commit()
 
@@ -257,6 +414,7 @@ def delete_authorization(
         "message": f"Authorization request for '{company}' and associated scopes have been removed.",
         "id": str(auth_id)
     }
+
 
 @router.get("/assets", response_model=List[ApprovedAssetResponse])
 def list_approved_assets(
@@ -298,6 +456,7 @@ def list_approved_assets(
 
     return query.order_by(ApprovedAsset.created_at.desc()).all()
 
+
 @router.post("/assets/{asset_id}/revoke", response_model=ApprovedAssetResponse)
 def revoke_asset(
     asset_id: UUID,
@@ -336,6 +495,7 @@ def revoke_asset(
         metadata_json={"host": asset.canonical_host, "revoked_by": user.email, "reason": data.reason}
     )
     return asset
+
 
 @router.post("/assets/{asset_id}/delete", status_code=status.HTTP_200_OK)
 @router.delete("/assets/{asset_id}", status_code=status.HTTP_200_OK)

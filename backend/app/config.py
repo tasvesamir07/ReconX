@@ -97,6 +97,16 @@ class Settings(BaseSettings):
     # Storage
     STORAGE_DIR: str = os.path.join(os.path.dirname(os.path.dirname(__file__)), "storage")
 
+    # Admin panel path (configurable for obscurity)
+    # Default: "admin" - change to a random string in production for path obscurity
+    # Example: "a3f9-admin-panel-x7k2"
+    ADMIN_PATH_PREFIX: str = "admin"
+    
+    # Admin panel IP allowlist (comma-separated CIDR notation)
+    # Empty = no IP restriction (only role-based access)
+    # Example: "10.0.0.0/8,192.168.1.0/24,203.0.113.0/24"
+    ADMIN_IP_ALLOWLIST: str = ""
+
     @property
     def is_production(self) -> bool:
         return self.APP_ENV.strip().lower() in ("production", "prod")
@@ -145,5 +155,9 @@ class Settings(BaseSettings):
                 if k_clean and k_clean not in keys:
                     keys.append(k_clean)
         return keys
+
+    @property
+    def admin_ip_allowlist_cidrs(self) -> List[str]:
+        return [cidr.strip() for cidr in self.ADMIN_IP_ALLOWLIST.split(",") if cidr.strip()]
 
 settings = Settings()

@@ -37,6 +37,22 @@ def make_moderator_decision(
     if req.requested_by == moderator.id:
         raise PolicyViolationError("CONFLICT_OF_INTEREST", "Moderator cannot review or approve their own authorization request.")
 
+    # Get original requested subdomain scope
+    req_subdomains = bool(req.requested_scope.get("allow_subdomains", False))
+    
+    # Determine final subdomain setting
+    subdomains_allowed = data.allow_subdomains if data.allow_subdomains is not None else req_subdomains
+    
+    # Validate subdomain scope change confirmation
+    if subdomains_allowed != req_subdomains:
+        if not data.subdomain_scope_confirmed:
+            raise PolicyViolationError(
+                "SUBDOMAIN_SCOPE_CONFIRMATION_REQUIRED",
+                f"Subdomain scope change detected: original request had allow_subdomains={req_subdomains}, "
+                f"but moderator decision sets allow_subdomains={subdomains_allowed}. "
+                f"Explicit confirmation via subdomain_scope_confirmed=true is required."
+            )
+
     now = utc_now()
     req.status = data.decision
     req.moderator_id = moderator.id
@@ -46,11 +62,6 @@ def make_moderator_decision(
     if data.decision == "approved":
         approved_domains = data.approved_domains or req.requested_scope.get("domains", [])
         expiry = data.approved_expiry_at or req.requested_expiry_at
-
-        # Subdomain Wildcard Governance:
-        # Default to the applicant's requested scope unless explicitly modified by Compliance Moderator
-        req_subdomains = bool(req.requested_scope.get("allow_subdomains", False))
-        subdomains_allowed = data.allow_subdomains if data.allow_subdomains is not None else req_subdomains
 
         # Create approved assets for each domain
         for domain in approved_domains:
@@ -72,6 +83,11 @@ def make_moderator_decision(
     AuditService.log(
         db, f"auth_request.{data.decision}", "authorization_request", str(req.id),
         actor_id=moderator.id, organization_id=req.organization_id,
-        decision=data.decision, reason=data.reason
+        decision=data.decision, reason=data.reason,
+        metadata_json={
+            "subdomain_scope_changed": subdomains_allowed != req_subdomains,
+            "original_allow_subdomains": req_subdomains,
+            "approved_allow_subdomains": subdomains_allowed,
+        }
     )
     return req
