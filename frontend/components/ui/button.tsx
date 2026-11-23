@@ -2,15 +2,21 @@ import * as React from "react";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "outline" | "subtle";
+type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "outline" | "subtle" | "primary-glass" | "secondary-glass" | "ghost-glass";
 type ButtonSize = "sm" | "md" | "lg" | "icon";
 
 const variants: Record<ButtonVariant, string> = {
   primary:
     "btn-sheen bg-accent text-text-inverse hover:bg-accent-hover active:bg-accent-pressed shadow-glow-subtle",
+  "primary-glass":
+    "btn bg-accent/90 backdrop-blur-md text-text-inverse hover:bg-accent hover:shadow-glow border border-border/20",
   secondary:
     "bg-surface-elevated text-text border border-border hover:bg-surface-pressed hover:border-border-strong",
-  ghost: "text-text-muted hover:text-text hover:bg-surface",
+  "secondary-glass":
+    "btn glass-card text-text hover:bg-surface/70 hover:border-border/60",
+  ghost: "text-text-muted hover:text-text hover:bg-surface/50",
+  "ghost-glass":
+    "btn glass-pill text-text-muted hover:text-text hover:bg-surface/70",
   danger:
     "bg-destructive text-white hover:bg-destructive-hover active:bg-destructive-pressed shadow-[0_0_16px_-4px_rgba(239,68,68,0.3)]",
   outline: "border-2 border-border text-text hover:bg-surface hover:border-border-strong",
@@ -65,7 +71,7 @@ export function buttonVariants({
   className?: string;
 } = {}) {
   return cn(
-    "inline-flex select-none items-center justify-center whitespace-nowrap rounded-lg font-medium transition-all duration-200",
+    "inline-flex select-none items-center justify-center whitespace-nowrap rounded-lg font-medium transition-all duration-200 ease-smooth",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     "disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
     "active:scale-[0.98]",

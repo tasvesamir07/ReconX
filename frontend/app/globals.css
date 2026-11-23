@@ -112,40 +112,72 @@
     @apply max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  /* Card variants */
-  .card {
-    @apply bg-surface border border-border rounded-xl;
+  /* Glassmorphism Card Variants */
+  .glass-card {
+    @apply bg-surface/60 backdrop-blur-lg border border-border/50 rounded-2xl shadow-glass-md;
   }
 
-  .card-elevated {
-    @apply bg-surface-elevated border border-border rounded-xl shadow-elevation-2;
+  .glass-card-strong {
+    @apply bg-surface/80 backdrop-blur-xl border border-border/30 rounded-2xl shadow-glass-lg;
   }
 
-  .card-hover {
-    @apply card transition-all duration-200 hover:border-border-strong hover:shadow-elevation-2 hover:bg-surface-elevated;
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300 ease-smooth
+           hover:border-border/60 hover:bg-surface/70 hover:shadow-glass-lg
+           hover:-translate-y-0.5;
   }
 
-  .card-interactive {
-    @apply card-hover cursor-pointer;
+  .glass-card-interactive {
+    @apply glass-card-hover cursor-pointer;
   }
 
-  /* Button variants */
+  .glass-panel {
+    @apply bg-surface/70 backdrop-blur-xl border border-border/40 rounded-2xl shadow-glass-md;
+  }
+
+  .glass-panel-strong {
+    @apply bg-surface/85 backdrop-blur-2xl border border-border/30 rounded-2xl shadow-glass-lg;
+  }
+
+  .glass-pill {
+    @apply bg-surface/60 backdrop-blur-lg border border-border/50 rounded-full;
+  }
+
+  .glass-pill-strong {
+    @apply bg-surface/80 backdrop-blur-xl border border-border/30 rounded-full;
+  }
+
+  /* Button variants with glassmorphism */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-all duration-150
+    @apply inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-all duration-200 ease-smooth
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background
-           disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none;
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none
+           active:scale-[0.98];
   }
 
   .btn-primary {
     @apply btn bg-accent text-text-inverse hover:bg-accent-hover active:bg-accent-pressed shadow-glow-subtle;
   }
 
+  .btn-primary-glass {
+    @apply btn bg-accent/90 backdrop-blur-md text-text-inverse hover:bg-accent hover:shadow-glow
+           border border-border/20;
+  }
+
   .btn-secondary {
     @apply btn bg-surface-elevated text-text border border-border hover:bg-surface-pressed hover:border-border-strong;
   }
 
+  .btn-secondary-glass {
+    @apply btn glass-card text-text hover:bg-surface/70 hover:border-border/60;
+  }
+
   .btn-ghost {
-    @apply btn text-text-muted hover:text-text hover:bg-surface;
+    @apply btn text-text-muted hover:text-text hover:bg-surface/50;
+  }
+
+  .btn-ghost-glass {
+    @apply btn glass-pill text-text-muted hover:text-text hover:bg-surface/70;
   }
 
   .btn-danger {
@@ -161,13 +193,19 @@
   .btn-lg { @apply px-5 py-2.5 text-label-lg h-11; }
   .btn-icon { @apply p-2 h-10 w-10; }
 
-  /* Input variants */
+  /* Input variants with glassmorphism */
   .input {
     @apply w-full rounded-lg border border-border bg-background px-3 py-2 text-text placeholder:text-text-subtle
-           transition-colors duration-150
+           transition-all duration-200 ease-smooth
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background
            disabled:opacity-50 disabled:cursor-not-allowed
            invalid:border-destructive invalid:focus-visible:ring-destructive;
+  }
+
+  .input-glass {
+    @apply input bg-surface/50 backdrop-blur-md border-border/50
+           hover:border-border/60 hover:bg-surface/60
+           focus-visible:border-accent focus-visible:ring-accent/30;
   }
 
   .input-sm { @apply px-2.5 py-1.5 text-body-xs h-8; }
@@ -192,22 +230,28 @@
     @apply text-destructive ml-1;
   }
 
-  /* Badge variants */
+  /* Badge variants with glassmorphism */
   .badge {
     @apply inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-label-xs font-medium;
   }
 
   .badge-primary { @apply bg-accent-soft text-accent; }
+  .badge-primary-glass { @apply glass-pill text-accent bg-accent/10; }
   .badge-success { @apply bg-success-soft text-success; }
+  .badge-success-glass { @apply glass-pill text-success bg-success/10; }
   .badge-warning { @apply bg-accentWarm-soft text-accentWarm; }
+  .badge-warning-glass { @apply glass-pill text-accentWarm bg-accentWarm/10; }
   .badge-danger { @apply bg-destructive-soft text-destructive; }
+  .badge-danger-glass { @apply glass-pill text-destructive bg-destructive/10; }
   .badge-info { @apply bg-accentCool-soft text-accentCool; }
+  .badge-info-glass { @apply glass-pill text-accentCool bg-accentCool/10; }
   .badge-neutral { @apply bg-slate-100 text-text-muted; }
   .badge-outline { @apply border border-border bg-transparent text-text-muted hover:bg-surface; }
+  .badge-outline-glass { @apply glass-pill border border-border/50 text-text-muted hover:bg-surface/50; }
 
-  /* Table */
+  /* Table with glassmorphism */
   .table-container {
-    @apply overflow-x-auto rounded-xl border border-border bg-surface;
+    @apply overflow-x-auto rounded-2xl border border-border bg-surface/60 backdrop-blur-lg shadow-glass-md;
   }
 
   .table {
@@ -215,32 +259,32 @@
   }
 
   .table th {
-    @apply px-4 py-3 text-label-xs uppercase tracking-wider text-text-subtle bg-background border-b border-border;
+    @apply px-4 py-3 text-label-xs uppercase tracking-wider text-text-subtle bg-surface/50 border-b border-border/50;
   }
 
   .table td {
-    @apply px-4 py-3 text-text border-b border-border/50;
+    @apply px-4 py-3 text-text border-b border-border/30;
   }
 
   .table tbody tr {
-    @apply transition-colors hover:bg-surface-elevated/50;
+    @apply transition-colors duration-150 hover:bg-surface/30;
   }
 
   .table tbody tr:last-child td {
     @apply border-b-0;
   }
 
-  /* Modal/Dialog */
+  /* Modal/Dialog with glassmorphism */
   .modal-overlay {
     @apply fixed inset-0 bg-black/60 backdrop-blur-sm animate-fade-in z-[400];
   }
 
   .modal-panel {
-    @apply relative bg-surface-elevated border border-border rounded-2xl shadow-elevation-4 max-h-[90vh] overflow-y-auto animate-scale-in;
+    @apply relative glass-card-strong max-h-[90vh] overflow-y-auto animate-glass-reveal;
   }
 
   .modal-header {
-    @apply flex items-start justify-between gap-4 border-b border-border px-6 py-4;
+    @apply flex items-start justify-between gap-4 border-b border-border/50 px-6 py-4;
   }
 
   .modal-body {
@@ -248,27 +292,31 @@
   }
 
   .modal-footer {
-    @apply flex flex-col-reverse sm:flex-row items-center justify-end gap-2 border-t border-border px-6 py-4;
+    @apply flex flex-col-reverse sm:flex-row items-center justify-end gap-2 border-t border-border/50 px-6 py-4;
   }
 
   /* Tooltip */
   .tooltip {
-    @apply absolute z-[600] px-2.5 py-1.5 text-body-xs text-text-inverse bg-text-subtle rounded-md shadow-lg animate-fade-in-fast whitespace-nowrap;
+    @apply absolute z-[600] px-2.5 py-1.5 text-body-xs text-text-inverse bg-surface/90 backdrop-blur-md rounded-md shadow-glass-md animate-fade-in-fast whitespace-nowrap border border-border/30;
   }
 
-  /* Toast */
+  /* Toast with glassmorphism */
   .toast {
-    @apply flex items-start gap-3 rounded-xl border border-border bg-surface-elevated p-4 shadow-elevation-3 animate-slide-up z-[700];
+    @apply flex items-start gap-3 rounded-xl glass-card-strong p-4 shadow-glass-lg animate-slide-up z-[700];
   }
 
-  .toast-success { @apply border-success/30; }
-  .toast-error { @apply border-destructive/30; }
-  .toast-warning { @apply border-accentWarm/30; }
-  .toast-info { @apply border-accentCool/30; }
+  .toast-success { @apply border-l-4 border-success; }
+  .toast-error { @apply border-l-4 border-destructive; }
+  .toast-warning { @apply border-l-4 border-accentWarm; }
+  .toast-info { @apply border-l-4 border-accentCool; }
 
-  /* Skeleton - Northline Dark Surface */
+  /* Skeleton - Glassmorphism */
   .skeleton {
     @apply relative overflow-hidden bg-white/5 border border-white/5 rounded-xl animate-pulse-soft;
+  }
+
+  .skeleton-glass {
+    @apply relative overflow-hidden glass-card animate-pulse-soft;
   }
 
   .skeleton::after {
@@ -276,9 +324,14 @@
     @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer;
   }
 
+  .skeleton-glass::after {
+    content: "";
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer;
+  }
+
   /* Skip link - visually hidden until focused via keyboard */
   .skip-link {
-    @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[1000] focus:px-4 focus:py-2 focus:bg-slate-900 focus:text-white focus:rounded-lg focus:shadow-xl focus:outline-none focus:ring-2 focus:ring-emerald-500;
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[1000] focus:px-4 focus:py-2 focus:glass-pill-strong focus:text-white focus:shadow-glass-lg focus:outline-none focus:ring-2 focus:ring-accent;
   }
 
   /* Visual divider */
@@ -327,6 +380,11 @@
   .focus-ring-inset {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset;
   }
+
+  /* Glassmorphism focus ring */
+  .focus-ring-glass {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
 }
 
 @layer utilities {
@@ -348,13 +406,17 @@
   .aspect-video { aspect-ratio: 16 / 9; }
   .aspect-square { aspect-ratio: 1 / 1; }
 
-  /* Glassmorphism */
+  /* Glassmorphism utilities */
   .glass {
     @apply bg-surface/60 backdrop-blur-lg border border-border/50;
   }
 
   .glass-strong {
     @apply bg-surface/80 backdrop-blur-xl border border-border/30;
+  }
+
+  .glass-subtle {
+    @apply bg-surface/40 backdrop-blur-md border border-border/60;
   }
 
   /* Northline Aesthetic: Lime Beam, Fluted Lines & Dark Glass Pill */

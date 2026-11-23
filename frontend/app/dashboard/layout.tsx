@@ -32,6 +32,7 @@ import { apiRequest } from "@/lib/api-client";
 import { User, Organization } from "@/types";
 import { CommandPalette } from "@/components/command-palette";
 import { MouseSpotlight } from "@/components/ui/mouse-spotlight";
+import { ThemeToggleButton3 } from "@/components/ui/skiper-ui";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -626,6 +627,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
+            {/* Theme Toggle Button (Skiper UI) */}
+            <ThemeToggleButton3 className="size-8 p-1.5 text-zinc-400 hover:text-[#C6F432] transition-colors" />
+
             {/* Search Input Bar with ⌘K badge */}
             <button
               onClick={() => setCommandPaletteOpen(true)}

@@ -1,64 +1,50 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-type BadgeVariant = "neutral" | "primary" | "success" | "warning" | "danger" | "info" | "outline";
-
-const variants: Record<BadgeVariant, string> = {
-  neutral: "border-slate-200 bg-slate-100 text-slate-700 font-medium",
-  primary: "border-emerald-300 bg-emerald-50 text-emerald-800 font-medium",
-  success: "border-emerald-300 bg-emerald-50 text-emerald-800 font-medium",
-  warning: "border-amber-300 bg-amber-50 text-amber-800 font-medium",
-  danger: "border-rose-300 bg-rose-50 text-rose-800 font-medium",
-  info: "border-sky-300 bg-sky-50 text-sky-800 font-medium",
-  outline: "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100",
-};
-
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: BadgeVariant;
-  dot?: boolean;
-  size?: "sm" | "md";
+  variant?: "default" | "glass" | "primary" | "success" | "warning" | "danger" | "info" | "outline" | "neutral";
+  size?: "sm" | "md" | "lg";
 }
 
-export function Badge({
-  className,
-  variant = "neutral",
-  dot = false,
-  size = "sm",
-  children,
-  ...props
-}: BadgeProps) {
-  const sizeClasses = {
-    sm: "px-2 py-0.5 text-label-xs",
-    md: "px-2.5 py-1 text-label-sm",
-  };
+export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
+  ({ className, variant = "default", size = "md", ...props }, ref) => {
+    const variants = {
+      default: "bg-surface-elevated text-text-muted border border-border",
+      glass: "glass-pill text-text-muted",
+      primary: "bg-accent-soft text-accent",
+      "primary-glass": "glass-pill text-accent bg-accent/10 border-accent/20",
+      success: "bg-success-soft text-success",
+      "success-glass": "glass-pill text-success bg-success/10 border-success/20",
+      warning: "bg-accentWarm-soft text-accentWarm",
+      "warning-glass": "glass-pill text-accentWarm bg-accentWarm/10 border-accentWarm/20",
+      danger: "bg-destructive-soft text-destructive",
+      "danger-glass": "glass-pill text-destructive bg-destructive/10 border-destructive/20",
+      info: "bg-accentCool-soft text-accentCool",
+      "info-glass": "glass-pill text-accentCool bg-accentCool/10 border-accentCool/20",
+      outline: "border border-border bg-transparent text-text-muted hover:bg-surface/50",
+      "outline-glass": "glass-pill border border-border/50 text-text-muted hover:bg-surface/50",
+      neutral: "bg-slate-800 text-text-muted",
+    };
 
-  const dotColors: Record<BadgeVariant, string> = {
-    neutral: "bg-text-subtle",
-    primary: "bg-accent",
-    success: "bg-success",
-    warning: "bg-accentWarm",
-    danger: "bg-destructive",
-    info: "bg-accentCool",
-    outline: "bg-text-subtle",
-  };
+    const sizes = {
+      sm: "px-1.5 py-0.5 text-[10px] gap-1",
+      md: "px-2 py-0.5 text-label-xs gap-1.5",
+      lg: "px-3 py-1 text-label-sm gap-2",
+    };
 
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border font-medium",
-        sizeClasses[size],
-        variants[variant],
-        className
-      )}
-      {...props}
-    >
-      {dot ? (
-        <span
-          className={cn("h-1.5 w-1.5 rounded-full", dotColors[variant])}
-          aria-hidden="true"
-        />
-      ) : null}
-      {children}
-    </span>
-  );
-}
+    return (
+      <span
+        ref={ref}
+        className={cn(
+          "inline-flex items-center font-medium rounded-full transition-all duration-200 ease-smooth",
+          variants[variant],
+          sizes[size],
+          className
+        )}
+        {...props}
+      />
+    );
+  }
+);
+
+Badge.displayName = "Badge";

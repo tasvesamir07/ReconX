@@ -17,6 +17,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { Skiper103, ThemeToggleButton3 } from "@/components/ui/skiper-ui";
 
 // Mandatory B11: Tagline Word-by-Word Scroll Reveal Component
 function TaglineReveal() {
@@ -102,7 +103,6 @@ function TaglineReveal() {
 }
 
 export default function LandingPage() {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
   // Dynamic Mouse-Tracking Spotlight Position
@@ -142,10 +142,6 @@ export default function LandingPage() {
       window.removeEventListener("mousemove", handlePointerMove);
     };
   }, []);
-
-  const toggleFaq = (index: number) => {
-    setOpenFaq(openFaq === index ? null : index);
-  };
 
   const scrollToTop = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -225,6 +221,7 @@ export default function LandingPage() {
 
           {/* Right Action Buttons */}
           <div className="hidden sm:flex items-center space-x-3">
+            <ThemeToggleButton3 className="size-8 p-1.5 text-zinc-300 hover:text-[#C6F432] transition-colors" />
             <Link
               href="/login"
               className="text-xs font-medium text-zinc-300 hover:text-white transition-colors px-2 py-1"
@@ -935,7 +932,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* 8. FAQ Section (#faq) */}
+        {/* 8. FAQ Section (#faq) with Skiper 103 Bouncy Accordion */}
         <section id="faq" className="py-20 border-t border-white/10">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
             <div className="text-center space-y-2">
@@ -943,59 +940,58 @@ export default function LandingPage() {
                 Frequently asked questions
               </span>
               <h2 className="text-3xl font-serif text-white">Got questions? We have answers.</h2>
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-md mx-auto">
+                Everything you need to know about autonomous authorization, proof engines, and cryptographic verification.
+              </p>
             </div>
 
-            <div className="space-y-3 pt-4">
-              {[
-                {
-                  q: "How does ReconX prevent testing out of scope targets?",
-                  a: "Every scan requires an authorized domain scope with human moderator approval or DNS ownership verification. Probes resolve target IP addresses before each request and drop any traffic directed at shared provider edge infrastructure.",
-                },
-                {
-                  q: "Does the AI scanner execute destructive exploits?",
-                  a: "No. ReconX uses safe proof payloads designed to verify misconfigurations, exposed secrets, or vulnerable dependencies without modifying databases or altering server state.",
-                },
-                {
-                  q: "What tools are bundled with the autonomous worker?",
-                  a: "Workers include pure Python network checkers, TLS protocol evaluators, HTTP security analyzers, and automatic fallbacks. If optional external tools like Nuclei are installed, the engine escalates to active CVE verification.",
-                },
-                {
-                  q: "How does the cold start pre warming work?",
-                  a: "The frontend sends a lightweight health beacon immediately upon page arrival, waking cloud backend instances in parallel while the user navigates.",
-                },
-                {
-                  q: "Can I export reports for external compliance auditors?",
-                  a: "Yes. Executive summaries and technical findings can be downloaded in PDF and JSON formats with full SHA 256 evidence hashes.",
-                },
-                {
-                  q: "Is there a free trial or demo account?",
-                  a: "Yes. You can explore complete live dashboards immediately using the one click demo accounts on the sign in page without entering credit card details.",
-                },
-              ].map((faq, index) => (
-                <div
-                  key={index}
-                  className={`dark-card rounded-xl border p-4 transition-all duration-300 cursor-pointer ${
-                    openFaq === index
-                      ? "border-[#C6F432]/60 shadow-[0_0_15px_rgba(198,244,50,0.15)] bg-white/[0.04]"
-                      : "border-white/10 hover:border-white/20"
-                  }`}
-                  onClick={() => toggleFaq(index)}
-                >
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs sm:text-sm font-semibold text-white">{faq.q}</h3>
-                    <ChevronDown
-                      className={`w-4 h-4 text-zinc-400 transition-transform duration-300 ${
-                        openFaq === index ? "rotate-180 text-[#C6F432]" : ""
-                      }`}
-                    />
-                  </div>
-                  {openFaq === index && (
-                    <p className="mt-2.5 text-xs text-zinc-400 leading-relaxed font-sans animate-in fade-in slide-in-from-top-1 duration-200">
-                      {faq.a}
-                    </p>
-                  )}
-                </div>
-              ))}
+            <div className="pt-4">
+              <Skiper103
+                items={[
+                  {
+                    id: 1,
+                    question: "How does ReconX prevent testing out-of-scope targets?",
+                    answer:
+                      "Every scan requires an authorized domain scope with human moderator approval or DNS ownership verification. Probes resolve target IP addresses before each request and drop any traffic directed at shared provider edge infrastructure.",
+                    category: "Authorization",
+                  },
+                  {
+                    id: 2,
+                    question: "Does the AI scanner execute destructive exploits?",
+                    answer:
+                      "No. ReconX uses safe proof payloads designed to verify misconfigurations, exposed secrets, or vulnerable dependencies without modifying databases or altering server state.",
+                    category: "Safety Guardrails",
+                  },
+                  {
+                    id: 3,
+                    question: "What tools are bundled with the autonomous worker?",
+                    answer:
+                      "Workers include pure Python network checkers, TLS protocol evaluators, HTTP security analyzers, and automatic fallbacks. If optional external tools like Nuclei are installed, the engine escalates to active CVE verification.",
+                    category: "Worker Stack",
+                  },
+                  {
+                    id: 4,
+                    question: "How does the cold start pre-warming work?",
+                    answer:
+                      "The frontend sends a lightweight health beacon immediately upon page arrival, waking cloud backend instances in parallel while the user navigates.",
+                    category: "Performance",
+                  },
+                  {
+                    id: 5,
+                    question: "Can I export reports for external compliance auditors?",
+                    answer:
+                      "Yes. Executive summaries and technical findings can be downloaded in PDF and JSON formats with full SHA-256 evidence hashes.",
+                    category: "Compliance",
+                  },
+                  {
+                    id: 6,
+                    question: "Is there a free trial or demo account?",
+                    answer:
+                      "Yes. You can explore complete live dashboards immediately using the one-click demo accounts on the sign in page without entering credit card details.",
+                    category: "Demo Access",
+                  },
+                ]}
+              />
             </div>
           </div>
         </section>

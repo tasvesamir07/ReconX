@@ -1,13 +1,19 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+export function Card({ className, variant = "default", ...props }: React.HTMLAttributes<HTMLDivElement> & {
+  variant?: "default" | "glass" | "glass-strong" | "elevated";
+}) {
+  const variants = {
+    default: "rounded-xl border border-border bg-surface",
+    glass: "rounded-2xl glass-card",
+    "glass-strong": "rounded-2xl glass-card-strong",
+    elevated: "rounded-xl border border-border bg-surface-elevated shadow-elevation-2",
+  };
+
   return (
     <div
-      className={cn(
-        "rounded-xl border border-border bg-surface",
-        className
-      )}
+      className={cn(variants[variant], className)}
       {...props}
     />
   );
@@ -32,7 +38,7 @@ export function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDi
 export function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("flex items-center gap-2 border-t border-border px-5 py-3", className)}
+      className={cn("flex items-center gap-2 border-t border-border/50 px-5 py-3", className)}
       {...props}
     />
   );

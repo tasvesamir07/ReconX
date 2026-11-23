@@ -120,13 +120,13 @@ export function Dialog({
         aria-labelledby={titleId}
         aria-describedby={description ? descriptionId : undefined}
         className={cn(
-          "relative z-10 max-h-[90vh] w-full overflow-y-auto rounded-2xl border border-border bg-surface-elevated shadow-elevation-4 animate-scale-in",
+          "relative z-10 max-h-[90vh] w-full overflow-y-auto rounded-2xl glass-card-strong shadow-glass-lg animate-glass-reveal",
           "scrollbar-thin",
           sizes[size],
           className
         )}
       >
-        <div className="flex items-start justify-between gap-4 border-b border-border px-6 py-4">
+        <div className="flex items-start justify-between gap-4 border-b border-border/50 px-6 py-4">
           <div className="min-w-0">
             <h2 id={titleId} className="text-heading-sm font-semibold text-text">
               {title}
@@ -141,14 +141,14 @@ export function Dialog({
             type="button"
             onClick={() => onOpenChange(false)}
             aria-label="Close dialog"
-            className="rounded-lg p-1.5 text-text-muted transition-colors hover:bg-surface hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="rounded-lg p-1.5 text-text-muted transition-colors hover:bg-surface/50 hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
         <div className="px-6 py-4">{children}</div>
         {footer ? (
-          <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 border-t border-border px-6 py-4">
+          <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 border-t border-border/50 px-6 py-4">
             {footer}
           </div>
         ) : null}
@@ -188,7 +188,7 @@ export function ConfirmDialog({
       footer={
         <>
           <Button
-            variant="ghost"
+            variant="ghost-glass"
             size="sm"
             disabled={loading}
             onClick={() => onOpenChange(false)}
@@ -196,7 +196,7 @@ export function ConfirmDialog({
             {cancelLabel}
           </Button>
           <Button
-            variant={variant}
+            variant={variant === "danger" ? "danger" : "primary"}
             size="sm"
             loading={loading}
             onClick={async () => {
