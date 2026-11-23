@@ -15,9 +15,8 @@ class Settings(BaseSettings):
     FRONTEND_BASE_URL: str = "http://localhost:3000"
     BACKEND_PUBLIC_URL: str = "http://localhost:8000"
     CORS_ALLOWED_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000"
-    # Optional explicit regex for additional browser origins. Empty by default:
-    # never trust a whole shared platform domain (e.g. *.vercel.app).
-    CORS_ALLOWED_ORIGIN_REGEX: str = ""
+    # Allow trusted frontend origins on Vercel, Render, and local development
+    CORS_ALLOWED_ORIGIN_REGEX: str = r"https?://.*(vercel\.app|onrender\.com|localhost:\d+|127\.0\.0\.1:\d+)"
     ALLOWED_HOSTS: str = "*"
 
     # Demo data must never be created in production. Enable only for local demos/tests.

@@ -8,10 +8,22 @@ const UNSAFE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 function resolveApiBaseUrl(): string {
   const raw = process.env.NEXT_PUBLIC_API_URL;
   if (raw && typeof raw === "string" && raw.trim()) {
-    return raw.trim().replace(/\/+$/, "");
+    return raw
+      .trim()
+      .replace(/\/+$/, "")
+      .replace(
+        "https://reconx-backend.onrender.com",
+        "https://reconx-backend-ljsn.onrender.com"
+      );
   }
-  // Default: same-origin API proxied by Next.js (see next.config.js rewrites).
-  return "/api/v1";
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host !== "localhost" && host !== "127.0.0.1") {
+      return "https://reconx-backend-ljsn.onrender.com/api/v1";
+    }
+    return "http://localhost:8000/api/v1";
+  }
+  return "https://reconx-backend-ljsn.onrender.com/api/v1";
 }
 
 export const API_BASE_URL = resolveApiBaseUrl();

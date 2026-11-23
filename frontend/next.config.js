@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
-const API_PROXY_TARGET = process.env.API_PROXY_TARGET || "http://localhost:8000";
+const API_PROXY_TARGET =
+  process.env.API_PROXY_TARGET ||
+  (process.env.NEXT_PUBLIC_API_URL
+    ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/v1\/?$/, "")
+    : "https://reconx-backend-ljsn.onrender.com");
 const isDev = process.env.NODE_ENV !== "production";
 
 // Next.js injects inline bootstrap scripts, so 'unsafe-inline' is required for
@@ -15,7 +19,7 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "connect-src 'self' https://reconx-backend-ljsn.onrender.com https://challenges.cloudflare.com",
+  "connect-src 'self' https://reconx-backend-ljsn.onrender.com https://*.onrender.com https://*.vercel.app http://localhost:8000 https://challenges.cloudflare.com",
   "frame-src https://challenges.cloudflare.com",
   "object-src 'none'",
   "base-uri 'self'",

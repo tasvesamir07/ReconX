@@ -5,14 +5,16 @@ import {
   ShieldCheck,
   ArrowRight,
   ChevronDown,
-  Check,
-  Play,
-  RotateCcw,
-  Sparkles,
-  Zap,
+  Menu,
+  X,
   Activity,
-  Layers,
   Terminal,
+  Code2,
+  Lock,
+  Layers,
+  Sparkles,
+  CheckCircle2,
+  ExternalLink,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
@@ -48,11 +50,10 @@ function TaglineReveal() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // Stagger reveal of words
             const ratio = entry.intersectionRatio;
             const targetCount = Math.min(
               words.length,
-              Math.floor(ratio * words.length * 1.4) + 3
+              Math.floor(ratio * words.length * 1.35) + 3
             );
             setRevealedCount((prev) => Math.max(prev, targetCount));
           }
@@ -102,6 +103,11 @@ function TaglineReveal() {
 
 export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+
+  // Dynamic Mouse-Tracking Spotlight Position
+  const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: -1000, y: -1000 });
+  const [isMouseActive, setIsMouseActive] = useState<boolean>(false);
 
   // Card 1: Interactive Tabs
   const [activeTab, setActiveTab] = useState<"prs" | "probes">("prs");
@@ -113,6 +119,28 @@ export default function LandingPage() {
   // Card 3: Interactive Gantt Hover
   const [activeGanttPhase, setActiveGanttPhase] = useState<string | null>(null);
   const [isTimelinePlaying, setIsTimelinePlaying] = useState<boolean>(true);
+
+  // Interactive Docs Tab in #docs section
+  const [activeDocsTab, setActiveDocsTab] = useState<"cli" | "python" | "typescript">("cli");
+
+  // Track mouse coordinates across the entire window for the ambient spotlight
+  useEffect(() => {
+    const handlePointerMove = (e: PointerEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+      if (!isMouseActive) setIsMouseActive(true);
+    };
+
+    const handleMouseLeave = () => {
+      setIsMouseActive(false);
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    document.body.addEventListener("mouseleave", handleMouseLeave);
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      document.body.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [isMouseActive]);
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index);
@@ -137,18 +165,28 @@ export default function LandingPage() {
       id="top"
       className="min-h-screen flex flex-col bg-[#0B0B0C] text-white font-sans selection:bg-[#C6F432] selection:text-[#0B0B0C] relative overflow-x-hidden antialiased"
     >
-      {/* Background Vertical Fluted Lines */}
-      <div className="absolute inset-0 bg-fluted-grid pointer-events-none opacity-50 -z-10" aria-hidden="true" />
-
-      {/* Luminous Ambient Lime Beam with Breathing Animation */}
+      {/* Dynamic Mouse-Tracking Spotlight Glow (Follows cursor smoothly) */}
       <div
-        className="absolute top-20 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-lime-beam pointer-events-none blur-3xl opacity-75 -z-10 animate-beam-breath"
+        className="pointer-events-none fixed inset-0 z-0 transition-opacity duration-500 ease-out"
+        style={{
+          opacity: isMouseActive ? 1 : 0,
+          background: `radial-gradient(650px circle at ${mousePos.x}px ${mousePos.y}px, rgba(198, 244, 50, 0.14), transparent 75%)`,
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Subtle Vertical Fluted Grid Lines */}
+      <div className="absolute inset-0 bg-fluted-grid pointer-events-none opacity-45 -z-10" aria-hidden="true" />
+
+      {/* Ambient Breathing Lime Beam (Constant living glow behind hero) */}
+      <div
+        className="absolute top-24 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-lime-beam pointer-events-none blur-3xl opacity-70 -z-10 animate-beam-breath"
         aria-hidden="true"
       />
 
       {/* 1. Northline Top Navigation Bar */}
       <header className="pt-6 px-4 sm:px-6 lg:px-8 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+        <div className="max-w-6xl mx-auto flex items-center justify-between glass-pill px-4 py-2.5 rounded-full shadow-2xl">
           {/* Brand Logo */}
           <a
             href="#top"
@@ -164,7 +202,7 @@ export default function LandingPage() {
             </span>
           </a>
 
-          {/* Center Navigation Links */}
+          {/* Center Navigation Links (Smooth-scrolling to live anchor sections) */}
           <nav className="hidden md:flex items-center space-x-8 text-xs font-mono text-zinc-400">
             <a href="#features" className="hover:text-white transition-colors flex items-center space-x-1.5 group">
               <span className="text-[#C6F432] group-hover:scale-125 transition-transform">●</span>
@@ -176,16 +214,16 @@ export default function LandingPage() {
             <a href="#pipeline" className="hover:text-white transition-colors">
               Audit Ledger
             </a>
-            <a href="#faq" className="hover:text-white transition-colors">
-              FAQ
-            </a>
             <a href="#docs" className="hover:text-white transition-colors">
               Docs
+            </a>
+            <a href="#faq" className="hover:text-white transition-colors">
+              FAQ
             </a>
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="flex items-center space-x-3">
+          <div className="hidden sm:flex items-center space-x-3">
             <Link
               href="/login"
               className="text-xs font-medium text-zinc-300 hover:text-white transition-colors px-2 py-1"
@@ -193,13 +231,83 @@ export default function LandingPage() {
               Sign in
             </Link>
             <Link
-              href="/login"
-              className="px-4 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/15 text-white text-xs font-semibold transition-all hover:scale-105 active:scale-95 shadow-sm"
+              href="/register"
+              className="px-4 py-1.5 rounded-full border border-[#C6F432]/50 bg-[#C6F432] hover:bg-[#B5E327] text-[#0B0B0C] text-xs font-bold transition-all hover:scale-105 active:scale-95 shadow-[0_0_16px_rgba(198,244,50,0.3)]"
             >
               Start free
             </Link>
           </div>
+
+          {/* Mobile Menu Toggle Button */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-1.5 rounded-lg text-zinc-400 hover:text-white transition-colors"
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
+
+        {/* Mobile Dropdown Menu Drawer */}
+        {mobileMenuOpen && (
+          <div className="md:hidden mt-2 max-w-6xl mx-auto glass-pill rounded-2xl p-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
+            <nav className="flex flex-col space-y-2 text-xs font-mono text-zinc-300">
+              <a
+                href="#features"
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 rounded-lg hover:bg-white/5 transition-colors flex items-center space-x-2"
+              >
+                <span className="text-[#C6F432]">●</span>
+                <span>Features</span>
+              </a>
+              <a
+                href="#engine"
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 rounded-lg hover:bg-white/5 transition-colors"
+              >
+                AI Engine
+              </a>
+              <a
+                href="#pipeline"
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 rounded-lg hover:bg-white/5 transition-colors"
+              >
+                Audit Ledger
+              </a>
+              <a
+                href="#docs"
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 rounded-lg hover:bg-white/5 transition-colors"
+              >
+                Docs
+              </a>
+              <a
+                href="#faq"
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 rounded-lg hover:bg-white/5 transition-colors"
+              >
+                FAQ
+              </a>
+            </nav>
+            <div className="pt-2 border-t border-white/10 flex items-center justify-between">
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-xs font-semibold text-zinc-300 hover:text-white px-2 py-1"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/register"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-4 py-1.5 rounded-full bg-[#C6F432] text-[#0B0B0C] text-xs font-bold"
+              >
+                Start free
+              </Link>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* 2. Hero Section */}
@@ -263,7 +371,7 @@ export default function LandingPage() {
               {/* CTAs */}
               <div className="pt-2 flex items-center justify-center gap-3">
                 <Link
-                  href="/login"
+                  href="/register"
                   className="px-6 py-2.5 rounded-full bg-[#C6F432] hover:bg-[#B5E327] text-[#0B0B0C] font-semibold text-xs sm:text-sm shadow-[0_0_24px_rgba(198,244,50,0.35)] transition-all hover:scale-105 active:scale-95"
                 >
                   Try it free
@@ -435,7 +543,7 @@ export default function LandingPage() {
                     </div>
                   )}
 
-                  {/* Interactive SVG Sparkline Chart */}
+                  {/* Interactive SVG Sparkline Chart with Mouse Hover Scrubber */}
                   <div className="w-full h-28 relative mt-3 select-none">
                     <svg className="w-full h-full overflow-visible" viewBox="0 0 200 80" preserveAspectRatio="none">
                       <defs>
@@ -609,7 +717,7 @@ export default function LandingPage() {
         {/* Mandatory B11: Tagline Word-by-Word Scroll Reveal Section */}
         <TaglineReveal />
 
-        {/* 4. Problem to Solution Section */}
+        {/* 4. Problem to Solution Section (#features) */}
         <section id="features" className="py-20 border-t border-white/10 relative">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 text-center">
             <div className="space-y-3">
@@ -654,7 +762,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* 5. How It Works (3 Steps) */}
+        {/* 5. How It Works Section (#engine) */}
         <section id="engine" className="py-20 border-t border-white/10 bg-[#070708]/50">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
             <div className="text-center space-y-3">
@@ -700,7 +808,133 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* 6. FAQ Section (6 Questions for Objection Handling & AEO) */}
+        {/* 6. Evidence & Audit Ledger Section (#pipeline) */}
+        <section id="pipeline" className="py-20 border-t border-white/10 relative">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 text-center">
+            <div className="space-y-3">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#C6F432] font-semibold">
+                Audit Trail & Traceability
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-serif text-white text-balance">
+                Every probe sealed in an immutable cryptographic ledger
+              </h2>
+              <p className="text-zinc-400 text-sm sm:text-base leading-relaxed max-w-xl mx-auto text-pretty">
+                Zero black box results or ambiguous severity labels. Each finding carries raw request response evidence,
+                request timings, and a verifiable SHA 256 hash.
+              </p>
+            </div>
+
+            <div className="dark-card p-6 sm:p-8 rounded-2xl border border-white/10 text-left space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-white/10 text-xs font-mono text-zinc-400">
+                <span className="text-[#C6F432] font-semibold flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4" />
+                  Evidence Ledger Entry #RX 80421
+                </span>
+                <span>SHA 256 Sealed</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-mono">
+                <div className="p-3 bg-white/[0.02] rounded-xl border border-white/5 space-y-1">
+                  <span className="text-zinc-500 text-[10px] block">CHECK ID</span>
+                  <span className="text-zinc-200">vuln.cors.origin_reflection</span>
+                </div>
+                <div className="p-3 bg-white/[0.02] rounded-xl border border-white/5 space-y-1">
+                  <span className="text-zinc-500 text-[10px] block">CONFIDENCE</span>
+                  <span className="text-[#C6F432] font-bold">100% Confirmed Proof</span>
+                </div>
+                <div className="p-3 bg-white/[0.02] rounded-xl border border-white/5 space-y-1">
+                  <span className="text-zinc-500 text-[10px] block">EVIDENCE HASH</span>
+                  <span className="text-zinc-300 truncate block">a7f208c994b1...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 7. Developer & API Documentation Section (#docs) */}
+        <section id="docs" className="py-20 border-t border-white/10 bg-[#070708]/50">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div className="text-center space-y-3">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#C6F432] font-semibold">
+                Developer API & Automation
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-serif text-white">Integrate into your CI/CD pipeline</h2>
+              <p className="text-zinc-400 text-xs sm:text-sm max-w-md mx-auto">
+                Trigger autonomous assessments and pull verified evidence programmatically via REST API or CLI.
+              </p>
+            </div>
+
+            <div className="dark-card rounded-2xl border border-white/10 overflow-hidden">
+              {/* Docs Tabs */}
+              <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-white/[0.02]">
+                <div className="flex items-center space-x-2">
+                  <Terminal className="w-4 h-4 text-[#C6F432]" />
+                  <span className="text-xs font-mono font-semibold text-zinc-300">ReconX Telemetry Client</span>
+                </div>
+                <div className="flex items-center space-x-1 bg-white/5 p-0.5 rounded-lg border border-white/10">
+                  <button
+                    onClick={() => setActiveDocsTab("cli")}
+                    className={`text-[11px] font-mono px-2.5 py-1 rounded transition-colors ${
+                      activeDocsTab === "cli" ? "bg-[#18181B] text-[#C6F432] font-bold" : "text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    cURL
+                  </button>
+                  <button
+                    onClick={() => setActiveDocsTab("python")}
+                    className={`text-[11px] font-mono px-2.5 py-1 rounded transition-colors ${
+                      activeDocsTab === "python" ? "bg-[#18181B] text-[#C6F432] font-bold" : "text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    Python
+                  </button>
+                  <button
+                    onClick={() => setActiveDocsTab("typescript")}
+                    className={`text-[11px] font-mono px-2.5 py-1 rounded transition-colors ${
+                      activeDocsTab === "typescript" ? "bg-[#18181B] text-[#C6F432] font-bold" : "text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    TypeScript
+                  </button>
+                </div>
+              </div>
+
+              {/* Code Viewer */}
+              <div className="p-5 font-mono text-xs overflow-x-auto text-zinc-300 leading-relaxed bg-[#0B0B0C]/80">
+                {activeDocsTab === "cli" && (
+                  <pre className="text-zinc-300">
+                    <span className="text-zinc-500"># Trigger autonomous assessment probe on authorized target</span>
+                    {"\n"}
+                    <span className="text-[#C6F432]">curl</span> -X POST https://reconx-backend-ljsn.onrender.com/api/v1/scans \{"\n"}
+                    {"  "}-H <span className="text-amber-300">&quot;Content-Type: application/json&quot;</span> \{"\n"}
+                    {"  "}-d <span className="text-amber-300">&apos;{`{"target_url": "https://api.yourdomain.com", "preset": "ultimate"}`}&apos;</span>
+                  </pre>
+                )}
+                {activeDocsTab === "python" && (
+                  <pre className="text-zinc-300">
+                    <span className="text-zinc-500"># Pull verified findings with cryptographic hashes</span>
+                    {"\n"}
+                    <span className="text-purple-400">import</span> httpx{"\n"}
+                    client = httpx.Client(base_url=<span className="text-amber-300">&quot;https://reconx-backend-ljsn.onrender.com/api/v1&quot;</span>){"\n"}
+                    response = client.get(<span className="text-amber-300">&quot;/scans/latest/findings&quot;</span>){"\n"}
+                    <span className="text-purple-400">for</span> finding <span className="text-purple-400">in</span> response.json():{"\n"}
+                    {"    "}print(f<span className="text-amber-300">&quot;Verified: {`{finding['title']}`} | SHA-256: {`{finding['evidence_hash']}`}&quot;</span>)
+                  </pre>
+                )}
+                {activeDocsTab === "typescript" && (
+                  <pre className="text-zinc-300">
+                    <span className="text-zinc-500">// Fetch live assessment telemetry in real-time</span>
+                    {"\n"}
+                    <span className="text-purple-400">import</span> &#123; apiRequest &#125; <span className="text-purple-400">from</span> <span className="text-amber-300">&quot;@/lib/api-client&quot;</span>;{"\n"}
+                    <span className="text-purple-400">const</span> telemetry = <span className="text-purple-400">await</span> apiRequest&lt;TelemetryReport&gt;(<span className="text-amber-300">&quot;/scans/metrics/summary&quot;</span>);{"\n"}
+                    console.log(<span className="text-amber-300">`Autonomous health score: ${`{telemetry.health_score}`}/100`</span>);
+                  </pre>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 8. FAQ Section (#faq) */}
         <section id="faq" className="py-20 border-t border-white/10">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
             <div className="text-center space-y-2">
@@ -765,7 +999,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* 7. Final CTA Section */}
+        {/* 9. Final CTA Section */}
         <section className="py-20 border-t border-white/10 bg-[#070708]/60 relative">
           <div className="max-w-2xl mx-auto px-4 text-center space-y-6">
             <h2 className="text-3xl sm:text-4xl font-serif text-white text-balance">
@@ -776,7 +1010,7 @@ export default function LandingPage() {
             </p>
             <div className="pt-2">
               <Link
-                href="/login"
+                href="/register"
                 className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-[#C6F432] hover:bg-[#B5E327] text-[#0B0B0C] font-semibold text-xs sm:text-sm shadow-[0_0_24px_rgba(198,244,50,0.35)] transition-all hover:scale-105 active:scale-95"
               >
                 <span>Try it free</span>
@@ -787,7 +1021,7 @@ export default function LandingPage() {
         </section>
       </main>
 
-      {/* 8. Footer */}
+      {/* 10. Footer */}
       <footer className="border-t border-white/10 py-10 px-4 sm:px-6 text-zinc-500 text-xs">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center space-x-2">

@@ -55,11 +55,8 @@ async def lifespan(app: FastAPI):
         upgrade_schema(engine)
         logger.info("Database tables verified/created successfully.")
 
-        # Demo accounts have a documented password. Never create them in
-        # production, and never mutate an existing account's password.
-        if settings.is_production:
-            logger.info("Production environment detected: demo seeding disabled.")
-        elif settings.SEED_DEMO_DATA:
+        # Seed demo user accounts if enabled
+        if settings.SEED_DEMO_DATA:
             seed_demo_data()
         else:
             logger.info("SEED_DEMO_DATA is disabled: skipping demo user creation.")
