@@ -82,9 +82,9 @@ export function SeverityDonut({ counts }: { counts: SeverityCounts }) {
         {segments.map((segment) => (
           <div
             key={segment.key}
-            className="flex items-center justify-between gap-1.5 min-w-0 bg-slate-50 px-2 py-1 rounded-md border border-line"
+            className="flex items-center justify-between gap-1.5 min-w-0 bg-white/[0.03] hover:bg-white/[0.06] px-2 py-1 rounded-md border border-white/10 transition-colors"
           >
-            <span className="flex items-center gap-1.5 min-w-0 truncate text-[11px] text-muted">
+            <span className="flex items-center gap-1.5 min-w-0 truncate text-[11px] text-zinc-400">
               <span
                 className="h-2 w-2 rounded-full shrink-0"
                 style={{ backgroundColor: segment.color }}

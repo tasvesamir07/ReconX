@@ -207,61 +207,61 @@ export default function AdminUsersDirectoryPage() {
                   <th className="px-5 py-3.5 text-right">Security Controls</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-white/5">
                 {filteredUsers.map((u) => {
                   const initials = u.display_name
                     ? u.display_name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
                     : "RX";
 
                   return (
-                    <tr key={u.id} className="hover:bg-slate-50/70 transition">
+                    <tr key={u.id} className="hover:bg-white/[0.04] transition">
                       <td className="px-5 py-4">
                         <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                          <div className="w-8 h-8 rounded-lg bg-white/10 border border-white/15 text-white flex items-center justify-center font-bold text-xs shrink-0 font-mono">
                             {initials}
                           </div>
                           <div>
-                            <div className="font-bold text-slate-900 text-sm">{u.display_name}</div>
-                            <div className="text-xs font-mono text-slate-500">{u.email}</div>
+                            <div className="font-bold text-white text-sm">{u.display_name}</div>
+                            <div className="text-xs font-mono text-zinc-400">{u.email}</div>
                           </div>
                         </div>
                       </td>
                       <td className="px-5 py-4">
-                        <span className="inline-block px-2.5 py-0.5 rounded-md text-xs font-mono font-bold bg-slate-100 text-slate-800 border border-slate-200 uppercase">
+                        <span className="inline-block px-2.5 py-0.5 rounded-md text-xs font-mono font-bold bg-white/5 text-zinc-300 border border-white/10 uppercase">
                           {u.platform_role}
                         </span>
                       </td>
-                      <td className="px-5 py-4 text-xs text-slate-600">
+                      <td className="px-5 py-4 text-xs text-zinc-300">
                         {u.organizations.length > 0 ? (
                           <div className="flex flex-wrap gap-1">
                             {u.organizations.map((org) => (
                               <span
                                 key={org.id}
-                                className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-medium"
+                                className="px-2 py-0.5 rounded bg-white/5 text-zinc-300 font-medium border border-white/5"
                               >
                                 {org.name} ({org.role})
                               </span>
                             ))}
                           </div>
                         ) : (
-                          <span className="text-slate-400 italic">Freelancer / Personal</span>
+                          <span className="text-zinc-500 italic">Freelancer / Personal</span>
                         )}
                       </td>
-                      <td className="px-5 py-4 font-mono text-xs text-slate-700">
+                      <td className="px-5 py-4 font-mono text-xs text-zinc-300">
                         {u.total_scans} Scans
                       </td>
                       <td className="px-5 py-4">
                         <span
                           className={`inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
                             u.status === "active"
-                              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                              : "bg-red-50 text-red-800 border-red-200"
+                              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                              : "bg-red-500/10 text-red-400 border-red-500/30"
                           }`}
                         >
                           {u.status === "active" ? (
-                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                            <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                           ) : (
-                            <XCircle className="w-3 h-3 text-red-600" />
+                            <XCircle className="w-3 h-3 text-red-400" />
                           )}
                           <span className="capitalize">{u.status}</span>
                         </span>
@@ -270,7 +270,7 @@ export default function AdminUsersDirectoryPage() {
                         <div className="flex items-center justify-end space-x-2">
                           <button
                             onClick={() => setInspectUser(u)}
-                            className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition shadow-sm"
+                            className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-zinc-200 text-xs font-semibold transition shadow-sm"
                           >
                             <User className="w-3.5 h-3.5" />
                             <span>Profile</span>
@@ -281,8 +281,8 @@ export default function AdminUsersDirectoryPage() {
                               disabled={togglingId === u.id}
                               className={`inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition shadow-sm disabled:opacity-50 ${
                                 u.status === "active"
-                                  ? "border-red-200 bg-red-50 hover:bg-red-100 text-red-700"
-                                  : "border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700"
+                                  ? "border-red-500/30 bg-red-500/10 hover:bg-red-500/20 text-red-300"
+                                  : "border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300"
                               }`}
                             >
                               <ShieldAlert className="w-3.5 h-3.5" />
@@ -308,26 +308,26 @@ export default function AdminUsersDirectoryPage() {
 
       {/* Inspect Profile Modal */}
       {inspectUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full p-6 space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in">
+          <div className="bg-[#121214] rounded-2xl border border-white/10 shadow-2xl max-w-lg w-full p-6 space-y-5 text-white">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center space-x-3">
                 {inspectUser.avatar_url ? (
                   <img
                     src={inspectUser.avatar_url}
                     alt={inspectUser.display_name}
-                    className="w-12 h-12 rounded-xl object-cover border border-slate-200"
+                    className="w-12 h-12 rounded-xl object-cover border border-white/15"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-sm">
+                  <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/15 text-white flex items-center justify-center font-bold text-sm font-mono">
                     {inspectUser.display_name.slice(0, 2).toUpperCase()}
                   </div>
                 )}
                 <div>
-                  <h3 className="font-bold text-base text-slate-900">{inspectUser.display_name}</h3>
-                  <p className="text-xs text-slate-500 font-mono">{inspectUser.email}</p>
+                  <h3 className="font-bold text-base text-white">{inspectUser.display_name}</h3>
+                  <p className="text-xs text-zinc-400 font-mono">{inspectUser.email}</p>
                   {inspectUser.phone_number && (
-                    <p className="text-[11px] text-slate-600 font-mono mt-0.5">
+                    <p className="text-[11px] text-zinc-500 font-mono mt-0.5">
                       Phone: {inspectUser.phone_number}
                     </p>
                   )}
@@ -335,57 +335,57 @@ export default function AdminUsersDirectoryPage() {
               </div>
               <button
                 onClick={() => setInspectUser(null)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-3 text-xs text-slate-600 font-mono">
+            <div className="space-y-3 text-xs text-zinc-400 font-mono">
               {inspectUser.bio && (
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 font-sans text-xs text-slate-700">
-                  <span className="font-semibold text-slate-900 block mb-1">Professional Bio:</span>
-                  <p className="leading-relaxed">{inspectUser.bio}</p>
+                <div className="p-3 rounded-xl bg-white/5 border border-white/10 font-sans text-xs text-zinc-200">
+                  <span className="font-semibold text-white block mb-1">Professional Bio:</span>
+                  <p className="leading-relaxed text-zinc-300">{inspectUser.bio}</p>
                 </div>
               )}
 
-              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+              <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1.5">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Account ID:</span>
-                  <span className="text-slate-800 font-semibold">{inspectUser.id}</span>
+                  <span className="text-zinc-500">Account ID:</span>
+                  <span className="text-zinc-200 font-semibold">{inspectUser.id}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Platform Role:</span>
-                  <span className="text-slate-800 font-bold uppercase">{inspectUser.platform_role}</span>
+                  <span className="text-zinc-500">Platform Role:</span>
+                  <span className="text-[#C6F432] font-bold uppercase">{inspectUser.platform_role}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Phone Number:</span>
-                  <span className="text-slate-800 font-semibold">{inspectUser.phone_number || "Not Registered"}</span>
+                  <span className="text-zinc-500">Phone Number:</span>
+                  <span className="text-zinc-200 font-semibold">{inspectUser.phone_number || "Not Registered"}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Account Status:</span>
+                  <span className="text-zinc-500">Account Status:</span>
                   <span
                     className={`font-bold capitalize ${
-                      inspectUser.status === "active" ? "text-emerald-700" : "text-red-700"
+                      inspectUser.status === "active" ? "text-emerald-400" : "text-red-400"
                     }`}
                   >
                     {inspectUser.status}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Total Scans Executed:</span>
-                  <span className="text-slate-800">{inspectUser.total_scans}</span>
+                  <span className="text-zinc-500">Total Scans Executed:</span>
+                  <span className="text-zinc-200">{inspectUser.total_scans}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Registered At:</span>
-                  <span className="text-slate-800">
+                  <span className="text-zinc-500">Registered At:</span>
+                  <span className="text-zinc-200">
                     {new Date(inspectUser.created_at).toLocaleString()}
                   </span>
                 </div>
               </div>
 
               <div>
-                <div className="font-bold font-sans text-slate-800 text-xs mb-1.5">
+                <div className="font-bold font-sans text-zinc-200 text-xs mb-1.5">
                   Associated Organizations:
                 </div>
                 {inspectUser.organizations.length > 0 ? (
@@ -393,17 +393,17 @@ export default function AdminUsersDirectoryPage() {
                     {inspectUser.organizations.map((org) => (
                       <div
                         key={org.id}
-                        className="p-2 rounded-lg bg-slate-100 flex items-center justify-between text-slate-700"
+                        className="p-2 rounded-lg bg-white/5 border border-white/5 flex items-center justify-between text-zinc-300"
                       >
-                        <span className="font-sans font-semibold">{org.name}</span>
-                        <span className="text-[11px] font-bold uppercase text-slate-500">
+                        <span className="font-sans font-semibold text-white">{org.name}</span>
+                        <span className="text-[11px] font-bold uppercase text-zinc-400">
                           {org.role}
                         </span>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-slate-400 italic">No corporate memberships. Freelancer mode.</div>
+                  <div className="text-zinc-500 italic">No corporate memberships. Freelancer mode.</div>
                 )}
               </div>
             </div>
@@ -414,8 +414,8 @@ export default function AdminUsersDirectoryPage() {
                   onClick={() => handleToggleStatus(inspectUser)}
                   className={`px-3 py-2 rounded-xl text-xs font-semibold transition ${
                     inspectUser.status === "active"
-                      ? "bg-red-600 hover:bg-red-700 text-white"
-                      : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                      ? "bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30"
+                      : "bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30"
                   }`}
                 >
                   {inspectUser.status === "active" ? "Suspend Account" : "Activate Account"}
@@ -425,7 +425,7 @@ export default function AdminUsersDirectoryPage() {
               )}
               <button
                 onClick={() => setInspectUser(null)}
-                className="px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 transition"
+                className="px-4 py-2 rounded-xl border border-white/10 bg-white/10 hover:bg-white/20 text-xs font-semibold text-white transition"
               >
                 Close Profile
               </button>

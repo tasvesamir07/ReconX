@@ -195,27 +195,29 @@ export default function NewAssessmentPage() {
           </Card>
 
           {/* Preset Selection */}
-          <Card className="p-6 space-y-4">
-            <h3 className="font-semibold text-ink text-base">3. Choose Assessment Preset</h3>
+          <Card className="p-6 space-y-4 bg-[#121214] border-white/10">
+            <h3 className="font-semibold text-white text-base">3. Choose Assessment Preset</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Normal */}
               <div
                 onClick={() => setPreset("normal")}
                 className={`p-5 rounded-xl border cursor-pointer transition ${
                   preset === "normal"
-                    ? "border-accent bg-accent/10 shadow-sm ring-1 ring-accent"
-                    : "border-line bg-canvas hover:border-line-strong"
+                    ? "border-[#C6F432] bg-[#C6F432]/10 shadow-[0_0_15px_rgba(198,244,50,0.12)] ring-1 ring-[#C6F432]"
+                    : "border-white/10 bg-[#121214] hover:border-white/20 hover:bg-[#18181B]"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-base text-ink">Normal (Basic Recon)</span>
-                  <Badge variant="outline" className="font-mono text-[10px]">120s · 8 checks</Badge>
+                  <span className="font-bold text-base text-white">Normal (Basic Recon)</span>
+                  <Badge variant="outline" className="font-mono text-[10px] text-zinc-300 border-white/15 bg-white/5">
+                    120s · 8 checks
+                  </Badge>
                 </div>
-                <p className="text-xs text-muted mt-2 leading-relaxed">
+                <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
                   Version fingerprinting with CVE matching (NVD / OSV), sensitive-file exposure, TLS, CORS, security headers, cookies and email spoofing protection.
                 </p>
-                <div className="mt-3 text-[11px] font-mono text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-200/60">
-                  ⚡ Passive-first · Fast (~30s)
+                <div className="mt-3 text-[11px] font-mono text-zinc-300 bg-white/5 p-2.5 rounded-lg border border-white/10 flex items-center gap-1.5">
+                  <span>⚡</span> Passive-first · Fast (~30s)
                 </div>
               </div>
 
@@ -224,22 +226,24 @@ export default function NewAssessmentPage() {
                 onClick={() => setPreset("moderate")}
                 className={`p-5 rounded-xl border cursor-pointer transition relative ${
                   preset === "moderate"
-                    ? "border-accent bg-accent/10 shadow-sm ring-1 ring-accent"
-                    : "border-line bg-canvas hover:border-line-strong"
+                    ? "border-[#C6F432] bg-[#C6F432]/10 shadow-[0_0_15px_rgba(198,244,50,0.12)] ring-1 ring-[#C6F432]"
+                    : "border-white/10 bg-[#121214] hover:border-white/20 hover:bg-[#18181B]"
                 }`}
               >
-                <span className="absolute -top-2.5 right-4 px-2 py-0.5 rounded text-[10px] font-semibold bg-accent text-canvas">
+                <span className="absolute -top-2.5 right-4 px-2.5 py-0.5 rounded text-[10px] font-bold bg-[#C6F432] text-[#0B0B0C] shadow-[0_0_8px_rgba(198,244,50,0.4)]">
                   Standard Profile
                 </span>
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-base text-ink">Moderate (Standard Pentest)</span>
-                  <Badge variant="outline" className="font-mono text-[10px]">300s · 17 checks</Badge>
+                  <span className="font-bold text-base text-white">Moderate (Standard Pentest)</span>
+                  <Badge variant="outline" className="font-mono text-[10px] text-zinc-300 border-white/15 bg-white/5">
+                    300s · 17 checks
+                  </Badge>
                 </div>
-                <p className="text-xs text-muted mt-2 leading-relaxed">
+                <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
                   Everything in Normal, plus error disclosure, directory listing, admin and API exposure, open redirect, service versions (nmap -sV) and active CVE verification (Nuclei).
                 </p>
-                <div className="mt-3 text-[11px] font-mono text-emerald-700 bg-emerald-50 p-2 rounded-lg border border-emerald-200/60">
-                  🛡️ Active verification · In-Depth
+                <div className="mt-3 text-[11px] font-mono text-emerald-300 bg-emerald-950/40 p-2.5 rounded-lg border border-emerald-500/30 flex items-center gap-1.5">
+                  <span>🛡️</span> Active verification · In-Depth
                 </div>
               </div>
 
@@ -248,22 +252,24 @@ export default function NewAssessmentPage() {
                 onClick={() => setPreset("ultimate")}
                 className={`p-5 rounded-xl border cursor-pointer transition relative ${
                   preset === "ultimate"
-                    ? "border-purple-500 bg-purple-50 shadow-sm ring-1 ring-purple-500"
-                    : "border-line bg-canvas hover:border-line-strong"
+                    ? "border-purple-500/80 bg-purple-950/30 shadow-[0_0_20px_rgba(168,85,247,0.25)] ring-1 ring-purple-500/50"
+                    : "border-white/10 bg-[#121214] hover:border-purple-500/30 hover:bg-[#18181B]"
                 }`}
               >
-                <span className="absolute -top-2.5 right-4 px-2 py-0.5 rounded text-[10px] font-semibold bg-purple-600 text-white">
+                <span className="absolute -top-2.5 right-4 px-2.5 py-0.5 rounded text-[10px] font-bold bg-purple-600 text-white shadow-[0_0_8px_rgba(168,85,247,0.5)]">
                   God Mode
                 </span>
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-base text-purple-700">Ultimate (God Mode Pentest)</span>
-                  <Badge variant="outline" className="font-mono text-[10px] text-purple-700 border-purple-300">600s · 22 checks</Badge>
+                  <span className="font-bold text-base text-purple-300">Ultimate (God Mode Pentest)</span>
+                  <Badge variant="outline" className="font-mono text-[10px] text-purple-300 border-purple-500/40 bg-purple-950/40">
+                    600s · 22 checks
+                  </Badge>
                 </div>
-                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
                   Everything in Moderate, at full depth: top-1000 port service scan, every safe Nuclei template, deeper JavaScript library analysis, cache poisoning, WebSocket origin, SRI and WHOIS.
                 </p>
-                <div className="mt-3 text-[11px] font-mono text-purple-700 bg-purple-100/50 p-2 rounded-lg border border-purple-200">
-                  🔥 Full Depth · Still non-destructive
+                <div className="mt-3 text-[11px] font-mono text-purple-300 bg-purple-950/40 p-2.5 rounded-lg border border-purple-500/30 flex items-center gap-1.5">
+                  <span>🔥</span> Full Depth · Still non-destructive
                 </div>
               </div>
             </div>
@@ -272,14 +278,13 @@ export default function NewAssessmentPage() {
           {/* Launch Button */}
           <Button
             type="submit"
-            variant="primary"
             size="lg"
             loading={loading}
             disabled={isOversightRole}
-            className="w-full text-base font-bold shadow-sm"
+            className="w-full text-base font-bold shadow-[0_0_20px_rgba(198,244,50,0.35)] bg-[#C6F432] text-[#0B0B0C] hover:bg-[#B5E327] active:bg-[#A4D21C] transition-all"
           >
-            <Scan className="w-5 h-5 mr-2" />
-            <span>
+            <Scan className="w-5 h-5 mr-2 text-[#0B0B0C]" />
+            <span className="text-[#0B0B0C] font-bold">
               {isOversightRole
                 ? "Scans Must Be Initiated by Security Analysts (Oversight Role)"
                 : loading

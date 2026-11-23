@@ -7,9 +7,9 @@ type ButtonSize = "sm" | "md" | "lg" | "icon";
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    "btn-sheen bg-accent text-text-inverse hover:bg-accent-hover active:bg-accent-pressed shadow-glow-subtle",
+    "btn-sheen bg-[#C6F432] text-[#0B0B0C] font-bold hover:bg-[#B5E327] active:bg-[#A4D21C] shadow-[0_0_16px_rgba(198,244,50,0.3)]",
   "primary-glass":
-    "btn bg-accent/90 backdrop-blur-md text-text-inverse hover:bg-accent hover:shadow-glow border border-border/20",
+    "btn bg-[#C6F432]/90 backdrop-blur-md text-[#0B0B0C] font-bold hover:bg-[#C6F432] hover:shadow-[0_0_20px_rgba(198,244,50,0.4)] border border-[#C6F432]/30",
   secondary:
     "bg-surface-elevated text-text border border-border hover:bg-surface-pressed hover:border-border-strong",
   "secondary-glass":

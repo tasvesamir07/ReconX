@@ -362,8 +362,8 @@ export default function AuthorizationsPage() {
         </div>
 
         {!isGovernanceAdmin && (
-          <div className="hidden sm:flex items-center space-x-1.5 text-xs text-slate-500 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200">
-            <Lock className="w-3 h-3 text-slate-400" />
+          <div className="hidden sm:flex items-center space-x-1.5 text-xs text-zinc-400 bg-white/5 px-2.5 py-1 rounded-md border border-white/10">
+            <Lock className="w-3 h-3 text-zinc-400" />
             <span>Analyst View: Revocation restricted to Compliance & Org Admin</span>
           </div>
         )}
@@ -763,11 +763,11 @@ export default function AuthorizationsPage() {
         size="md"
       >
         <form onSubmit={handleExecuteGovernanceAction} className="space-y-4">
-          <div className="p-3.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-start space-x-2.5">
-            <KeyRound className="w-4 h-4 text-amber-700 flex-shrink-0 mt-0.5" />
+          <div className="p-3.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start space-x-2.5">
+            <KeyRound className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
             <div>
-              <span className="font-semibold block mb-0.5">Privileged Operator Identity Verification</span>
-              <span>
+              <span className="font-semibold block mb-0.5 text-amber-200">Privileged Operator Identity Verification</span>
+              <span className="text-zinc-300">
                 {actionType === "revoke_auth" || actionType === "revoke_asset"
                   ? "Revocation will immediately terminate all active assessment rights and cancel any in-progress scans. This action is permanently audited."
                   : "Permanent deletion will remove this authorization record from the corporate ledger."}

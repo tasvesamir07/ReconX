@@ -22,7 +22,7 @@ export function TraceabilityTab({
       title: "Target & Time-Budget Spec",
       status: "Configured",
       description: `${scan.target_url} (Preset: ${scan.preset}, Budget: ${budgetSeconds}s)`,
-      badgeColor: "border-emerald-200 bg-emerald-50 text-emerald-800",
+      badgeColor: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
     },
     {
       step: 2,
@@ -31,7 +31,7 @@ export function TraceabilityTab({
       status: "Enforced",
       description:
         "VERIFIED: Target matches approved asset boundary. Deterministic SSRF Blocklist (RFC 1918 / Cloud Metadata 169.254.169.254) check PASSED.",
-      badgeColor: "border-emerald-200 bg-emerald-50 text-emerald-800",
+      badgeColor: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
     },
     {
       step: 3,
@@ -39,7 +39,7 @@ export function TraceabilityTab({
       title: "Fixed Check Plan",
       status: "Deterministic",
       description: `The ${scan.preset} preset runs the same ordered, non-destructive checks every time (Normal ⊂ Moderate ⊂ Ultimate). No AI chooses what is tested.`,
-      badgeColor: "border-emerald-200 bg-emerald-50 text-emerald-800",
+      badgeColor: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
     },
     {
       step: 4,
@@ -48,7 +48,7 @@ export function TraceabilityTab({
       status: "Sandboxed",
       description:
         "Executed inside non-root Python subprocess sandbox with hard per-check socket timeouts and strict concurrency caps.",
-      badgeColor: "border-emerald-200 bg-emerald-50 text-emerald-800",
+      badgeColor: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
     },
     {
       step: 5,
@@ -56,7 +56,7 @@ export function TraceabilityTab({
       title: "Cryptographic Evidence Storage",
       status: "Persisted",
       description: `${evidenceCount} raw evidence item(s) stored with SHA-256 cryptographic digest integrity verification.`,
-      badgeColor: "border-emerald-200 bg-emerald-50 text-emerald-800",
+      badgeColor: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
     },
     {
       step: 6,
@@ -65,7 +65,7 @@ export function TraceabilityTab({
       status: "Validated",
       description:
         "Deterministic rules classify evidence; detected versions are matched against NVD and OSV, enriched with CISA KEV and FIRST EPSS, and merged with active Nuclei verifications.",
-      badgeColor: "border-emerald-200 bg-emerald-50 text-emerald-800",
+      badgeColor: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
     },
     {
       step: 7,
@@ -73,7 +73,7 @@ export function TraceabilityTab({
       title: "Actionable Security Findings",
       status: "Actionable",
       description: `${findingsCount} vulnerability record(s) synthesized with defensive remediation guidance and cryptographic provenance link.`,
-      badgeColor: "border-emerald-200 bg-emerald-50 text-emerald-800",
+      badgeColor: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
     },
   ];
 
@@ -95,21 +95,21 @@ export function TraceabilityTab({
           return (
             <div
               key={s.step}
-              className="p-4 rounded-xl bg-slate-50 border border-line flex items-start space-x-4 transition hover:border-line-strong hover:bg-white"
+              className="p-4 rounded-xl bg-[#121214] border border-white/10 flex items-start space-x-4 transition hover:border-[#C6F432]/30 hover:bg-[#18181B]"
             >
-              <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center font-bold text-xs flex-shrink-0 font-mono">
+              <div className="w-8 h-8 rounded-lg bg-[#C6F432]/10 border border-[#C6F432]/30 text-[#C6F432] flex items-center justify-center font-bold text-xs flex-shrink-0 font-mono">
                 {s.step}
               </div>
               <div className="space-y-1 flex-1 min-w-0">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="text-xs font-semibold text-ink">
+                  <div className="text-xs font-semibold text-white">
                     {s.title}
                   </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white border border-line text-emerald-700">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-emerald-400">
                     {s.status}
                   </span>
                 </div>
-                <div className="text-xs text-muted font-mono leading-relaxed break-words">
+                <div className="text-xs text-zinc-400 font-mono leading-relaxed break-words">
                   {s.description}
                 </div>
               </div>
