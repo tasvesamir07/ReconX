@@ -105,10 +105,6 @@ function TaglineReveal() {
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
-  // Dynamic Mouse-Tracking Spotlight Position
-  const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: -1000, y: -1000 });
-  const [isMouseActive, setIsMouseActive] = useState<boolean>(false);
-
   // Card 1: Interactive Tabs
   const [activeTab, setActiveTab] = useState<"prs" | "probes">("prs");
 
@@ -122,26 +118,6 @@ export default function LandingPage() {
 
   // Interactive Docs Tab in #docs section
   const [activeDocsTab, setActiveDocsTab] = useState<"cli" | "python" | "typescript">("cli");
-
-  // Track mouse coordinates across the entire window for the ambient spotlight
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setMousePos({ x: window.innerWidth / 2, y: window.innerHeight / 2.8 });
-      setIsMouseActive(true);
-    }
-
-    const handlePointerMove = (e: MouseEvent | PointerEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-      setIsMouseActive(true);
-    };
-
-    window.addEventListener("pointermove", handlePointerMove, { passive: true });
-    window.addEventListener("mousemove", handlePointerMove, { passive: true });
-    return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("mousemove", handlePointerMove);
-    };
-  }, []);
 
   const scrollToTop = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -165,19 +141,9 @@ export default function LandingPage() {
       {/* Background Fluted Grid Lines (Vertical pinstripes) */}
       <div className="fixed inset-0 bg-fluted-grid pointer-events-none opacity-35 z-0" aria-hidden="true" />
 
-      {/* Ambient Breathing Lime Beam (Constant living column of light behind hero) */}
+      {/* Ambient Breathing Lime Beam (Constant living subtle column of light behind hero) */}
       <div
-        className="fixed top-16 left-1/2 -translate-x-1/2 w-[950px] h-[580px] bg-lime-beam pointer-events-none blur-3xl opacity-80 z-0 animate-beam-breath"
-        aria-hidden="true"
-      />
-
-      {/* Dynamic Cursor-Following Spotlight (Luminous Northline lime aura) */}
-      <div
-        className="fixed inset-0 pointer-events-none z-10 transition-opacity duration-200 ease-out"
-        style={{
-          opacity: isMouseActive ? 1 : 0.85,
-          background: `radial-gradient(750px circle at ${mousePos.x}px ${mousePos.y}px, rgba(198, 244, 50, 0.28) 0%, rgba(198, 244, 50, 0.09) 38%, rgba(198, 244, 50, 0.02) 65%, transparent 75%)`,
-        }}
+        className="fixed top-16 left-1/2 -translate-x-1/2 w-[950px] h-[580px] bg-lime-beam pointer-events-none blur-3xl opacity-40 z-0 animate-beam-breath"
         aria-hidden="true"
       />
 

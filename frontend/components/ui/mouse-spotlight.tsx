@@ -20,7 +20,7 @@ export function MouseSpotlight() {
     const updatePosition = (x: number, y: number) => {
       if (spotlightRef.current) {
         spotlightRef.current.style.opacity = "1";
-        spotlightRef.current.style.background = `radial-gradient(750px circle at ${x}px ${y}px, rgba(198, 244, 50, 0.28) 0%, rgba(198, 244, 50, 0.09) 38%, rgba(198, 244, 50, 0.02) 65%, transparent 75%)`;
+        spotlightRef.current.style.background = `radial-gradient(650px circle at ${x}px ${y}px, rgba(198, 244, 50, 0.08) 0%, rgba(198, 244, 50, 0.03) 35%, rgba(198, 244, 50, 0.008) 58%, transparent 75%)`;
       }
     };
 
@@ -50,7 +50,7 @@ export function MouseSpotlight() {
       className="pointer-events-none fixed inset-0 z-20 transition-opacity duration-300 ease-out"
       style={{
         opacity: 1,
-        background: `radial-gradient(750px circle at 50% 35%, rgba(198, 244, 50, 0.28) 0%, rgba(198, 244, 50, 0.09) 38%, rgba(198, 244, 50, 0.02) 65%, transparent 75%)`,
+        background: `radial-gradient(650px circle at 50% 35%, rgba(198, 244, 50, 0.08) 0%, rgba(198, 244, 50, 0.03) 35%, rgba(198, 244, 50, 0.008) 58%, transparent 75%)`,
       }}
       aria-hidden="true"
     />

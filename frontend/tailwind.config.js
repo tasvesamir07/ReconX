@@ -526,7 +526,7 @@ module.exports = {
   		backgroundImage: {
   			'grid-subtle': 'linear-gradient(to right, rgba(148, 163, 184, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(148, 163, 184, 0.03) 1px, transparent 1px)',
   			'radial-glow': 'radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0, 212, 170, 0.08), transparent 70%)',
-  			'lime-beam': 'radial-gradient(ellipse 75% 50% at 50% 55%, rgba(198, 244, 50, 0.32) 0%, rgba(198, 244, 50, 0.10) 45%, rgba(11, 11, 12, 0) 100%)',
+  			'lime-beam': 'radial-gradient(ellipse 75% 50% at 50% 55%, rgba(198, 244, 50, 0.14) 0%, rgba(198, 244, 50, 0.04) 45%, rgba(11, 11, 12, 0) 100%)',
   			'fluted-grid': 'repeating-linear-gradient(90deg, transparent, transparent 36px, rgba(255, 255, 255, 0.035) 36px, rgba(255, 255, 255, 0.035) 37px)'
   		}
   	}
