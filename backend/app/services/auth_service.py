@@ -25,8 +25,11 @@ class AuthService:
         if existing:
             raise ConflictError("An account with this email already exists.")
 
-        is_moderator = account_type == "moderator"
-        role = "MODERATOR" if is_moderator else "USER"
+        # Public self-registration must never grant a platform role. The
+        # account_type field is only a UX hint: everyone starts as USER, and
+        # ownership of a newly created organization is an organization-level
+        # role (OWNER), not platform-wide MODERATOR visibility.
+        role = "USER"
 
         user = User(
             email=normalized_email,
@@ -39,8 +42,8 @@ class AuthService:
         db.add(user)
         db.flush()
 
-        # If Moderator registered with an Organization, automatically create it with this user as Owner
-        if is_moderator and organization_name and len(organization_name.strip()) >= 2:
+        # Create the workspace on request and make the registrant its Owner.
+        if organization_name and len(organization_name.strip()) >= 2:
             from app.services.org_service import OrganizationService
             OrganizationService.create_organization(db, user, organization_name.strip())
 
@@ -66,10 +69,39 @@ class AuthService:
         return user
 
     @staticmethod
+    def _as_utc(value):
+        # Postgres returns aware datetimes; be defensive for other dialects.
+        from datetime import timezone
+        if value is not None and value.tzinfo is None:
+            return value.replace(tzinfo=timezone.utc)
+        return value
+
+    @staticmethod
     def login(db: Session, email: str, password: str, ip: str = None, user_agent: str = None) -> Tuple[User, str]:
         normalized_email = email.strip().lower()
+        now = utc_now()
         user = db.query(User).filter(User.email == normalized_email).first()
+
+        # Account lockout: slows credential stuffing even when the email is
+        # publicly known (demo accounts, leaked addresses, etc.).
+        if user:
+            locked_until = AuthService._as_utc(user.locked_until)
+            if locked_until and locked_until > now:
+                retry_after = max(1, int((locked_until - now).total_seconds()))
+                raise ReconXException(
+                    429,
+                    "ACCOUNT_LOCKED",
+                    "Too many failed sign-in attempts. Please try again later.",
+                    {"retry_after": retry_after},
+                )
+
         if not user or not user.password_hash or not verify_password(password, user.password_hash):
+            if user:
+                user.failed_login_attempts = (user.failed_login_attempts or 0) + 1
+                if user.failed_login_attempts >= settings.LOGIN_MAX_FAILED_ATTEMPTS:
+                    user.locked_until = now + timedelta(minutes=settings.LOGIN_LOCKOUT_MINUTES)
+                    user.failed_login_attempts = 0
+                db.commit()
             raise AuthenticationError("Invalid email or password.")
 
         if user.status == "suspended":
@@ -81,7 +113,6 @@ class AuthService:
         # Create session record with opaque token
         raw_session_token = generate_secure_token(32)
         token_hash = hash_token(raw_session_token)
-        now = utc_now()
         expires_at = now + timedelta(minutes=settings.SESSION_IDLE_TIMEOUT_MINUTES)
 
         session_record = UserSession(
@@ -94,6 +125,8 @@ class AuthService:
         )
         db.add(session_record)
         user.last_login_at = now
+        user.failed_login_attempts = 0
+        user.locked_until = None
         db.commit()
 
         return user, raw_session_token
@@ -113,13 +146,23 @@ class AuthService:
         if not session_record:
             return None
 
-        if session_record.expires_at < now:
+        # Absolute session lifetime: an attacker who steals a session token
+        # cannot keep it alive indefinitely by touching the API.
+        created_at = AuthService._as_utc(session_record.created_at)
+        absolute_deadline = created_at + timedelta(hours=settings.SESSION_ABSOLUTE_TIMEOUT_HOURS)
+        if now >= absolute_deadline:
             session_record.revoked_at = now
             db.commit()
             return None
 
-        # Slide idle timeout
-        session_record.expires_at = now + timedelta(minutes=settings.SESSION_IDLE_TIMEOUT_MINUTES)
+        if AuthService._as_utc(session_record.expires_at) < now:
+            session_record.revoked_at = now
+            db.commit()
+            return None
+
+        # Slide idle timeout, but never beyond the absolute deadline.
+        idle_deadline = now + timedelta(minutes=settings.SESSION_IDLE_TIMEOUT_MINUTES)
+        session_record.expires_at = min(idle_deadline, absolute_deadline)
         db.commit()
 
         return session_record.user

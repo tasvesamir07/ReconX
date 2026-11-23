@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 from typing import List, Dict, Any
 from app.database import get_db, engine
@@ -7,6 +8,7 @@ from app.models.audit import AuditEvent, WorkerInstance
 from app.api.deps import require_platform_role
 from app.core.constants import PRESET_BUDGETS, PRESET_MAX_CONCURRENCY
 from app.config import settings
+from app.services.audit_service import AuditService
 
 router = APIRouter(prefix="/admin", tags=["Administration"])
 
@@ -19,7 +21,7 @@ def get_system_health(
     db_ok = True
     try:
         with engine.connect() as conn:
-            conn.execute("SELECT 1")
+            conn.execute(text("SELECT 1"))
     except Exception:
         db_ok = False
 
@@ -41,7 +43,7 @@ def list_workers(
 
 @router.get("/audit-events")
 def list_audit_events(
-    limit: int = 150,
+    limit: int = Query(150, ge=1, le=500),
     admin: User = Depends(require_platform_role("SUPER_ADMIN")),
     db: Session = Depends(get_db)
 ):
@@ -127,6 +129,11 @@ def emergency_kill_all_scans(
         ))
 
     db.commit()
+    AuditService.log(
+        db, "admin.emergency_kill_all", "platform", "all_scans",
+        actor_id=admin.id,
+        metadata_json={"terminated_scans": count},
+    )
     return {"status": "success", "terminated_scans": count, "message": f"Successfully terminated {count} active assessment workers."}
 
 @router.post("/purge-test-scans")
@@ -156,6 +163,11 @@ def purge_test_scans(
         db.delete(s)
 
     db.commit()
+    AuditService.log(
+        db, "admin.purge_test_scans", "platform", "all_scans",
+        actor_id=admin.id,
+        metadata_json={"purged_count": count},
+    )
     return {
         "status": "success",
         "purged_count": count,

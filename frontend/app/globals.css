@@ -4,8 +4,8 @@
 
 @layer base {
   :root {
-    color-scheme: light;
-    --focus-ring: 5 150 105;
+    color-scheme: dark;
+    --focus-ring: 198 244 50;
   }
 
   * {
@@ -13,7 +13,7 @@
   }
 
   html {
-    background-color: theme("colors.background.DEFAULT");
+    background-color: #0B0B0C;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -21,13 +21,13 @@
   }
 
   body {
-    @apply bg-background text-text antialiased;
+    @apply bg-[#0B0B0C] text-white antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11", "liga", "clig", "calt";
   }
 
   ::selection {
-    background-color: rgb(0 212 170 / 0.3);
-    color: theme("colors.text.inverse");
+    background-color: rgba(198, 244, 50, 0.35);
+    color: #FFFFFF;
   }
 
   :focus-visible {
@@ -357,21 +357,26 @@
     @apply bg-surface/80 backdrop-blur-xl border border-border/30;
   }
 
-  /* Fernwood Aesthetic: Dot Matrix & Bloom */
-  .bg-dot-matrix {
-    background-image: radial-gradient(rgba(232, 220, 196, 0.15) 1px, transparent 1px);
-    background-size: 22px 22px;
+  /* Northline Aesthetic: Lime Beam, Fluted Lines & Dark Glass Pill */
+  .bg-lime-beam {
+    background: radial-gradient(ellipse 70% 45% at 50% 65%, rgba(198, 244, 50, 0.18) 0%, rgba(11, 11, 12, 0) 100%);
   }
 
-  .bg-purple-bloom {
-    background: radial-gradient(60% 60% at 50% 55%, rgba(139, 92, 246, 0.35) 0%, rgba(31, 61, 43, 0) 100%);
+  .bg-fluted-grid {
+    background-image: repeating-linear-gradient(90deg, transparent, transparent 36px, rgba(255, 255, 255, 0.018) 36px, rgba(255, 255, 255, 0.018) 37px);
   }
 
   .glass-pill {
-    background: rgba(20, 39, 28, 0.65);
+    background: rgba(18, 18, 20, 0.75);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(232, 220, 196, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+  }
+
+  .dark-card {
+    background: #121214;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8);
   }
 
   /* Text gradient */
@@ -467,15 +472,16 @@
   }
 
   .nav-item-idle {
-    color: #475569;
+    color: #A1A1AA;
     font-weight: 500;
   }
 
   .nav-item-active {
-    background-color: #0f172a;
-    color: #ffffff;
+    background-color: #18181B;
+    color: #C6F432;
     font-weight: 600;
-    box-shadow: 0 1px 2px rgb(15 23 42 / 0.2), 0 10px 22px -12px rgb(15 23 42 / 0.55);
+    border: 1px solid rgba(198, 244, 50, 0.25);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 10px 22px -12px rgba(198, 244, 50, 0.2);
   }
 
   .nav-item-active::before {
@@ -487,7 +493,8 @@
     height: 60%;
     transform: translateY(-50%);
     border-radius: 9999px;
-    background: #34d399;
+    background: #C6F432;
+    box-shadow: 0 0 8px rgba(198, 244, 50, 0.6);
   }
 
   .nav-item:active {
@@ -496,8 +503,8 @@
 
   @media (hover: hover) {
     .nav-item-idle:hover {
-      color: #0f172a;
-      background-color: #f1f5f9;
+      color: #FFFFFF;
+      background-color: #18181B;
       transform: translateX(2px);
     }
 

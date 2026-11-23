@@ -750,13 +750,6 @@ export default function AuthorizationsPage() {
             <span className="text-muted text-xs">
               Signed in as: <strong className="text-ink">{user?.email || "Operator"}</strong>
             </span>
-            <button
-              type="button"
-              onClick={() => setAuthPassword("DemoPassword2026!")}
-              className="inline-flex items-center space-x-1 text-xs text-accent font-semibold hover:text-accent-strong hover:underline"
-            >
-              <span>Auto-fill Demo Password</span>
-            </button>
           </div>
 
           <div className="space-y-1.5">
@@ -784,7 +777,7 @@ export default function AuthorizationsPage() {
               autoFocus
             />
             <p className="text-[11px] text-muted">
-              Default demo password: <code className="font-mono font-semibold text-accent bg-slate-100 px-1 py-0.5 rounded">DemoPassword2026!</code>
+              For your protection, scope revocation requires re-entering your own account password.
             </p>
           </div>
 

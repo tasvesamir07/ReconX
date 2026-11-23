@@ -1,27 +1,55 @@
 import { ApiError } from "@/types";
 
+const CSRF_COOKIE = "reconx_csrf";
+const CSRF_HEADER = "X-CSRF-Token";
+const CSRF_STORAGE_KEY = "reconx_csrf_fallback";
+const UNSAFE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
+
 function resolveApiBaseUrl(): string {
-  let raw = process.env.NEXT_PUBLIC_API_URL;
-  if (raw && typeof raw === "string") {
-    // Auto-correct stale Render service subdomains
-    raw = raw.replace(
-      "https://reconx-backend.onrender.com",
-      "https://reconx-backend-ljsn.onrender.com"
-    );
-    return raw.replace(/\/+$/, "");
+  const raw = process.env.NEXT_PUBLIC_API_URL;
+  if (raw && typeof raw === "string" && raw.trim()) {
+    return raw.trim().replace(/\/+$/, "");
   }
-  if (typeof window !== "undefined") {
-    const host = window.location.hostname;
-    if (host !== "localhost" && host !== "127.0.0.1") {
-      return "https://reconx-backend-ljsn.onrender.com/api/v1";
-    }
-  }
-  return "http://localhost:8000/api/v1";
+  // Default: same-origin API proxied by Next.js (see next.config.js rewrites).
+  return "/api/v1";
 }
 
 export const API_BASE_URL = resolveApiBaseUrl();
-
 const API_BASE = API_BASE_URL;
+
+function readCookie(name: string): string | null {
+  if (typeof document === "undefined") return null;
+  const prefix = `${name}=`;
+  for (const part of document.cookie.split(";")) {
+    const value = part.trim();
+    if (value.startsWith(prefix)) {
+      return decodeURIComponent(value.slice(prefix.length));
+    }
+  }
+  return null;
+}
+
+function getCsrfToken(): string | null {
+  const cookieToken = readCookie(CSRF_COOKIE);
+  if (cookieToken) return cookieToken;
+  // Fallback for deployments where the API is still on a different origin and
+  // the cookie is therefore not readable from document.cookie.
+  if (typeof window === "undefined") return null;
+  try {
+    return window.sessionStorage.getItem(CSRF_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function rememberCsrfToken(token: string | null): void {
+  if (!token || typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem(CSRF_STORAGE_KEY, token);
+  } catch {
+    // Storage can be unavailable in private browsing; the cookie still works.
+  }
+}
 
 /**
  * Pre-warms the backend by sending a lightweight, non-blocking ping.
@@ -30,11 +58,13 @@ const API_BASE = API_BASE_URL;
 export function warmBackend(): void {
   if (typeof window === "undefined") return;
   try {
-    const healthUrl = API_BASE.replace(/\/api\/v1\/?$/, "") + "/api/v1/health";
+    const healthUrl = API_BASE.endsWith("/api/v1")
+      ? `${API_BASE}/health`
+      : `${API_BASE.replace(/\/api\/v1\/?$/, "")}/api/v1/health`;
     if (navigator.sendBeacon) {
       navigator.sendBeacon(healthUrl);
     } else {
-      fetch(healthUrl, { method: "GET", mode: "no-cors", cache: "no-store" }).catch(() => {});
+      fetch(healthUrl, { method: "GET", mode: "cors", cache: "no-store" }).catch(() => {});
     }
   } catch (_) {}
 }
@@ -72,6 +102,12 @@ export async function apiRequest<T = any>(
     headers.set("Content-Type", "application/json");
   }
 
+  const method = (options.method || "GET").toUpperCase();
+  if (UNSAFE_METHODS.has(method)) {
+    const csrfToken = getCsrfToken();
+    if (csrfToken) headers.set(CSRF_HEADER, csrfToken);
+  }
+
   const timeoutMs = 45000; // 45s allows for Render free-tier cold starts
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -80,6 +116,7 @@ export async function apiRequest<T = any>(
   try {
     res = await fetch(url, {
       ...options,
+      method,
       headers,
       credentials: "include",
       signal: options.signal || controller.signal,
@@ -108,6 +145,8 @@ export async function apiRequest<T = any>(
   } finally {
     clearTimeout(timeoutId);
   }
+
+  rememberCsrfToken(res.headers.get(CSRF_HEADER));
 
   if (res.status === 204) {
     return undefined as T;

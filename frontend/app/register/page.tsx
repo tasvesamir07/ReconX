@@ -19,6 +19,9 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { apiRequest, ReconXApiError } from "@/lib/api-client";
+import { TurnstileWidget } from "@/components/security/turnstile-widget";
+
+const CAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -31,6 +34,7 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +42,11 @@ export default function RegisterPage() {
 
     if (accountType === "moderator" && (!organizationName.trim() || organizationName.trim().length < 2)) {
       setError("Please specify your Organization or Company name.");
+      return;
+    }
+
+    if (CAPTCHA_SITE_KEY && !captchaToken) {
+      setError("Please complete the human verification challenge.");
       return;
     }
 
@@ -68,32 +77,33 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-forest-darker bg-dot-matrix p-4 sm:p-6 relative overflow-hidden font-sans selection:bg-electric selection:text-white">
-      {/* Ambient Purple Bloom */}
+    <div className="min-h-screen flex items-center justify-center bg-[#0B0B0C] p-4 sm:p-6 relative overflow-hidden font-sans selection:bg-[#C6F432] selection:text-[#0B0B0C]">
+      {/* Background Fluted Lines & Ambient Lime Beam */}
+      <div className="absolute inset-0 bg-fluted-grid pointer-events-none opacity-40 -z-10" aria-hidden="true" />
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-purple-bloom pointer-events-none blur-3xl opacity-75 -z-10"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[500px] bg-lime-beam pointer-events-none blur-3xl opacity-60 -z-10"
         aria-hidden="true"
       />
-      <div className="w-full max-w-xl bg-sand text-forest rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl border border-sand/40 relative">
+      <div className="w-full max-w-xl dark-card rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl relative border border-white/10 text-white">
         {/* Navigation to Landing Page */}
-        <div className="flex items-center justify-between pb-3 border-b border-forest/15">
+        <div className="flex items-center justify-between pb-3 border-b border-white/10">
           <Link
             href="/"
-            className="inline-flex items-center space-x-1.5 text-xs font-semibold text-forest/70 hover:text-forest transition-colors"
+            className="inline-flex items-center space-x-1.5 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Back to Home</span>
           </Link>
-          <span className="text-xs font-mono font-medium text-forest/60">ReconX Identity</span>
+          <span className="text-xs font-mono font-medium text-zinc-500">ReconX Identity</span>
         </div>
 
         {/* Brand Header */}
         <div className="text-center space-y-1.5">
-          <div className="w-12 h-12 rounded-2xl bg-forest text-sand flex items-center justify-center mx-auto shadow-md">
-            <ShieldCheck className="w-6 h-6 text-electric-light" aria-hidden="true" />
+          <div className="w-11 h-11 rounded-xl bg-[#18181B] border border-white/15 text-[#C6F432] flex items-center justify-center mx-auto shadow-md">
+            <ShieldCheck className="w-6 h-6" aria-hidden="true" />
           </div>
-          <h2 className="text-2xl font-serif font-bold text-forest tracking-tight">Create ReconX Account</h2>
-          <p className="text-xs sm:text-sm text-forest/75 font-sans">
+          <h2 className="text-2xl font-serif font-bold text-white tracking-tight">Create ReconX Account</h2>
+          <p className="text-xs sm:text-sm text-zinc-400 font-sans">
             Select your account tier to begin authorized web security auditing
           </p>
         </div>
@@ -105,21 +115,21 @@ export default function RegisterPage() {
             onClick={() => setAccountType("analyst")}
             className={`p-4 rounded-xl border text-left transition relative flex flex-col justify-between ${
               accountType === "analyst"
-                ? "border-slate-900 bg-slate-50/80 ring-2 ring-slate-900 shadow-sm"
-                : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50"
+                ? "border-[#C6F432] bg-[#18181B] ring-1 ring-[#C6F432]/60 shadow-sm"
+                : "border-white/10 bg-[#121214] hover:border-white/20 hover:bg-[#18181B]"
             }`}
           >
             <div className="flex items-center justify-between">
-              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-[#C6F432]/10 text-[#C6F432] flex items-center justify-center">
                 <Scan className="w-4 h-4" />
               </div>
               {accountType === "analyst" && (
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <CheckCircle2 className="w-4 h-4 text-[#C6F432]" />
               )}
             </div>
             <div className="mt-3">
-              <div className="font-bold text-xs sm:text-sm text-slate-900">Security Analyst (Freelancer / Team)</div>
-              <div className="text-[11px] text-slate-500 mt-1 leading-snug">
+              <div className="font-bold text-xs sm:text-sm text-white">Security Analyst (Freelancer / Team)</div>
+              <div className="text-[11px] text-zinc-400 mt-1 leading-snug">
                 Work independently in Freelancer mode or join an organization. Run assessments and view verified audit reports.
               </div>
             </div>
@@ -130,21 +140,21 @@ export default function RegisterPage() {
             onClick={() => setAccountType("moderator")}
             className={`p-4 rounded-xl border text-left transition relative flex flex-col justify-between ${
               accountType === "moderator"
-                ? "border-slate-900 bg-slate-50/80 ring-2 ring-slate-900 shadow-sm"
-                : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50"
+                ? "border-[#C6F432] bg-[#18181B] ring-1 ring-[#C6F432]/60 shadow-sm"
+                : "border-white/10 bg-[#121214] hover:border-white/20 hover:bg-[#18181B]"
             }`}
           >
             <div className="flex items-center justify-between">
-              <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-[#C6F432]/10 text-[#C6F432] flex items-center justify-center">
                 <Building className="w-4 h-4" />
               </div>
               {accountType === "moderator" && (
-                <CheckCircle2 className="w-4 h-4 text-purple-600" />
+                <CheckCircle2 className="w-4 h-4 text-[#C6F432]" />
               )}
             </div>
             <div className="mt-3">
-              <div className="font-bold text-xs sm:text-sm text-slate-900">Organization Moderator (Team Lead)</div>
-              <div className="text-[11px] text-slate-500 mt-1 leading-snug">
+              <div className="font-bold text-xs sm:text-sm text-white">Organization Moderator (Team Lead)</div>
+              <div className="text-[11px] text-zinc-400 mt-1 leading-snug">
                 Establish corporate tenant, invite & govern multiple analysts, and review & approve domain testing scopes.
               </div>
             </div>

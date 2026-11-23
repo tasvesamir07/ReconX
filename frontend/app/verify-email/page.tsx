@@ -172,8 +172,13 @@ function VerifyEmailContent() {
 
 export default function VerifyEmailPage() {
   return (
-    <div className="aurora route-enter min-h-screen flex items-center justify-center bg-background p-4 sm:p-6">
-      <Suspense fallback={<div className="text-text-muted text-body-sm">Loading verification...</div>}>
+    <div className="min-h-screen flex items-center justify-center bg-[#0B0B0C] p-4 sm:p-6 relative overflow-hidden font-sans selection:bg-[#C6F432] selection:text-[#0B0B0C]">
+      <div className="absolute inset-0 bg-fluted-grid pointer-events-none opacity-40 -z-10" aria-hidden="true" />
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[450px] bg-lime-beam pointer-events-none blur-3xl opacity-60 -z-10"
+        aria-hidden="true"
+      />
+      <Suspense fallback={<div className="text-zinc-400 text-sm">Loading verification...</div>}>
         <VerifyEmailContent />
       </Suspense>
     </div>

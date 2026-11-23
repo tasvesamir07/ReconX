@@ -11,6 +11,11 @@ from sqlalchemy.engine import Engine
 
 logger = logging.getLogger("reconx.schema")
 
+_USER_COLUMNS = [
+    ("failed_login_attempts", "INTEGER NOT NULL DEFAULT 0"),
+    ("locked_until", "TIMESTAMP WITH TIME ZONE"),
+]
+
 _FINDING_COLUMNS = [
     ("finding_class", "VARCHAR(30) NOT NULL DEFAULT 'vulnerability'"),
     ("source", "VARCHAR(50) NOT NULL DEFAULT 'check'"),
@@ -29,6 +34,8 @@ def upgrade_schema(engine: Engine) -> None:
     if engine.dialect.name != "postgresql":
         return
     with engine.begin() as conn:
+        for name, ddl in _USER_COLUMNS:
+            conn.execute(text(f"ALTER TABLE users ADD COLUMN IF NOT EXISTS {name} {ddl}"))
         for name, ddl in _FINDING_COLUMNS:
             conn.execute(text(f"ALTER TABLE findings ADD COLUMN IF NOT EXISTS {name} {ddl}"))
-    logger.info("Schema upgrade check complete (findings intelligence columns).")
+    logger.info("Schema upgrade check complete (auth lockout and findings intelligence columns).")

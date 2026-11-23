@@ -71,34 +71,35 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-forest-darker bg-dot-matrix p-4 sm:p-6 relative overflow-hidden font-sans selection:bg-electric selection:text-white">
-      {/* Ambient Purple Bloom */}
+    <div className="min-h-screen flex items-center justify-center bg-[#0B0B0C] p-4 sm:p-6 relative overflow-hidden font-sans selection:bg-[#C6F432] selection:text-[#0B0B0C]">
+      {/* Background Fluted Lines & Ambient Lime Beam */}
+      <div className="absolute inset-0 bg-fluted-grid pointer-events-none opacity-40 -z-10" aria-hidden="true" />
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-purple-bloom pointer-events-none blur-3xl opacity-75 -z-10"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[450px] bg-lime-beam pointer-events-none blur-3xl opacity-60 -z-10"
         aria-hidden="true"
       />
-      <div className="w-full max-w-md bg-sand text-forest rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl border border-sand/40 relative">
+      <div className="w-full max-w-md dark-card rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl relative border border-white/10 text-white">
         {/* Navigation to Landing Page */}
-        <div className="flex items-center justify-between pb-3 border-b border-forest/15">
+        <div className="flex items-center justify-between pb-3 border-b border-white/10">
           <Link
             href="/"
-            className="inline-flex items-center space-x-1.5 text-body-xs text-forest/70 hover:text-forest transition-colors font-medium"
+            className="inline-flex items-center space-x-1.5 text-xs text-zinc-400 hover:text-white transition-colors font-medium"
           >
             <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Back to Home</span>
           </Link>
-          <span className="text-label-xs font-mono text-forest/60">ReconX Identity</span>
+          <span className="text-xs font-mono text-zinc-500">ReconX Identity</span>
         </div>
 
         {/* Brand Header */}
         <Link href="/" className="block text-center space-y-2 group">
-          <div className="w-12 h-12 rounded-2xl bg-forest text-sand flex items-center justify-center mx-auto shadow-md group-hover:scale-105 transition-transform">
-            <ShieldCheck className="w-6 h-6 text-electric-light" aria-hidden="true" />
+          <div className="w-11 h-11 rounded-xl bg-[#18181B] border border-white/15 text-[#C6F432] flex items-center justify-center mx-auto shadow-md group-hover:border-[#C6F432]/50 transition-colors">
+            <ShieldCheck className="w-6 h-6" aria-hidden="true" />
           </div>
-          <h2 className="text-2xl font-serif font-bold text-forest tracking-tight group-hover:text-electric transition-colors">
+          <h2 className="text-2xl font-serif font-bold text-white tracking-tight group-hover:text-[#C6F432] transition-colors">
             Sign in to ReconX
           </h2>
-          <p className="text-xs text-forest/75 font-sans">
+          <p className="text-xs text-zinc-400 font-sans">
             Evidence-backed security assessment platform
           </p>
         </Link>
@@ -114,8 +115,8 @@ export default function LoginPage() {
 
         {/* Cold Start Indicator */}
         {isWarmingUp && (
-          <div className="flex items-center justify-center gap-2 text-xs text-purple-900 bg-purple-100/90 border border-purple-300 rounded-xl p-3 animate-pulse shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-electric animate-ping" />
+          <div className="flex items-center justify-center gap-2 text-xs text-[#C6F432] bg-[#C6F432]/10 border border-[#C6F432]/30 rounded-xl p-3 animate-pulse shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-[#C6F432] animate-ping" />
             <span>Connecting to backend instance (Render free tier spin-up can take ~20s)...</span>
           </div>
         )}
@@ -133,15 +134,15 @@ export default function LoginPage() {
         />
 
         {/* Links */}
-        <div className="pt-3 border-t border-forest/15 text-center text-body-xs text-forest/70 space-y-2">
+        <div className="pt-3 border-t border-white/10 text-center text-xs text-zinc-400 space-y-2">
           <div>
             Need a fresh account?{" "}
-            <Link href="/register" className="text-electric hover:underline font-semibold ml-1">
+            <Link href="/register" className="text-[#C6F432] hover:underline font-semibold ml-1">
               Register new organization
             </Link>
           </div>
           <div>
-            <Link href="/" className="text-forest/60 hover:text-forest transition-colors text-label-xs">
+            <Link href="/" className="text-zinc-500 hover:text-zinc-300 transition-colors text-xs">
               ← Return to Product Overview & Features
             </Link>
           </div>

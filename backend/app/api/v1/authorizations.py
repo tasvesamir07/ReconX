@@ -7,6 +7,7 @@ from uuid import UUID
 from app.database import get_db
 from app.core.security import verify_password
 from app.models.user import User
+from app.models.organization import OrganizationMembership
 from app.models.authorization import AuthorizationRequest, ApprovedAsset
 from app.models.scan import Scan, ScanEvent
 from app.schemas.authorization import AuthRequestCreate, AuthRequestResponse, ApprovedAssetResponse, ScopeActionRequest
@@ -80,10 +81,30 @@ def list_authorizations(
     db: Session = Depends(get_db)
 ):
     query = db.query(AuthorizationRequest)
-    if organization_id:
+
+    if organization_id is not None:
+        # IDOR guard: requesting another tenant's workspace requires membership.
+        if user.platform_role not in PLATFORM_OVERSIGHT:
+            role = OrganizationService.get_user_role_in_org(db, user.id, organization_id)
+            if role is None:
+                raise PermissionDeniedError("You are not a member of this organization.")
         query = query.filter(AuthorizationRequest.organization_id == organization_id)
-    elif user.platform_role not in ("SUPER_ADMIN", "MODERATOR"):
-        query = query.filter(AuthorizationRequest.requested_by == user.id)
+    elif user.platform_role not in PLATFORM_OVERSIGHT:
+        # Default view: the caller's own submissions plus their workspaces.
+        member_org_ids = [
+            membership.organization_id
+            for membership in db.query(OrganizationMembership).filter(
+                OrganizationMembership.user_id == user.id,
+                OrganizationMembership.status == "active",
+            ).all()
+        ]
+        query = query.filter(
+            or_(
+                AuthorizationRequest.requested_by == user.id,
+                AuthorizationRequest.organization_id.in_(member_org_ids),
+            )
+        )
+
     return query.order_by(AuthorizationRequest.created_at.desc()).all()
 
 def check_can_manage_governance(
@@ -119,8 +140,10 @@ def check_can_manage_governance(
             "Operator password re-authentication is required to confirm scope revocation or deletion."
         )
 
-    # Master local demo password "DemoPassword2026!" or user's hashed password
-    valid = (password == "DemoPassword2026!") or (user.password_hash and verify_password(password, user.password_hash))
+    # Re-authentication must verify the operator's real password. There is no
+    # master/backdoor password: a shared secret would let anyone holding the
+    # demo credential revoke or delete production scopes.
+    valid = bool(user.password_hash) and verify_password(password, user.password_hash)
     if not valid:
         raise PolicyViolationError(
             "INVALID_CREDENTIALS",
@@ -132,9 +155,13 @@ def get_authorization(auth_id: UUID, user: User = Depends(get_current_user), db:
     req = db.query(AuthorizationRequest).filter(AuthorizationRequest.id == auth_id).first()
     if not req:
         raise NotFoundError("Authorization request not found.")
-    if req.requested_by != user.id and user.platform_role not in ("SUPER_ADMIN", "MODERATOR"):
-        raise PermissionDeniedError("Access denied.")
-    return req
+    if req.requested_by == user.id or user.platform_role in PLATFORM_OVERSIGHT:
+        return req
+    if req.organization_id is not None:
+        role = OrganizationService.get_user_role_in_org(db, user.id, req.organization_id)
+        if role is not None:
+            return req
+    raise PermissionDeniedError("Access denied.")
 
 @router.post("/authorizations/{auth_id}/revoke", response_model=AuthRequestResponse)
 def revoke_authorization(
@@ -241,8 +268,34 @@ def list_approved_assets(
     query = db.query(ApprovedAsset)
     if not include_inactive:
         query = query.filter(ApprovedAsset.status == "active", ApprovedAsset.expires_at > utc_now())
-    if organization_id:
+
+    if organization_id is not None:
+        # IDOR guard: never expose another tenant's approved targets by ID.
+        if user.platform_role not in PLATFORM_OVERSIGHT:
+            role = OrganizationService.get_user_role_in_org(db, user.id, organization_id)
+            if role is None:
+                raise PermissionDeniedError("You are not a member of this organization.")
         query = query.filter(ApprovedAsset.organization_id == organization_id)
+    elif user.platform_role not in PLATFORM_OVERSIGHT:
+        # Scope to workspaces the caller belongs to, plus assets requested by
+        # the caller in a personal (organization-less) workflow.
+        member_org_ids = [
+            membership.organization_id
+            for membership in db.query(OrganizationMembership).filter(
+                OrganizationMembership.user_id == user.id,
+                OrganizationMembership.status == "active",
+            ).all()
+        ]
+        query = query.join(
+            AuthorizationRequest,
+            ApprovedAsset.authorization_request_id == AuthorizationRequest.id,
+        ).filter(
+            or_(
+                ApprovedAsset.organization_id.in_(member_org_ids),
+                AuthorizationRequest.requested_by == user.id,
+            )
+        )
+
     return query.order_by(ApprovedAsset.created_at.desc()).all()
 
 @router.post("/assets/{asset_id}/revoke", response_model=ApprovedAssetResponse)

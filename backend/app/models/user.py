@@ -19,6 +19,8 @@ class User(Base, TimestampMixin):
     status = Column(String(50), default="active", nullable=False)  # active, suspended, pending
     platform_role = Column(String(50), default="USER", nullable=False)  # USER, MODERATOR, SUPER_ADMIN, DEVELOPER
     last_login_at = Column(DateTime(timezone=True), nullable=True)
+    failed_login_attempts = Column(Integer, default=0, nullable=False)
+    locked_until = Column(DateTime(timezone=True), nullable=True)
 
     sessions = relationship("Session", back_populates="user", cascade="all, delete-orphan")
     memberships = relationship("OrganizationMembership", back_populates="user", cascade="all, delete-orphan")

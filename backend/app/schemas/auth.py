@@ -7,13 +7,14 @@ class RegisterRequest(BaseModel):
     email: str = Field(..., min_length=3, max_length=255)
     password: str = Field(..., min_length=8, max_length=128)
     display_name: str = Field(..., min_length=2, max_length=100)
-    phone_number: Optional[str] = None
-    account_type: Optional[str] = "analyst"  # "analyst" or "moderator"
-    organization_name: Optional[str] = None
+    phone_number: Optional[str] = Field(None, max_length=50)
+    account_type: Optional[str] = Field("analyst", max_length=20)  # UX hint only
+    organization_name: Optional[str] = Field(None, max_length=150)
+    captcha_token: Optional[str] = Field(None, max_length=4096)
 
 class LoginRequest(BaseModel):
     email: str = Field(..., min_length=3, max_length=255)
-    password: str
+    password: str = Field(..., max_length=256)
 
 class VerifyEmailRequest(BaseModel):
     email: str = Field(..., min_length=3, max_length=255)
@@ -21,14 +22,22 @@ class VerifyEmailRequest(BaseModel):
 
 class ResendVerificationRequest(BaseModel):
     email: str = Field(..., min_length=3, max_length=255)
+    captcha_token: Optional[str] = Field(None, max_length=4096)
 
 class ForgotPasswordRequest(BaseModel):
     email: str = Field(..., min_length=3, max_length=255)
+    captcha_token: Optional[str] = Field(None, max_length=4096)
 
 class ResetPasswordRequest(BaseModel):
     email: str = Field(..., min_length=3, max_length=255)
     otp: str = Field(..., min_length=6, max_length=6)
     new_password: str = Field(..., min_length=8, max_length=128)
+
+class ProfileUpdateRequest(BaseModel):
+    display_name: Optional[str] = Field(None, min_length=2, max_length=100)
+    phone_number: Optional[str] = Field(None, max_length=50)
+    avatar_url: Optional[str] = Field(None, max_length=500)
+    bio: Optional[str] = Field(None, max_length=1000)
 
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)

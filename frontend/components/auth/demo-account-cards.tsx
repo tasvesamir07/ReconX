@@ -12,11 +12,19 @@ export interface DemoPreset {
   badgeColor?: string;
 }
 
+// Demo shortcuts are disabled unless explicitly enabled at build time. They
+// must never be available in production: the seeded accounts share a known
+// password and one of them is a platform super admin.
+export const DEMO_ACCOUNTS_ENABLED =
+  process.env.NEXT_PUBLIC_SHOW_DEMO_ACCOUNTS === "true";
+
+const DEMO_PASSWORD = process.env.NEXT_PUBLIC_DEMO_PASSWORD ?? "";
+
 export const DEMO_PRESETS: DemoPreset[] = [
   {
     role: "Security Analyst",
     email: "analyst@reconx.local",
-    password: "DemoPassword2026!",
+    password: DEMO_PASSWORD,
     description: "Launch scans & download reports",
     icon: UserCheck,
     tag: "Execution Role",
@@ -25,7 +33,7 @@ export const DEMO_PRESETS: DemoPreset[] = [
   {
     role: "Compliance Moderator",
     email: "moderator@reconx.local",
-    password: "DemoPassword2026!",
+    password: DEMO_PASSWORD,
     description: "Review & approve domain scopes",
     icon: Shield,
     tag: "Governance Role",
@@ -34,7 +42,7 @@ export const DEMO_PRESETS: DemoPreset[] = [
   {
     role: "Platform Super Admin",
     email: "admin@reconx.local",
-    password: "DemoPassword2026!",
+    password: DEMO_PASSWORD,
     description: "System health, workers & live logs",
     icon: KeyRound,
     tag: "Oversight Role",
@@ -66,6 +74,10 @@ export function DemoAccountCards({
   const currentRole = selectedRole !== undefined ? selectedRole : autoFilledRole;
   const doAutofill = onAutofill || onAutofillOnly || (() => {});
   const doQuickLogin = onQuickLogin || onOneClickLogin || (() => {});
+
+  if (!DEMO_ACCOUNTS_ENABLED || !DEMO_PASSWORD) {
+    return null;
+  }
 
   return (
     <div className="p-4 rounded-xl bg-surface border border-border space-y-3">

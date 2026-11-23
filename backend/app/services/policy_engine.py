@@ -37,6 +37,12 @@ def canonicalize_host(hostname_or_url: str) -> str:
         raw = "https://" + raw
 
     parsed = urllib.parse.urlsplit(raw)
+    if parsed.scheme.lower() not in ("http", "https"):
+        raise PolicyViolationError(
+            "UNSUPPORTED_SCHEME",
+            "Only http and https target URLs are permitted.",
+        )
+
     hostname = parsed.hostname
     if not hostname:
         raise PolicyViolationError("INVALID_TARGET_URL", "Unable to extract a valid hostname from the provided URL.")
@@ -59,22 +65,29 @@ def resolve_and_verify_dns(hostname: str) -> str:
     Returns the resolved public IP.
     """
     try:
-        # Resolve address records
+        # Resolve every A/AAAA record. Checking only the first record would
+        # allow a hostname with one public and one private address to bypass
+        # the guard depending on resolver ordering.
         addr_info = socket.getaddrinfo(hostname, None, socket.AF_UNSPEC, socket.SOCK_STREAM)
         if not addr_info:
             raise PolicyViolationError("DNS_RESOLUTION_FAILED", f"No DNS records found for host: {hostname}")
-        
-        resolved_ip = addr_info[0][4][0]
+
+        addresses = []
+        for entry in addr_info:
+            ip = entry[4][0]
+            if ip not in addresses:
+                addresses.append(ip)
     except socket.gaierror as e:
         raise PolicyViolationError("DNS_RESOLUTION_FAILED", f"DNS lookup failed for {hostname}: {str(e)}")
 
-    if is_ip_prohibited(resolved_ip):
-        raise PolicyViolationError(
-            "SSRF_PROHIBITED_DESTINATION",
-            f"Target host '{hostname}' resolves to a prohibited or private IP ({resolved_ip}). Scanning blocked."
-        )
+    for ip in addresses:
+        if is_ip_prohibited(ip):
+            raise PolicyViolationError(
+                "SSRF_PROHIBITED_DESTINATION",
+                f"Target host '{hostname}' resolves to a prohibited or private IP ({ip}). Scanning blocked."
+            )
 
-    return resolved_ip
+    return addresses[0]
 
 class PolicyEngine:
     @staticmethod

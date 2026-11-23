@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-manrope",
   display: "swap",
   weight: ["400", "500", "600", "700"],
 });
@@ -92,18 +92,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${manrope.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://reconx-backend-ljsn.onrender.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://reconx-backend-ljsn.onrender.com" />
-        {/* Instant backend pre-warm trigger on first byte of frontend page load */}
+        {/* Instant backend pre-warm trigger on first byte of frontend page load.
+            The same-origin /api/v1 path is proxied to the API by next.config.js. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var u=(window.location.hostname==="localhost"?"http://localhost:8000/api/v1":"https://reconx-backend-ljsn.onrender.com/api/v1").replace(/\\/api\\/v1\\/?$/,"")+"/api/v1/health";if(navigator.sendBeacon){navigator.sendBeacon(u)}else{fetch(u,{mode:"no-cors",cache:"no-store"}).catch(function(){})}}catch(e){}})();`,
+            __html: `(function(){try{var u="/api/v1/health";if(navigator.sendBeacon){navigator.sendBeacon(u)}else{fetch(u,{cache:"no-store"}).catch(function(){})}}catch(e){}})();`,
           }}
         />
       </head>

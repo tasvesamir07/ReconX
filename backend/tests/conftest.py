@@ -6,6 +6,11 @@ from app.main import app
 from app.database import Base, get_db
 from app.config import settings
 
+# Keep the suite deterministic: rate limiting and CSRF protection are
+# security features covered by their own tests, not by every fixture call.
+settings.RATE_LIMIT_ENABLED = False
+settings.CSRF_ENABLED = False
+
 # Test database connection string (use same local postgres or sqlite in-memory for fast unit tests)
 engine = create_engine(settings.DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

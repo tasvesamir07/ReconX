@@ -7,10 +7,11 @@ from app.models.organization import Organization, OrganizationMembership
 from app.models.authorization import AuthorizationRequest, ApprovedAsset
 from app.models.base import utc_now
 from app.core.security import hash_password
+from app.config import settings
 
 logger = logging.getLogger("reconx.seed")
 
-DEMO_PASSWORD = "DemoPassword2026!"
+DEMO_PASSWORD = settings.DEMO_ACCOUNT_PASSWORD
 
 DEMO_ACCOUNTS = [
     {
@@ -57,9 +58,8 @@ def seed_demo_data():
                 db.flush()
                 logger.info(f"Seeded user: {acc['email']} ({acc['platform_role']})")
             else:
-                user.password_hash = hashed_pwd
-                user.status = "active"
-                user.platform_role = acc["platform_role"]
+                # Never overwrite an existing password or role: a local demo
+                # account that an operator has changed must stay changed.
                 if not user.email_verified_at:
                     user.email_verified_at = now
                 db.flush()

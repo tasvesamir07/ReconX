@@ -13,79 +13,71 @@ module.exports = {
       colors: {
         // Core semantic tokens - Clean Professional Light Theme (White Background)
         background: {
-          DEFAULT: "#FFFFFF",      // Pure clean white
-          elevated: "#F8FAFC",     // Slate-50 elevated surfaces
-          overlay: "#FFFFFF",      // Modals, drawers
-          hover: "#F1F5F9",        // Slate-100 hover states
+          DEFAULT: "#0B0B0C",      // Midnight Black primary
+          elevated: "#121214",     // Deep dark elevated surface
+          overlay: "#18181B",      // Modals, drawers
+          hover: "#1A1A1E",        // Hover states
         },
         canvas: {
-          DEFAULT: "#FFFFFF",
-          subtle: "#F8FAFC",
+          DEFAULT: "#0B0B0C",
+          subtle: "#121214",
         },
         surface: {
-          DEFAULT: "#FFFFFF",      // Pure white card backgrounds
-          elevated: "#F8FAFC",     // Slate-50 elevated cards
-          pressed: "#F1F5F9",      // Slate-100 active/pressed
+          DEFAULT: "#121214",      // Northline dark card backgrounds
+          elevated: "#18181B",     // Elevated cards
+          pressed: "#1E1E22",      // Active/pressed
         },
         border: {
-          DEFAULT: "#E2E8F0",      // Slate-200 crisp hairline borders
-          strong: "#CBD5E1",       // Slate-300 emphasized borders
-          focus: "#059669",        // Emerald-600 focus rings
-          error: "#DC2626",        // Red-600 error borders
+          DEFAULT: "rgba(255, 255, 255, 0.08)", // Crisp hairline borders
+          strong: "rgba(255, 255, 255, 0.16)",  // Emphasized borders
+          focus: "#C6F432",                     // Lime-green focus rings
+          error: "#EF4444",                     // Red error borders
         },
         line: {
-          DEFAULT: "#E2E8F0",
-          strong: "#CBD5E1",
+          DEFAULT: "rgba(255, 255, 255, 0.08)",
+          strong: "rgba(255, 255, 255, 0.16)",
         },
-        "line-strong": "#CBD5E1",
+        "line-strong": "rgba(255, 255, 255, 0.16)",
         text: {
-          DEFAULT: "#0F172A",      // Slate-900 primary text
-          muted: "#475569",        // Slate-600 secondary text
-          subtle: "#64748B",       // Slate-500 tertiary text
-          inverse: "#FFFFFF",      // On accent backgrounds
+          DEFAULT: "#FFFFFF",      // Pure White primary text
+          muted: "#A1A1AA",        // Zinc-400 secondary text
+          subtle: "#71717A",       // Zinc-500 tertiary text
+          inverse: "#0B0B0C",      // Dark on lime accent backgrounds
         },
         ink: {
-          DEFAULT: "#0F172A",
-          muted: "#475569",
-          subtle: "#64748B",
+          DEFAULT: "#FFFFFF",
+          muted: "#A1A1AA",
+          subtle: "#71717A",
         },
         muted: {
-          DEFAULT: "#475569",
-          "30": "rgba(226, 232, 240, 0.3)",
+          DEFAULT: "#A1A1AA",
+          "30": "rgba(161, 161, 170, 0.3)",
         },
-        subtle: "#64748B",
-        elevated: "#F1F5F9",
-        // Fernwood-inspired Aesthetic Palette: Forest Green + Sand Beige + Electric Purple
-        forest: {
-          DEFAULT: "#1F3D2B",      // Forest Green primary
-          dark: "#14271C",         // Deep pine
-          darker: "#0C1911",       // Midnight forest
-          deep: "#0F2117",         // Deep background base
-          surface: "#254B35",      // Elevated dark surface
-          border: "rgba(232, 220, 196, 0.15)",
+        subtle: "#71717A",
+        elevated: "#18181B",
+        // Northline Aesthetic Palette: Midnight Black + Pure White + Lime Green
+        midnight: {
+          DEFAULT: "#0B0B0C",      // Midnight Black (#0B0B0C)
+          dark: "#070708",         // Deep black
+          card: "#121214",         // Signature Northline dark card
+          elevated: "#18181B",     // Elevated dark surface
+          hover: "#1A1A1E",
+          border: "rgba(255, 255, 255, 0.08)",
         },
-        sand: {
-          DEFAULT: "#E8DCC4",      // Sand Beige primary
-          light: "#F5EFE6",        // Warm cream
-          card: "#E8DCC4",         // Signature Sand Beige Card
-          dark: "#D6C7A8",         // Muted sand
-          muted: "#8C8370",        // Secondary text on sand
-          text: "#1F3D2B",         // Deep forest green on sand
-        },
-        electric: {
-          DEFAULT: "#8B5CF6",      // Electric Purple
-          hover: "#7C3AED",        // Vivid purple hover
-          pressed: "#6D28D9",
-          light: "#A78BFA",        // Light violet
-          glow: "rgba(139, 92, 246, 0.45)",
-          soft: "rgba(139, 92, 246, 0.15)",
+        lime: {
+          DEFAULT: "#C6F432",      // Lime Green primary (#C6F432)
+          hover: "#B5E327",        // Luminous lime hover
+          pressed: "#A4D21C",
+          dark: "#0B0B0C",         // Text on lime
+          glow: "rgba(198, 244, 50, 0.35)",
+          soft: "rgba(198, 244, 50, 0.12)",
         },
         accent: {
-          DEFAULT: "#8B5CF6",      // Electric Purple primary brand
-          hover: "#7C3AED",        // Vivid purple hover state
-          pressed: "#6D28D9",      // Deep purple pressed
-          soft: "#F5F3FF",         // Purple soft
-          glow: "rgba(139, 92, 246, 0.25)",
+          DEFAULT: "#C6F432",      // Lime Green primary brand
+          hover: "#B5E327",        // Luminous hover
+          pressed: "#A4D21C",      // Deep lime pressed
+          soft: "rgba(198, 244, 50, 0.12)",
+          glow: "rgba(198, 244, 50, 0.35)",
         },
         accentWarm: {
           DEFAULT: "#D97706",      // Amber-600 warning
@@ -140,9 +132,10 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
+        sans: ["var(--font-manrope)", ...defaultTheme.fontFamily.sans],
         mono: ["var(--font-jetbrains-mono)", ...defaultTheme.fontFamily.mono],
-        display: ["var(--font-inter-display)", ...defaultTheme.fontFamily.sans],
+        display: ["var(--font-manrope)", ...defaultTheme.fontFamily.sans],
+        serif: ["Newsreader", "Playfair Display", "Georgia", "serif"],
       },
       fontSize: {
         'display-xl': ['clamp(2.5rem, 5vw, 4rem)', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '700' }],

@@ -208,21 +208,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       : "Freelancer Analyst";
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full bg-white border-r border-slate-200 select-none">
+    <div className="flex flex-col h-full bg-[#121214] border-r border-white/10 select-none text-white">
       {/* 1. Header & Logo */}
-      <div className="h-16 px-5 border-b border-slate-200/80 flex items-center justify-between shrink-0">
+      <div className="h-16 px-5 border-b border-white/10 flex items-center justify-between shrink-0">
         <Link href="/dashboard" className="flex items-center space-x-2.5">
-          <div className="w-8 h-8 rounded-xl bg-black flex items-center justify-center text-white shadow-sm shrink-0">
-            <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
+          <div className="w-8 h-8 rounded-xl bg-[#18181B] border border-white/15 flex items-center justify-center text-white shadow-sm shrink-0">
+            <ShieldCheck className="w-5 h-5 text-[#C6F432] shrink-0" />
           </div>
-          <span className="font-bold text-lg tracking-tight text-slate-900">ReconX</span>
-          <span className="text-xs font-mono font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+          <span className="font-bold text-lg tracking-tight text-white">ReconX</span>
+          <span className="text-xs font-mono font-medium text-zinc-400 bg-white/5 px-2 py-0.5 rounded-md border border-white/10">
             v2.4
           </span>
         </Link>
         <button
           onClick={() => setMobileMenuOpen(false)}
-          className="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-700"
+          className="md:hidden p-1.5 rounded-lg text-zinc-400 hover:text-white"
           aria-label="Close menu"
         >
           <X className="w-5 h-5" />
@@ -542,21 +542,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </nav>
 
       {/* 4. Bottom Profile Card -> Links to /dashboard/profile */}
-      <div className="p-3 border-t border-slate-200/80 bg-white shrink-0">
-        <div className="p-2.5 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between">
+      <div className="p-3 border-t border-white/10 bg-[#121214] shrink-0">
+        <div className="p-2.5 rounded-xl border border-white/10 bg-[#18181B] flex items-center justify-between">
           <Link
             href="/dashboard/profile"
             className="flex items-center space-x-2.5 min-w-0 flex-1 hover:opacity-80 transition group"
             title="View personal profile & identity"
           >
-            <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-xs font-bold text-slate-800 shadow-sm shrink-0 group-hover:border-slate-400">
+            <div className="w-8 h-8 rounded-lg bg-[#27272A] border border-white/10 flex items-center justify-center text-xs font-bold text-white shadow-sm shrink-0 group-hover:border-white/30">
               {userInitials}
             </div>
             <div className="min-w-0 flex-1">
-              <div className="text-xs font-bold text-slate-900 truncate">
+              <div className="text-xs font-bold text-white truncate">
                 {user?.display_name || "User"}
               </div>
-              <div className="text-[10px] text-slate-500 font-medium truncate">
+              <div className="text-[10px] text-zinc-400 font-medium truncate">
                 {userRoleDisplay}
               </div>
             </div>
@@ -565,7 +565,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             onClick={handleLogout}
             aria-label="Sign Out"
             title="Sign Out"
-            className="p-1.5 text-slate-400 hover:text-red-600 rounded-lg hover:bg-white hover:border hover:border-slate-200 transition shrink-0 ml-1"
+            className="p-1.5 text-zinc-400 hover:text-red-400 rounded-lg hover:bg-white/5 transition shrink-0 ml-1"
           >
             <LogOut className="w-4 h-4" />
           </button>
@@ -575,9 +575,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   );
 
   return (
-    <div className="min-h-screen flex bg-slate-50/50 text-slate-900 font-sans antialiased">
+    <div className="min-h-screen flex bg-[#0B0B0C] text-white font-sans antialiased">
       {/* Desktop Sticky Sidebar */}
-      <aside className="hidden md:flex w-72 flex-col shrink-0 h-screen sticky top-0 bg-white z-30">
+      <aside className="hidden md:flex w-72 flex-col shrink-0 h-screen sticky top-0 bg-[#121214] border-r border-white/10 z-30">
         <SidebarContent />
       </aside>
 
@@ -585,10 +585,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 flex md:hidden">
           <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm animate-in"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-in"
             onClick={() => setMobileMenuOpen(false)}
           />
-          <div className="drawer-enter relative w-80 max-w-full h-full flex flex-col z-10 bg-white shadow-2xl">
+          <div className="drawer-enter relative w-80 max-w-full h-full flex flex-col z-10 bg-[#121214] border-r border-white/10 shadow-2xl">
             <SidebarContent />
           </div>
         </div>
@@ -597,23 +597,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
         {/* Top Header Bar */}
-        <header className="h-16 border-b border-slate-200/80 px-4 sm:px-8 flex items-center justify-between bg-white/95 backdrop-blur sticky top-0 z-40">
+        <header className="h-16 border-b border-white/10 px-4 sm:px-8 flex items-center justify-between bg-[#0B0B0C]/95 backdrop-blur sticky top-0 z-40">
           <div className="flex items-center space-x-3 sm:space-x-4 min-w-0">
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              className="md:hidden p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5"
               aria-label="Open navigation menu"
             >
               <Menu className="w-5 h-5" />
             </button>
 
             {/* Breadcrumb Trail */}
-            <nav className="flex items-center space-x-2 text-xs sm:text-sm font-semibold text-slate-500 truncate">
-              <span className="truncate max-w-[120px] sm:max-w-[200px] text-slate-600 font-medium">
+            <nav className="flex items-center space-x-2 text-xs sm:text-sm font-semibold text-zinc-400 truncate">
+              <span className="truncate max-w-[120px] sm:max-w-[200px] text-zinc-400 font-medium">
                 {isSuperAdmin ? "Platform Administration" : orgName}
               </span>
-              <span className="text-slate-300">/</span>
-              <span className="text-slate-900 font-bold truncate">{getBreadcrumb()}</span>
+              <span className="text-zinc-600">/</span>
+              <span className="text-white font-bold truncate">{getBreadcrumb()}</span>
             </nav>
           </div>
 
@@ -621,12 +621,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {/* Search Input Bar with ⌘K badge */}
             <button
               onClick={() => setCommandPaletteOpen(true)}
-              className="flex items-center space-x-2 sm:space-x-3 px-3 sm:px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-slate-300 text-xs sm:text-sm text-slate-500 transition"
+              className="flex items-center space-x-2 sm:space-x-3 px-3 sm:px-4 py-2 rounded-xl border border-white/10 bg-[#121214] hover:bg-[#18181B] hover:border-white/20 text-xs sm:text-sm text-zinc-400 transition"
             >
-              <Search className="w-4 h-4 text-slate-400 shrink-0" />
+              <Search className="w-4 h-4 text-zinc-400 shrink-0" />
               <span className="hidden sm:inline">Search domains, scans, LOAs</span>
               <span className="sm:hidden">Search</span>
-              <kbd className="px-1.5 py-0.5 rounded-md bg-white border border-slate-200 text-[10px] font-mono text-slate-400">
+              <kbd className="px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-[10px] font-mono text-zinc-400">
                 ⌘K
               </kbd>
             </button>
@@ -635,7 +635,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {!isModerator && !isSuperAdmin && (
               <Link
                 href="/dashboard/assessments/new"
-                className="inline-flex items-center space-x-1.5 bg-black hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm px-3.5 py-2 rounded-xl transition shadow-sm active:scale-95"
+                className="inline-flex items-center space-x-1.5 bg-[#C6F432] hover:bg-[#B5E327] text-[#0B0B0C] font-semibold text-xs sm:text-sm px-3.5 py-2 rounded-xl transition shadow-[0_0_15px_rgba(198,244,50,0.25)] active:scale-95"
               >
                 <Plus className="w-4 h-4 shrink-0" />
                 <span>Launch Scan</span>
@@ -645,9 +645,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {isModerator && (
               <Link
                 href="/dashboard/moderator"
-                className="inline-flex items-center space-x-1.5 bg-black hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm px-3.5 py-2 rounded-xl transition shadow-sm active:scale-95"
+                className="inline-flex items-center space-x-1.5 bg-[#C6F432] hover:bg-[#B5E327] text-[#0B0B0C] font-semibold text-xs sm:text-sm px-3.5 py-2 rounded-xl transition shadow-[0_0_15px_rgba(198,244,50,0.25)] active:scale-95"
               >
-                <Shield className="w-4 h-4 text-emerald-400 shrink-0" />
+                <Shield className="w-4 h-4 text-[#0B0B0C] shrink-0" />
                 <span>Review Scope{pendingCount > 0 ? ` (${pendingCount})` : ""}</span>
               </Link>
             )}
@@ -655,9 +655,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {isSuperAdmin && (
               <Link
                 href="/dashboard/admin"
-                className="inline-flex items-center space-x-1.5 bg-black hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm px-3.5 py-2 rounded-xl transition shadow-sm active:scale-95"
+                className="inline-flex items-center space-x-1.5 bg-[#C6F432] hover:bg-[#B5E327] text-[#0B0B0C] font-semibold text-xs sm:text-sm px-3.5 py-2 rounded-xl transition shadow-[0_0_15px_rgba(198,244,50,0.25)] active:scale-95"
               >
-                <Activity className="w-4 h-4 text-emerald-400 shrink-0" />
+                <Activity className="w-4 h-4 text-[#0B0B0C] shrink-0" />
                 <span>Fleet Telemetry</span>
               </Link>
             )}

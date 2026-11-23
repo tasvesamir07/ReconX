@@ -1,6 +1,6 @@
 import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing import List
+from typing import List, Optional
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -15,12 +15,38 @@ class Settings(BaseSettings):
     FRONTEND_BASE_URL: str = "http://localhost:3000"
     BACKEND_PUBLIC_URL: str = "http://localhost:8000"
     CORS_ALLOWED_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000"
+    # Optional explicit regex for additional browser origins. Empty by default:
+    # never trust a whole shared platform domain (e.g. *.vercel.app).
+    CORS_ALLOWED_ORIGIN_REGEX: str = ""
+    ALLOWED_HOSTS: str = "*"
+
+    # Demo data must never be created in production. Enable only for local demos/tests.
+    SEED_DEMO_DATA: bool = True
+    DEMO_ACCOUNT_PASSWORD: str = "DemoPassword2026!"
 
     # Sessions
     SESSION_COOKIE_NAME: str = "reconx_session"
     SESSION_COOKIE_SECURE: bool = False
     SESSION_IDLE_TIMEOUT_MINUTES: int = 120
     SESSION_ABSOLUTE_TIMEOUT_HOURS: int = 24
+    CSRF_COOKIE_NAME: str = "reconx_csrf"
+    CSRF_HEADER_NAME: str = "X-CSRF-Token"
+    CSRF_ENABLED: bool = True
+
+    # Brute-force protection
+    LOGIN_MAX_FAILED_ATTEMPTS: int = 5
+    LOGIN_LOCKOUT_MINUTES: int = 15
+
+    # Application rate limiting (in-process sliding window)
+    RATE_LIMIT_ENABLED: bool = True
+    AUTH_RATE_LIMIT_PER_MINUTE: int = 10
+    API_RATE_LIMIT_PER_MINUTE: int = 120
+    TRUST_PROXY_HEADERS: bool = True
+
+    # CAPTCHA (Cloudflare Turnstile). Disabled unless a secret is configured.
+    CAPTCHA_ENABLED: bool = False
+    TURNSTILE_SECRET_KEY: str = ""
+    TURNSTILE_VERIFY_URL: str = "https://challenges.cloudflare.com/turnstile/v0/siteverify"
 
     # Email & OTP
     EMAIL_PROVIDER: str = "local"
@@ -73,8 +99,29 @@ class Settings(BaseSettings):
     STORAGE_DIR: str = os.path.join(os.path.dirname(os.path.dirname(__file__)), "storage")
 
     @property
+    def is_production(self) -> bool:
+        return self.APP_ENV.strip().lower() in ("production", "prod")
+
+    @property
     def cors_origins_list(self) -> List[str]:
         return [origin.strip() for origin in self.CORS_ALLOWED_ORIGINS.split(",") if origin.strip()]
+
+    @property
+    def cors_origin_regex(self) -> Optional[str]:
+        value = self.CORS_ALLOWED_ORIGIN_REGEX.strip()
+        return value or None
+
+    @property
+    def allowed_hosts_list(self) -> List[str]:
+        hosts = [host.strip() for host in self.ALLOWED_HOSTS.split(",") if host.strip()]
+        return hosts or ["*"]
+
+    @property
+    def cookie_samesite(self) -> str:
+        # Cross-site cookies are only needed when the API lives on a different
+        # registrable domain than the frontend. Prefer same-site (Lax) whenever
+        # possible; CSRF tokens protect state-changing requests either way.
+        return "none" if self.SESSION_COOKIE_SECURE else "lax"
 
     @property
     def groq_keys_list(self) -> List[str]:
