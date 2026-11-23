@@ -39,19 +39,19 @@ export const sidebarSections = {
           icon: SidebarHomeMutedIcon,
           pageTitle: 'Overview',
         },
-        { name: 'Analytics', href: '/analytics', icon: SidebarAnalyticsIcon },
-        { name: 'Net Worth', href: '/net-worth', icon: SidebarNetWorthIcon },
+        { name: 'Telemetry & Risk', href: '/analytics', icon: SidebarAnalyticsIcon },
+        { name: 'Capital Risk Model', href: '/net-worth', icon: SidebarNetWorthIcon },
       ],
     },
     {
-      label: 'Operations',
+      label: 'Attack Surfaces',
       collapsible: true,
       defaultOpen: true,
       items: [
-        { name: 'Stocks', href: '/stocks', icon: SidebarFolderIcon },
-        { name: 'Crypto', href: '/crypto', icon: SidebarLinkIcon },
-        { name: 'Real Estate', href: '/real-estate', icon: SidebarRealEstateIcon },
-        { name: 'Fixed Income', href: '/fixed-income', icon: SidebarFixedIncomeIcon },
+        { name: 'API Gateways', href: '/stocks', icon: SidebarFolderIcon },
+        { name: 'Identity & SSO', href: '/crypto', icon: SidebarLinkIcon },
+        { name: 'Cloud Mesh', href: '/real-estate', icon: SidebarRealEstateIcon },
+        { name: 'Internal Services', href: '/fixed-income', icon: SidebarFixedIncomeIcon },
       ],
     },
   ],
@@ -85,15 +85,15 @@ export const currentUser = {
   name: 'Lead Security Analyst',
   email: 'analyst@reconx.dev',
   initials: 'LS',
-  avatar: `https://api.dicebear.com/10.x/glyphs/svg?seed=${encodeURIComponent('Vansh Patel')}`,
+  avatar: `https://api.dicebear.com/10.x/glyphs/svg?seed=${encodeURIComponent('Security Analyst')}`,
 }
 
 export const notifications = [
   {
-    id: 'template-ready',
-    title: 'Template ready',
-    description: 'Dashboard shell is ready for new content.',
-    time: 'Now',
+    id: 'assessment-active',
+    title: 'Autonomous Telemetry Synced',
+    description: 'Continuous perimeter risk models updated.',
+    time: 'Live',
   },
 ] as const
 
@@ -116,13 +116,13 @@ export const dashboardSummaryCardsByPeriod = {
   monthly: [
     {
       id: 'net-worth',
-      title: 'Total Net worth',
+      title: 'Asset Value at Risk',
       value: '$2.8M',
       icon: 'wallet',
       color: '#C6F432',
       change: {
         value: '15%',
-        label: 'Increased vs last month',
+        label: 'Simulated breach liability',
         tone: 'positive',
       },
       chart: {
@@ -139,15 +139,15 @@ export const dashboardSummaryCardsByPeriod = {
     },
     {
       id: 'portfolio-return',
-      title: 'Portfolio return',
+      title: 'Remediation Velocity',
       value: '+14.7%',
       icon: 'trend',
       color: '#C6F432',
       target: {
         current: '42%',
-        label: 'to target',
+        label: 'to quarterly target',
         progress: 42,
-        gained: '$184K gained',
+        gained: '$184K mitigated',
         goal: 'Goal $438K',
       },
       bars: [
@@ -164,25 +164,25 @@ export const dashboardSummaryCardsByPeriod = {
     },
     {
       id: 'asset-classes',
-      title: 'Asset classes',
+      title: 'Target Attack Surfaces',
       value: '$2.05M',
       icon: 'pie',
       color: '#C6F432',
       allocations: [
-        { label: 'Stock & Crypto', value: '$1.20M', share: 58, color: '#C6F432' },
-        { label: 'Real estate', value: '$854K', share: 42, color: '#C6F432' },
+        { label: 'Web APIs & Gateways', value: '$1.20M', share: 58, color: '#C6F432' },
+        { label: 'Cloud Mesh & Ingress', value: '$854K', share: 42, color: '#C6F432' },
       ],
     },
     {
       id: 'risk-score',
-      title: 'Risk score',
+      title: 'Exploit Threat Score',
       value: '62',
       suffix: '/ 100',
       icon: 'shield',
       color: '#EAB308',
       change: {
         value: 'Moderate,',
-        label: 'well diversified',
+        label: 'well isolated',
         tone: 'neutral',
       },
       chart: {
@@ -201,13 +201,13 @@ export const dashboardSummaryCardsByPeriod = {
   weekly: [
     {
       id: 'net-worth',
-      title: 'Total Net worth',
+      title: 'Asset Value at Risk',
       value: '$2.74M',
       icon: 'wallet',
       color: '#C6F432',
       change: {
         value: '4.2%',
-        label: 'Increased vs last week',
+        label: 'Reduced vs last week',
         tone: 'positive',
       },
       chart: {
@@ -224,15 +224,15 @@ export const dashboardSummaryCardsByPeriod = {
     },
     {
       id: 'portfolio-return',
-      title: 'Portfolio return',
+      title: 'Remediation Velocity',
       value: '+3.8%',
       icon: 'trend',
       color: '#C6F432',
       target: {
         current: '28%',
-        label: 'to target',
+        label: 'to weekly target',
         progress: 28,
-        gained: '$42K gained',
+        gained: '$42K mitigated',
         goal: 'Goal $150K',
       },
       bars: [
@@ -249,25 +249,25 @@ export const dashboardSummaryCardsByPeriod = {
     },
     {
       id: 'asset-classes',
-      title: 'Asset classes',
+      title: 'Target Attack Surfaces',
       value: '$2.02M',
       icon: 'pie',
       color: '#C6F432',
       allocations: [
-        { label: 'Stock & Crypto', value: '$1.16M', share: 57, color: '#C6F432' },
-        { label: 'Real estate', value: '$862K', share: 43, color: '#C6F432' },
+        { label: 'Web APIs & Gateways', value: '$1.16M', share: 57, color: '#C6F432' },
+        { label: 'Cloud Mesh & Ingress', value: '$862K', share: 43, color: '#C6F432' },
       ],
     },
     {
       id: 'risk-score',
-      title: 'Risk score',
+      title: 'Exploit Threat Score',
       value: '58',
       suffix: '/ 100',
       icon: 'shield',
       color: '#EAB308',
       change: {
         value: 'Balanced,',
-        label: 'lower volatility',
+        label: 'lower exposure',
         tone: 'neutral',
       },
       chart: {
@@ -286,13 +286,13 @@ export const dashboardSummaryCardsByPeriod = {
   quarterly: [
     {
       id: 'net-worth',
-      title: 'Total Net worth',
+      title: 'Asset Value at Risk',
       value: '$2.92M',
       icon: 'wallet',
       color: '#C6F432',
       change: {
         value: '18%',
-        label: 'Increased vs last quarter',
+        label: 'Coverage expanded vs Q4',
         tone: 'positive',
       },
       chart: {
@@ -309,7 +309,7 @@ export const dashboardSummaryCardsByPeriod = {
     },
     {
       id: 'portfolio-return',
-      title: 'Portfolio return',
+      title: 'Remediation Velocity',
       value: '+18.9%',
       icon: 'trend',
       color: '#C6F432',
@@ -317,7 +317,7 @@ export const dashboardSummaryCardsByPeriod = {
         current: '56%',
         label: 'to target',
         progress: 56,
-        gained: '$245K gained',
+        gained: '$245K mitigated',
         goal: 'Goal $438K',
       },
       bars: [
@@ -334,25 +334,25 @@ export const dashboardSummaryCardsByPeriod = {
     },
     {
       id: 'asset-classes',
-      title: 'Asset classes',
+      title: 'Target Attack Surfaces',
       value: '$2.17M',
       icon: 'pie',
       color: '#C6F432',
       allocations: [
-        { label: 'Stock & Crypto', value: '$1.32M', share: 61, color: '#C6F432' },
-        { label: 'Real estate', value: '$846K', share: 39, color: '#C6F432' },
+        { label: 'Web APIs & Gateways', value: '$1.32M', share: 61, color: '#C6F432' },
+        { label: 'Cloud Mesh & Ingress', value: '$846K', share: 39, color: '#C6F432' },
       ],
     },
     {
       id: 'risk-score',
-      title: 'Risk score',
+      title: 'Exploit Threat Score',
       value: '65',
       suffix: '/ 100',
       icon: 'shield',
       color: '#EAB308',
       change: {
         value: 'Moderate,',
-        label: 'growth tilted',
+        label: 'hardened ingress',
         tone: 'neutral',
       },
       chart: {
@@ -371,13 +371,13 @@ export const dashboardSummaryCardsByPeriod = {
   yearly: [
     {
       id: 'net-worth',
-      title: 'Total Net worth',
+      title: 'Asset Value at Risk',
       value: '$3.24M',
       icon: 'wallet',
       color: '#C6F432',
       change: {
         value: '31%',
-        label: 'Increased vs last year',
+        label: 'Total enterprise assets under surveillance',
         tone: 'positive',
       },
       chart: {
@@ -394,15 +394,15 @@ export const dashboardSummaryCardsByPeriod = {
     },
     {
       id: 'portfolio-return',
-      title: 'Portfolio return',
+      title: 'Remediation Velocity',
       value: '+26.4%',
       icon: 'trend',
       color: '#C6F432',
       target: {
         current: '72%',
-        label: 'to target',
+        label: 'to annual target',
         progress: 72,
-        gained: '$316K gained',
+        gained: '$316K mitigated',
         goal: 'Goal $438K',
       },
       bars: [
@@ -419,25 +419,25 @@ export const dashboardSummaryCardsByPeriod = {
     },
     {
       id: 'asset-classes',
-      title: 'Asset classes',
+      title: 'Target Attack Surfaces',
       value: '$2.43M',
       icon: 'pie',
       color: '#C6F432',
       allocations: [
-        { label: 'Stock & Crypto', value: '$1.56M', share: 64, color: '#C6F432' },
-        { label: 'Real estate', value: '$872K', share: 36, color: '#C6F432' },
+        { label: 'Web APIs & Gateways', value: '$1.56M', share: 64, color: '#C6F432' },
+        { label: 'Cloud Mesh & Ingress', value: '$872K', share: 36, color: '#C6F432' },
       ],
     },
     {
       id: 'risk-score',
-      title: 'Risk score',
+      title: 'Exploit Threat Score',
       value: '69',
       suffix: '/ 100',
       icon: 'shield',
       color: '#EAB308',
       change: {
         value: 'Moderate,',
-        label: 'higher growth mix',
+        label: 'perimeter segmented',
         tone: 'neutral',
       },
       chart: {
@@ -458,29 +458,29 @@ export const dashboardSummaryCardsByPeriod = {
 export const defaultDashboardPeriod = dashboardPeriods[0].value
 
 const performanceMetrics = [
-  { label: 'Stocks', value: '$1.20M', change: '+11.2%', tone: 'positive' },
-  { label: 'Real estate', value: '$840K', change: '+6.8%', tone: 'positive' },
-  { label: 'Crypto', value: '$380K', change: '+35.8%', tone: 'positive' },
-  { label: 'Fixed Income', value: '$427K', change: '-1.1%', tone: 'negative' },
+  { label: 'Production Ingress', value: '$1.20M', change: '+11.2%', tone: 'positive' },
+  { label: 'Cloud Infrastructure', value: '$840K', change: '+6.8%', tone: 'positive' },
+  { label: 'Identity & SSO Gateways', value: '$380K', change: '+35.8%', tone: 'positive' },
+  { label: 'Internal APIs', value: '$427K', change: '-1.1%', tone: 'negative' },
 ] as const
 
 const allocationItems = [
-  { label: 'Stocks', value: '$1.20M', percent: 42, color: '#C6F432' },
-  { label: 'Real Estate', value: '$854K', percent: 30, color: '#C6F432' },
-  { label: 'Crypto', value: '$370K', percent: 13, color: '#A3E635' },
-  { label: 'Fixed income', value: '$427K', percent: 15, color: '#EAB308' },
+  { label: 'Production Ingress', value: '$1.20M', percent: 42, color: '#C6F432' },
+  { label: 'Cloud Infrastructure', value: '$854K', percent: 30, color: '#C6F432' },
+  { label: 'Identity & SSO Gateways', value: '$370K', percent: 13, color: '#A3E635' },
+  { label: 'Internal APIs', value: '$427K', percent: 15, color: '#EAB308' },
 ] as const
 
 export const dashboardDetailByPeriod = {
   monthly: {
     performance: {
-      title: 'Portfolio Performance',
-      trend: '+14.7% YTD',
-      actionLabel: 'Full Analysis',
+      title: 'Attack Surface Risk & Remediation Velocity',
+      trend: '+14.7% YTD SLA',
+      actionLabel: 'Full Risk Analysis',
       yAxis: ['700K', '600K', '500K', '400K', '300K', '200K'],
       legend: [
-        { label: 'Your Portfolio', color: '#C6F432' },
-        { label: 'S&P 500', color: '#C6F432' },
+        { label: 'Monitored Perimeter', color: '#C6F432' },
+        { label: 'CIS Benchmark', color: '#C6F432' },
       ],
       data: [
         { label: 'Week 1', axisLabel: 'Week 1', portfolio: 310, benchmark: 280 },
@@ -502,22 +502,22 @@ export const dashboardDetailByPeriod = {
       metrics: performanceMetrics,
     },
     allocation: {
-      title: 'Asset Allocation',
-      status: 'Balanced',
+      title: 'Asset Exposure Distribution',
+      status: 'Hardened',
       centerValue: '4',
-      centerLabel: 'Classes',
+      centerLabel: 'Clusters',
       items: allocationItems,
     },
   },
   weekly: {
     performance: {
-      title: 'Portfolio Performance',
-      trend: '+3.8% WTD',
-      actionLabel: 'Full Analysis',
+      title: 'Attack Surface Risk & Remediation Velocity',
+      trend: '+3.8% WTD SLA',
+      actionLabel: 'Full Risk Analysis',
       yAxis: ['700K', '600K', '500K', '400K', '300K', '200K'],
       legend: [
-        { label: 'Your Portfolio', color: '#C6F432' },
-        { label: 'S&P 500', color: '#C6F432' },
+        { label: 'Monitored Perimeter', color: '#C6F432' },
+        { label: 'CIS Benchmark', color: '#C6F432' },
       ],
       data: [
         { label: 'Mon', axisLabel: 'Mon', portfolio: 300, benchmark: 285 },
@@ -532,22 +532,22 @@ export const dashboardDetailByPeriod = {
       metrics: performanceMetrics,
     },
     allocation: {
-      title: 'Asset Allocation',
-      status: 'Balanced',
+      title: 'Asset Exposure Distribution',
+      status: 'Hardened',
       centerValue: '4',
-      centerLabel: 'Classes',
+      centerLabel: 'Clusters',
       items: allocationItems,
     },
   },
   quarterly: {
     performance: {
-      title: 'Portfolio Performance',
-      trend: '+18.9% QTD',
-      actionLabel: 'Full Analysis',
+      title: 'Attack Surface Risk & Remediation Velocity',
+      trend: '+18.9% QTD SLA',
+      actionLabel: 'Full Risk Analysis',
       yAxis: ['700K', '600K', '500K', '400K', '300K', '200K'],
       legend: [
-        { label: 'Your Portfolio', color: '#C6F432' },
-        { label: 'S&P 500', color: '#C6F432' },
+        { label: 'Monitored Perimeter', color: '#C6F432' },
+        { label: 'CIS Benchmark', color: '#C6F432' },
       ],
       data: [
         { label: 'Jan', axisLabel: 'Jan', portfolio: 280, benchmark: 260 },
@@ -562,22 +562,22 @@ export const dashboardDetailByPeriod = {
       metrics: performanceMetrics,
     },
     allocation: {
-      title: 'Asset Allocation',
-      status: 'Balanced',
+      title: 'Asset Exposure Distribution',
+      status: 'Hardened',
       centerValue: '4',
-      centerLabel: 'Classes',
+      centerLabel: 'Clusters',
       items: allocationItems,
     },
   },
   yearly: {
     performance: {
-      title: 'Portfolio Performance',
-      trend: '+26.4% YTD',
-      actionLabel: 'Full Analysis',
+      title: 'Attack Surface Risk & Remediation Velocity',
+      trend: '+26.4% YTD SLA',
+      actionLabel: 'Full Risk Analysis',
       yAxis: ['700K', '600K', '500K', '400K', '300K', '200K'],
       legend: [
-        { label: 'Your Portfolio', color: '#C6F432' },
-        { label: 'S&P 500', color: '#C6F432' },
+        { label: 'Monitored Perimeter', color: '#C6F432' },
+        { label: 'CIS Benchmark', color: '#C6F432' },
       ],
       data: [
         { label: 'Q1', axisLabel: 'Q1', portfolio: 260, benchmark: 240 },
@@ -592,84 +592,84 @@ export const dashboardDetailByPeriod = {
       metrics: performanceMetrics,
     },
     allocation: {
-      title: 'Asset Allocation',
-      status: 'Balanced',
+      title: 'Asset Exposure Distribution',
+      status: 'Hardened',
       centerValue: '4',
-      centerLabel: 'Classes',
+      centerLabel: 'Clusters',
       items: allocationItems,
     },
   },
 } as const
 
 const dicebearGlassAvatar = (seed: string) =>
-  `https://api.dicebear.com/10.x/glass/svg?seed=${encodeURIComponent(seed)}`
+  `https://api.dicebear.com/10.x/identicon/svg?seed=${encodeURIComponent(seed)}`
 
 const holdingLogoUrls = {
-  aapl: dicebearGlassAvatar('AAPL'),
-  bitcoin: dicebearGlassAvatar('Bitcoin'),
-  oakAve: dicebearGlassAvatar('55 Oak Ave'),
-  msft: dicebearGlassAvatar('MSFT'),
-  treasury: dicebearGlassAvatar('US Treasury 10Y'),
+  apiGateway: dicebearGlassAvatar('api.reconx.cloud'),
+  idpBroker: dicebearGlassAvatar('auth.internal-idp.net'),
+  k8sIngress: dicebearGlassAvatar('core-k8s-ingress.us-east'),
+  vaultDb: dicebearGlassAvatar('payment-vault.db.mesh'),
+  vpnPerimeter: dicebearGlassAvatar('legacy-vpn.perimeter.corp'),
 } as const
 
 const topHoldings = [
   {
     no: '1',
-    asset: 'AAPL',
-    type: 'US Equity',
+    asset: 'api.reconx.cloud',
+    type: 'Production Edge Gateway',
     value: '$284,500',
     allocation: '10.0%',
-    return: '+22.4%',
-    day: '+1.8%',
-    logo: holdingLogoUrls.aapl,
+    return: 'Remediated',
+    day: '0 Probes',
+    logo: holdingLogoUrls.apiGateway,
     tone: 'positive',
     dayTone: 'positive',
   },
   {
     no: '2',
-    asset: 'Bitcoin',
-    type: 'Crypto Asset',
+    asset: 'auth.internal-idp.net',
+    type: 'OAuth / OIDC Broker',
     value: '$198,720',
     allocation: '7.0%',
-    return: '+61.2%',
-    day: '+3.4%',
-    logo: holdingLogoUrls.bitcoin,
+    return: 'Patched',
+    day: '3 Probes',
+    logo: holdingLogoUrls.idpBroker,
     tone: 'positive',
     dayTone: 'positive',
   },
   {
     no: '3',
-    asset: '55 Oak Ave',
-    type: 'Real Estate',
+    asset: 'core-k8s-ingress.us-east',
+    type: 'Kubernetes Ingress Mesh',
     value: '$1,100,000',
     allocation: '11.2%',
-    return: '+15.3%',
-    day: '-----',
-    logo: holdingLogoUrls.oakAve,
+    return: 'Hardened',
+    day: 'Isolated',
+    logo: holdingLogoUrls.k8sIngress,
     tone: 'positive',
     dayTone: 'neutral',
   },
   {
     no: '4',
-    asset: 'MSFT',
-    type: 'US Equity',
+    asset: 'payment-vault.db.mesh',
+    type: 'Confidential Data Store',
     value: '$950,000',
     allocation: '9.7%',
-    return: '+20.1%',
-    day: '+2.3%',
-    logo: holdingLogoUrls.msft,
+    return: 'Enforced',
+    day: 'Encrypted',
+    logo: holdingLogoUrls.vaultDb,
     tone: 'positive',
     dayTone: 'positive',
   },
   {
     no: '5',
-    asset: 'US Treasury 10Y',
-    type: 'US Equity',
+    asset: 'legacy-vpn.perimeter.corp',
+    type: 'Edge SSL VPN Gateway',
     value: '$1,100,000',
     allocation: '8.8%',
-    return: '-1.2%',
-    day: '-----',
-    logo: holdingLogoUrls.treasury,
+    return: 'Quarantined',
+    day: 'Blocked',
+    logo: holdingLogoUrls.vpnPerimeter,
     tone: 'negative',
     dayTone: 'neutral',
   },
@@ -677,21 +677,21 @@ const topHoldings = [
 
 const smartInsights = [
   {
-    title: 'Rebalance opportunity',
-    description: 'Crypto at 13%, above 10% target. Trim $68K.',
-    action: 'Rebalance Now',
-    icon: 'scale',
-  },
-  {
-    title: 'Tax-loss harvesting',
-    description: '2 holdings eligible, saving est. $12,400',
-    action: 'Review',
+    title: 'Zero-Day Vulnerability Advisory',
+    description: 'OIDC Broker token replay mitigation deployed across 4 clusters. 0 exploits possible.',
+    action: 'Inspect CVE',
     icon: 'taxes',
   },
   {
-    title: 'Dividend reinvestment',
-    description: '$3,840 pending. DRIP adds +0.4% annually.',
-    action: 'Enable DRIP',
+    title: 'Attack Surface Hardening',
+    description: '2 perimeter endpoints missing HSTS & TLS 1.3 strict flags. Auto-remediation script ready.',
+    action: 'Apply Patch',
+    icon: 'scale',
+  },
+  {
+    title: 'Continuous LOA Sync',
+    description: 'Target scope verified cryptographically against signed authorization letter #LOA-2026-09.',
+    action: 'View Audit',
     icon: 'reload',
   },
 ] as const
@@ -699,53 +699,53 @@ const smartInsights = [
 export const dashboardBottomByPeriod = {
   monthly: {
     holdings: {
-      title: 'Top Holdings',
-      actionLabel: 'View all',
-      columns: ['No', 'Asset', 'Value', 'Allocation', 'Return', '24H'],
+      title: 'High-Risk Target Assets',
+      actionLabel: 'View All Targets',
+      columns: ['No', 'Scope / Asset', 'Risk Value', 'Surface Share', 'Remediation', 'Telemetry'],
       rows: topHoldings,
     },
     insights: {
-      title: 'Smart Insights',
-      status: 'AI Recommendation',
+      title: 'Automated Pentest Insights',
+      status: 'AI Guardrail',
       items: smartInsights,
     },
   },
   weekly: {
     holdings: {
-      title: 'Top Holdings',
-      actionLabel: 'View all',
-      columns: ['No', 'Asset', 'Value', 'Allocation', 'Return', '24H'],
+      title: 'High-Risk Target Assets',
+      actionLabel: 'View All Targets',
+      columns: ['No', 'Scope / Asset', 'Risk Value', 'Surface Share', 'Remediation', 'Telemetry'],
       rows: topHoldings,
     },
     insights: {
-      title: 'Smart Insights',
-      status: 'AI Recommendation',
+      title: 'Automated Pentest Insights',
+      status: 'AI Guardrail',
       items: smartInsights,
     },
   },
   quarterly: {
     holdings: {
-      title: 'Top Holdings',
-      actionLabel: 'View all',
-      columns: ['No', 'Asset', 'Value', 'Allocation', 'Return', '24H'],
+      title: 'High-Risk Target Assets',
+      actionLabel: 'View All Targets',
+      columns: ['No', 'Scope / Asset', 'Risk Value', 'Surface Share', 'Remediation', 'Telemetry'],
       rows: topHoldings,
     },
     insights: {
-      title: 'Smart Insights',
-      status: 'AI Recommendation',
+      title: 'Automated Pentest Insights',
+      status: 'AI Guardrail',
       items: smartInsights,
     },
   },
   yearly: {
     holdings: {
-      title: 'Top Holdings',
-      actionLabel: 'View all',
-      columns: ['No', 'Asset', 'Value', 'Allocation', 'Return', '24H'],
+      title: 'High-Risk Target Assets',
+      actionLabel: 'View All Targets',
+      columns: ['No', 'Scope / Asset', 'Risk Value', 'Surface Share', 'Remediation', 'Telemetry'],
       rows: topHoldings,
     },
     insights: {
-      title: 'Smart Insights',
-      status: 'AI Recommendation',
+      title: 'Automated Pentest Insights',
+      status: 'AI Guardrail',
       items: smartInsights,
     },
   },
@@ -755,9 +755,9 @@ const analyticsMetrics = {
   monthly: [
     {
       id: 'net-worth',
-      title: 'Total Net worth',
-      value: '1.84',
-      description: 'Strong risk-adjusted return',
+      title: 'Asset Value at Risk',
+      value: '$2.84M',
+      description: 'Continuous perimeter exposure index',
       color: '#C6F432',
       type: 'line',
       data: [
@@ -771,9 +771,9 @@ const analyticsMetrics = {
     },
     {
       id: 'risk-score',
-      title: 'Risk score',
+      title: 'Exploit Threat Score',
       value: '-4.2%',
-      description: 'Peak to trough - Jan 2026',
+      description: 'Perimeter threat level - Jan 2026',
       color: 'var(--chart-5)',
       type: 'area',
       data: [
@@ -787,9 +787,9 @@ const analyticsMetrics = {
     },
     {
       id: 'portfolio-return',
-      title: 'Portfolio return',
+      title: 'Remediation Velocity',
       value: '8.6%',
-      description: 'Below benchmark avg 10.2%',
+      description: 'SLA resolution within target threshold',
       color: '#EAB308',
       type: 'bars',
       data: [
@@ -805,8 +805,8 @@ const analyticsMetrics = {
   weekly: [
     {
       id: 'net-worth',
-      title: 'Total Net worth',
-      value: '1.31',
+      title: 'Asset Value at Risk',
+      value: '$2.74M',
       description: 'Stable short-term efficiency',
       color: '#C6F432',
       type: 'line',
@@ -821,9 +821,9 @@ const analyticsMetrics = {
     },
     {
       id: 'risk-score',
-      title: 'Risk score',
+      title: 'Exploit Threat Score',
       value: '-1.1%',
-      description: 'Intraday drawdown - Thu',
+      description: 'Threat dip detected - Thu',
       color: 'var(--chart-5)',
       type: 'area',
       data: [
@@ -837,9 +837,9 @@ const analyticsMetrics = {
     },
     {
       id: 'portfolio-return',
-      title: 'Portfolio return',
+      title: 'Remediation Velocity',
       value: '3.8%',
-      description: 'Above benchmark avg 3.0%',
+      description: 'Above SLA baseline 3.0%',
       color: '#EAB308',
       type: 'bars',
       data: [
@@ -855,9 +855,9 @@ const analyticsMetrics = {
   quarterly: [
     {
       id: 'net-worth',
-      title: 'Total Net worth',
-      value: '2.12',
-      description: 'Improving quarterly efficiency',
+      title: 'Asset Value at Risk',
+      value: '$2.92M',
+      description: 'Improving quarterly posture',
       color: '#C6F432',
       type: 'line',
       data: [
@@ -871,9 +871,9 @@ const analyticsMetrics = {
     },
     {
       id: 'risk-score',
-      title: 'Risk score',
+      title: 'Exploit Threat Score',
       value: '-3.5%',
-      description: 'Peak to trough - Feb 2026',
+      description: 'Perimeter threat level - Feb 2026',
       color: 'var(--chart-5)',
       type: 'area',
       data: [
@@ -887,9 +887,9 @@ const analyticsMetrics = {
     },
     {
       id: 'portfolio-return',
-      title: 'Portfolio return',
+      title: 'Remediation Velocity',
       value: '18.9%',
-      description: 'Above benchmark avg 15.0%',
+      description: 'Above target avg 15.0%',
       color: '#EAB308',
       type: 'bars',
       data: [
@@ -905,9 +905,9 @@ const analyticsMetrics = {
   yearly: [
     {
       id: 'net-worth',
-      title: 'Total Net worth',
-      value: '2.68',
-      description: 'Best annual risk-adjusted return',
+      title: 'Asset Value at Risk',
+      value: '$3.24M',
+      description: 'Best annual posture remediation',
       color: '#C6F432',
       type: 'line',
       data: [
@@ -921,9 +921,9 @@ const analyticsMetrics = {
     },
     {
       id: 'risk-score',
-      title: 'Risk score',
+      title: 'Exploit Threat Score',
       value: '-6.4%',
-      description: 'Peak to trough - 2024',
+      description: 'Perimeter threat level - 2024',
       color: 'var(--chart-5)',
       type: 'area',
       data: [
@@ -937,9 +937,9 @@ const analyticsMetrics = {
     },
     {
       id: 'portfolio-return',
-      title: 'Portfolio return',
+      title: 'Remediation Velocity',
       value: '26.4%',
-      description: 'Above benchmark avg 21.3%',
+      description: 'Above SLA baseline 21.3%',
       color: '#EAB308',
       type: 'bars',
       data: [
@@ -962,9 +962,9 @@ const analyticsPeriodLabels = {
 } as const
 
 const analyticsPerformanceLegend = [
-  { dataKey: 'portfolio', label: 'Portfolio +14.7%', color: '#C6F432' },
-  { dataKey: 'benchmark', label: 'S&P 500 +11.4%', color: '#C6F432' },
-  { dataKey: 'balanced', label: '60/40 +7.2%', color: '#A3E635' },
+  { dataKey: 'portfolio', label: 'Monitored Perimeter +14.7%', color: '#C6F432' },
+  { dataKey: 'benchmark', label: 'CIS Benchmark +11.4%', color: '#C6F432' },
+  { dataKey: 'balanced', label: 'OWASP Top 10 +7.2%', color: '#A3E635' },
 ] as const
 
 const analyticsPerformanceData = {
@@ -1092,136 +1092,136 @@ const analyticsYearlyIncomeStreams = [
 export const analyticsDataByPeriod = {
   monthly: {
     performance: {
-      title: 'Portfolio Performance',
-      subtitle: 'Portfolio performance over 6 months',
-      trend: 'Outperforming +3.3pp',
-      compareLabel: 'vs S&P 500',
+      title: 'Attack Surface Risk & Remediation Velocity',
+      subtitle: 'Continuous perimeter surveillance over 6 months',
+      trend: 'SLA Exceeded +3.3pp',
+      compareLabel: 'vs CIS Benchmark',
       labels: analyticsPeriodLabels.monthly,
       legend: analyticsPerformanceLegend,
       data: analyticsPerformanceData.monthly,
     },
     metrics: analyticsMetrics.monthly,
     returns: {
-      title: 'Monthly returns',
-      subtitle: 'Per asset class 2026',
-      status: 'All positive',
+      title: 'Attack Surface Exposure Rate',
+      subtitle: 'Per asset cluster 2026',
+      status: 'All monitored',
       series: [
-        { dataKey: 'stocks', label: 'Stocks', color: '#C6F432' },
-        { dataKey: 'realEstate', label: 'Real Estate', color: '#C6F432' },
-        { dataKey: 'crypto', label: 'Crypto', color: '#EAB308' },
-        { dataKey: 'fixedIncome', label: 'Fixed Income', color: '#A3E635' },
+        { dataKey: 'stocks', label: 'API Gateways', color: '#C6F432' },
+        { dataKey: 'realEstate', label: 'Cloud Mesh', color: '#C6F432' },
+        { dataKey: 'crypto', label: 'Identity / SSO', color: '#EAB308' },
+        { dataKey: 'fixedIncome', label: 'Internal Services', color: '#A3E635' },
       ],
       data: analyticsMonthlyReturns,
     },
     income: {
-      title: 'Income streams',
-      subtitle: 'Dividends & rental income - 2026',
-      status: '$18,240 YTD',
+      title: 'Exploit Defense Telemetry',
+      subtitle: 'Automated Probes & WAF Blocks - 2026',
+      status: '48,240 Probes Neutralized',
       series: [
-        { dataKey: 'dividends', label: 'Dividends', color: '#C6F432' },
-        { dataKey: 'rentalIncome', label: 'Rental Income', color: '#C6F432' },
+        { dataKey: 'dividends', label: 'Probes Blocked', color: '#C6F432' },
+        { dataKey: 'rentalIncome', label: 'Rate-Limited Ingress', color: '#C6F432' },
       ],
       data: analyticsIncomeStreams,
     },
   },
   weekly: {
     performance: {
-      title: 'Portfolio Performance',
-      subtitle: 'Portfolio performance this week',
-      trend: 'Outperforming +0.8pp',
-      compareLabel: 'vs S&P 500',
+      title: 'Attack Surface Risk & Remediation Velocity',
+      subtitle: 'Perimeter performance this week',
+      trend: 'SLA Exceeded +0.8pp',
+      compareLabel: 'vs CIS Benchmark',
       labels: analyticsPeriodLabels.weekly,
       legend: analyticsPerformanceLegend,
       data: analyticsPerformanceData.weekly,
     },
     metrics: analyticsMetrics.weekly,
     returns: {
-      title: 'Daily returns',
-      subtitle: 'Per asset class this week',
-      status: 'All positive',
+      title: 'Daily Exposure Rate',
+      subtitle: 'Per asset cluster this week',
+      status: 'All monitored',
       series: [
-        { dataKey: 'stocks', label: 'Stocks', color: '#C6F432' },
-        { dataKey: 'realEstate', label: 'Real Estate', color: '#C6F432' },
-        { dataKey: 'crypto', label: 'Crypto', color: '#EAB308' },
-        { dataKey: 'fixedIncome', label: 'Fixed Income', color: '#A3E635' },
+        { dataKey: 'stocks', label: 'API Gateways', color: '#C6F432' },
+        { dataKey: 'realEstate', label: 'Cloud Mesh', color: '#C6F432' },
+        { dataKey: 'crypto', label: 'Identity / SSO', color: '#EAB308' },
+        { dataKey: 'fixedIncome', label: 'Internal Services', color: '#A3E635' },
       ],
       data: analyticsWeeklyReturns,
     },
     income: {
-      title: 'Income streams',
-      subtitle: 'Dividends & rental income this week',
-      status: '$3,120 WTD',
+      title: 'Exploit Defense Telemetry',
+      subtitle: 'Automated Probes & WAF Blocks this week',
+      status: '3,120 Neutralized',
       series: [
-        { dataKey: 'dividends', label: 'Dividends', color: '#C6F432' },
-        { dataKey: 'rentalIncome', label: 'Rental Income', color: '#C6F432' },
+        { dataKey: 'dividends', label: 'Probes Blocked', color: '#C6F432' },
+        { dataKey: 'rentalIncome', label: 'Rate-Limited Ingress', color: '#C6F432' },
       ],
       data: analyticsWeeklyIncomeStreams,
     },
   },
   quarterly: {
     performance: {
-      title: 'Portfolio Performance',
-      subtitle: 'Portfolio performance this quarter',
-      trend: 'Outperforming +3.9pp',
-      compareLabel: 'vs S&P 500',
+      title: 'Attack Surface Risk & Remediation Velocity',
+      subtitle: 'Perimeter performance this quarter',
+      trend: 'SLA Exceeded +3.9pp',
+      compareLabel: 'vs CIS Benchmark',
       labels: analyticsPeriodLabels.quarterly,
       legend: analyticsPerformanceLegend,
       data: analyticsPerformanceData.quarterly,
     },
     metrics: analyticsMetrics.quarterly,
     returns: {
-      title: 'Monthly returns',
-      subtitle: 'Per asset class this quarter',
-      status: 'All positive',
+      title: 'Monthly Exposure Rate',
+      subtitle: 'Per asset cluster this quarter',
+      status: 'All monitored',
       series: [
-        { dataKey: 'stocks', label: 'Stocks', color: '#C6F432' },
-        { dataKey: 'realEstate', label: 'Real Estate', color: '#C6F432' },
-        { dataKey: 'crypto', label: 'Crypto', color: '#EAB308' },
-        { dataKey: 'fixedIncome', label: 'Fixed Income', color: '#A3E635' },
+        { dataKey: 'stocks', label: 'API Gateways', color: '#C6F432' },
+        { dataKey: 'realEstate', label: 'Cloud Mesh', color: '#C6F432' },
+        { dataKey: 'crypto', label: 'Identity / SSO', color: '#EAB308' },
+        { dataKey: 'fixedIncome', label: 'Internal Services', color: '#A3E635' },
       ],
       data: analyticsQuarterlyReturns,
     },
     income: {
-      title: 'Income streams',
-      subtitle: 'Dividends & rental income this quarter',
-      status: '$9,640 QTD',
+      title: 'Exploit Defense Telemetry',
+      subtitle: 'Automated Probes & WAF Blocks this quarter',
+      status: '9,640 Neutralized',
       series: [
-        { dataKey: 'dividends', label: 'Dividends', color: '#C6F432' },
-        { dataKey: 'rentalIncome', label: 'Rental Income', color: '#C6F432' },
+        { dataKey: 'dividends', label: 'Probes Blocked', color: '#C6F432' },
+        { dataKey: 'rentalIncome', label: 'Rate-Limited Ingress', color: '#C6F432' },
       ],
       data: analyticsQuarterlyIncomeStreams,
     },
   },
   yearly: {
     performance: {
-      title: 'Portfolio Performance',
-      subtitle: 'Portfolio performance this year',
-      trend: 'Outperforming +5.1pp',
-      compareLabel: 'vs S&P 500',
+      title: 'Attack Surface Risk & Remediation Velocity',
+      subtitle: 'Perimeter performance this year',
+      trend: 'SLA Exceeded +5.1pp',
+      compareLabel: 'vs CIS Benchmark',
       labels: analyticsPeriodLabels.yearly,
       legend: analyticsPerformanceLegend,
       data: analyticsPerformanceData.yearly,
     },
     metrics: analyticsMetrics.yearly,
     returns: {
-      title: 'Quarterly returns',
-      subtitle: 'Per asset class 2026',
-      status: 'All positive',
+      title: 'Quarterly Exposure Rate',
+      subtitle: 'Per asset cluster 2026',
+      status: 'All monitored',
       series: [
-        { dataKey: 'stocks', label: 'Stocks', color: '#C6F432' },
-        { dataKey: 'realEstate', label: 'Real Estate', color: '#C6F432' },
-        { dataKey: 'crypto', label: 'Crypto', color: '#EAB308' },
-        { dataKey: 'fixedIncome', label: 'Fixed Income', color: '#A3E635' },
+        { dataKey: 'stocks', label: 'API Gateways', color: '#C6F432' },
+        { dataKey: 'realEstate', label: 'Cloud Mesh', color: '#C6F432' },
+        { dataKey: 'crypto', label: 'Identity / SSO', color: '#EAB308' },
+        { dataKey: 'fixedIncome', label: 'Internal Services', color: '#A3E635' },
       ],
       data: analyticsYearlyReturns,
     },
     income: {
-      title: 'Income streams',
-      subtitle: 'Dividends & rental income - 2026',
-      status: '$18,240 YTD',
+      title: 'Exploit Defense Telemetry',
+      subtitle: 'Automated Probes & WAF Blocks - 2026',
+      status: '48,240 Probes Neutralized',
       series: [
-        { dataKey: 'dividends', label: 'Dividends', color: '#C6F432' },
-        { dataKey: 'rentalIncome', label: 'Rental Income', color: '#C6F432' },
+        { dataKey: 'dividends', label: 'Probes Blocked', color: '#C6F432' },
+        { dataKey: 'rentalIncome', label: 'Rate-Limited Ingress', color: '#C6F432' },
       ],
       data: analyticsYearlyIncomeStreams,
     },

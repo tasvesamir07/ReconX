@@ -11,7 +11,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { SidebarTrigger } from '@/components/ui/sidebar'
 import {
   dashboardPeriods,
   dashboardTopbarData,
@@ -26,7 +25,7 @@ function isPeriodValue(value: string | null): value is PeriodValue {
 
 export function DashboardTopbar() {
   const { pathname, period, setPeriod } = useDashboardNavigation()
-  const title = getPageTitle(pathname)
+  const title = "Cyber Asset Valuation & Capital Risk"
   const selectedPeriodValue = isPeriodValue(period) ? period : defaultDashboardPeriod
 
   const selectedPeriod =
@@ -38,12 +37,10 @@ export function DashboardTopbar() {
   }
 
   return (
-    <header className="flex shrink-0 flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between md:px-8">
+    <header className="flex shrink-0 flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between md:px-8 border-b border-white/8 bg-[#0B0B0C]">
       <div className="flex min-w-0 items-center gap-3">
-        <SidebarTrigger className="size-8.5 shrink-0 md:hidden [&_svg]:size-5!" />
-
         <div className="flex min-w-0 flex-1 items-center justify-between gap-3 md:flex-col md:items-start md:justify-center md:gap-1.5">
-          <h1 className="truncate font-section text-lg leading-none font-semibold text-foreground md:text-xl">
+          <h1 className="truncate font-section text-lg leading-none font-bold text-white md:text-xl">
             {title}
           </h1>
           <div className="flex shrink-0 items-center gap-1.5 font-section text-xs text-foreground md:gap-2 md:text-sm">

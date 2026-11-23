@@ -19,13 +19,29 @@ import { AdminDashboard } from "@/components/dashboard/admin-dashboard";
 
 export default function DashboardOverviewPage() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [scans, setScans] = useState<ScanType[]>([]);
-  const [assets, setAssets] = useState<ApprovedAsset[]>([]);
-  const [authorizations, setAuthorizations] = useState<AuthorizationRequest[]>([]);
-  const [metrics, setMetrics] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const cached = localStorage.getItem("reconx_cached_session_user");
+        if (cached) return JSON.parse(cached);
+      } catch {}
+    }
+    return null;
+  });
+  const [scans, setScans] = useState<ScanType[]>(() => {
+    return isSimulationActive() ? DEMO_SCANS : [];
+  });
+  const [assets, setAssets] = useState<ApprovedAsset[]>(() => {
+    return isSimulationActive() ? DEMO_APPROVED_ASSETS : [];
+  });
+  const [authorizations, setAuthorizations] = useState<AuthorizationRequest[]>(() => {
+    return isSimulationActive() ? DEMO_AUTHORIZATION_REQUESTS : [];
+  });
+  const [metrics, setMetrics] = useState<any>(() => {
+    return isSimulationActive() ? DEMO_METRICS : null;
+  });
   const [adminAuditEvents, setAdminAuditEvents] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const fetchDashboardData = useCallback(async (isInitial = false) => {
     try {

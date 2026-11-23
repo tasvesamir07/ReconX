@@ -136,7 +136,7 @@ export default function LandingPage() {
   return (
     <div
       id="top"
-      className="min-h-screen flex flex-col bg-transparent text-white font-sans selection:bg-[#C6F432] selection:text-[#0B0B0C] relative overflow-x-hidden antialiased"
+      className="min-h-screen flex flex-col bg-transparent text-white font-sans selection:bg-[#C6F432] selection:text-[#0B0B0C] relative antialiased"
     >
       {/* Background Fluted Grid Lines (Vertical pinstripes) */}
       <div className="fixed inset-0 bg-fluted-grid pointer-events-none opacity-35 z-0" aria-hidden="true" />
@@ -147,9 +147,9 @@ export default function LandingPage() {
         aria-hidden="true"
       />
 
-      {/* 1. Northline Top Navigation Bar */}
-      <header className="pt-6 px-4 sm:px-6 lg:px-8 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto flex items-center justify-between glass-pill px-4 py-2.5 rounded-full shadow-2xl">
+      {/* 1. Northline Top Navigation Bar - Truly Sticky Header */}
+      <header className="sticky top-0 z-50 w-full py-3 px-4 sm:px-6 lg:px-8 bg-[#0B0B0C]/80 backdrop-blur-md transition-all duration-300">
+        <div className="max-w-6xl mx-auto flex items-center justify-between glass-pill px-4 py-2.5 rounded-full shadow-2xl border border-white/10 bg-[#121214]/90 backdrop-blur-lg">
           {/* Brand Logo */}
           <a
             href="#top"

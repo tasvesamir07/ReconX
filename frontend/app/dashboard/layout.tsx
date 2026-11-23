@@ -37,10 +37,45 @@ import { ThemeToggleButton3 } from "@/components/ui/skiper-ui";
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [orgs, setOrgs] = useState<Organization[]>([]);
-  const [currentOrg, setCurrentOrg] = useState<Organization | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const cached = localStorage.getItem("reconx_cached_session_user");
+        if (cached) return JSON.parse(cached);
+      } catch {}
+    }
+    return null;
+  });
+  const [orgs, setOrgs] = useState<Organization[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const cached = localStorage.getItem("reconx_cached_orgs");
+        if (cached) return JSON.parse(cached);
+      } catch {}
+    }
+    return [];
+  });
+  const [currentOrg, setCurrentOrg] = useState<Organization | null>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const cached = localStorage.getItem("reconx_cached_orgs");
+        if (cached) {
+          const list = JSON.parse(cached);
+          if (Array.isArray(list) && list.length > 0) return list[0];
+        }
+      } catch {}
+    }
+    return null;
+  });
+  const [loading, setLoading] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const cached = localStorage.getItem("reconx_cached_session_user");
+        if (cached) return false;
+      } catch {}
+    }
+    return true;
+  });
   const [pendingCount, setPendingCount] = useState<number>(0);
 
   // Shell UI states
@@ -65,6 +100,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       try {
         const sessionData = await apiRequest<{ user: User }>("/auth/me");
         setUser(sessionData.user);
+        if (typeof window !== "undefined") {
+          localStorage.setItem("reconx_cached_session_user", JSON.stringify(sessionData.user));
+        }
 
         // Super Admin operates platform-wide and is not tied to any tenant
         if (sessionData.user.platform_role !== "SUPER_ADMIN") {
@@ -72,6 +110,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           setOrgs(orgList);
           if (orgList.length > 0) {
             setCurrentOrg(orgList[0]);
+            if (typeof window !== "undefined") {
+              localStorage.setItem("reconx_cached_orgs", JSON.stringify(orgList));
+            }
           }
         }
 
@@ -121,6 +162,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const handleLogout = async () => {
     try {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("reconx_cached_session_user");
+        localStorage.removeItem("reconx_cached_orgs");
+      }
       await apiRequest("/auth/logout", { method: "POST" });
     } finally {
       router.push("/login");
