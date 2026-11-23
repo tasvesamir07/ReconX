@@ -2,12 +2,13 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: "default" | "glass" | "primary" | "success" | "warning" | "danger" | "info" | "outline" | "neutral";
+  variant?: "default" | "glass" | "primary" | "success" | "warning" | "danger" | "info" | "outline" | "neutral" | "primary-glass" | "success-glass" | "warning-glass" | "danger-glass" | "info-glass" | "outline-glass";
   size?: "sm" | "md" | "lg";
+  dot?: boolean;
 }
 
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ className, variant = "default", size = "md", ...props }, ref) => {
+  ({ className, variant = "default", size = "md", dot = false, children, ...props }, ref) => {
     const variants = {
       default: "bg-surface-elevated text-text-muted border border-border",
       glass: "glass-pill text-text-muted",
@@ -42,7 +43,10 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
           className
         )}
         {...props}
-      />
+      >
+        {dot && <span className="size-1.5 rounded-full bg-current shrink-0" aria-hidden="true" />}
+        {children}
+      </span>
     );
   }
 );

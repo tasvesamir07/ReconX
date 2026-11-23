@@ -8,10 +8,14 @@ export function CopyButton({
   value,
   label,
   className,
+  variant = "ghost-glass",
+  size = "sm",
 }: {
   value: string;
   label?: string;
   className?: string;
+  variant?: "default" | "ghost" | "ghost-glass";
+  size?: "sm" | "md";
 }) {
   const [copied, setCopied] = React.useState(false);
   const timerRef = React.useRef<number | null>(null);
@@ -51,8 +55,11 @@ export function CopyButton({
       title={copied ? "Copied" : label ?? "Copy to clipboard"}
       aria-label={copied ? "Copied" : label ?? "Copy to clipboard"}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-md px-1.5 py-1 text-[11px] font-medium text-subtle transition-colors",
-        "hover:bg-elevated hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
+        "inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-label-xs font-medium text-text-muted transition-colors",
+        "hover:bg-surface/50 hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
+        variant === "ghost-glass" && "glass-pill",
+        size === "sm" && "px-2 py-1",
+        size === "md" && "px-3 py-1.5",
         className
       )}
     >

@@ -2,7 +2,7 @@ import * as React from "react";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "outline" | "subtle" | "primary-glass" | "secondary-glass" | "ghost-glass";
+type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "destructive" | "outline" | "subtle" | "primary-glass" | "secondary-glass" | "ghost-glass";
 type ButtonSize = "sm" | "md" | "lg" | "icon";
 
 const variants: Record<ButtonVariant, string> = {
@@ -18,6 +18,8 @@ const variants: Record<ButtonVariant, string> = {
   "ghost-glass":
     "btn glass-pill text-text-muted hover:text-text hover:bg-surface/70",
   danger:
+    "bg-destructive text-white hover:bg-destructive-hover active:bg-destructive-pressed shadow-[0_0_16px_-4px_rgba(239,68,68,0.3)]",
+  destructive:
     "bg-destructive text-white hover:bg-destructive-hover active:bg-destructive-pressed shadow-[0_0_16px_-4px_rgba(239,68,68,0.3)]",
   outline: "border-2 border-border text-text hover:bg-surface hover:border-border-strong",
   subtle: "bg-surface-elevated text-text-muted hover:text-text hover:bg-surface-pressed",

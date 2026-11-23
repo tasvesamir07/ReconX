@@ -4,19 +4,19 @@ import { cn } from "@/lib/utils";
 
 const scanStatusMap: Record<
   Scan["status"],
-  { label: string; variant: "neutral" | "primary" | "success" | "warning" | "danger" | "info" }
+  { label: string; variant: "neutral" | "primary" | "success" | "warning" | "danger" | "info" | "primary-glass" | "success-glass" | "warning-glass" | "danger-glass" | "info-glass" }
 > = {
   draft: { label: "Draft", variant: "neutral" },
-  validating: { label: "Validating", variant: "info" },
-  queued: { label: "Queued", variant: "info" },
-  provisioning: { label: "Preparing", variant: "info" },
-  running: { label: "Running", variant: "primary" },
-  stopping: { label: "Stopping", variant: "warning" },
-  completed: { label: "Completed", variant: "success" },
-  partial: { label: "Partial", variant: "warning" },
+  validating: { label: "Validating", variant: "info-glass" },
+  queued: { label: "Queued", variant: "info-glass" },
+  provisioning: { label: "Preparing", variant: "info-glass" },
+  running: { label: "Running", variant: "primary-glass" },
+  stopping: { label: "Stopping", variant: "warning-glass" },
+  completed: { label: "Completed", variant: "success-glass" },
+  partial: { label: "Partial", variant: "warning-glass" },
   cancelled: { label: "Cancelled", variant: "neutral" },
-  failed: { label: "Failed", variant: "danger" },
-  rejected: { label: "Rejected", variant: "danger" },
+  failed: { label: "Failed", variant: "danger-glass" },
+  rejected: { label: "Rejected", variant: "danger-glass" },
 };
 
 export function ScanStatusBadge({
@@ -34,20 +34,15 @@ export function ScanStatusBadge({
   );
 }
 
-const severityClasses: Record<Finding["severity"], string> = {
-  critical: "border-red-200 bg-red-50 text-red-700",
-  high: "border-orange-200 bg-orange-50 text-orange-700",
-  medium: "border-amber-200 bg-amber-50 text-amber-700",
-  low: "border-sky-200 bg-sky-50 text-sky-700",
-  informational: "border-slate-200 bg-slate-50 text-slate-700",
-};
-
-const severityLabels: Record<Finding["severity"], string> = {
-  critical: "Critical",
-  high: "High",
-  medium: "Medium",
-  low: "Low",
-  informational: "Info",
+const severityMap: Record<
+  Finding["severity"],
+  { variant: "danger-glass" | "warning-glass" | "success-glass" | "primary-glass" | "info-glass"; label: string }
+> = {
+  critical: { label: "Critical", variant: "danger-glass" },
+  high: { label: "High", variant: "warning-glass" },
+  medium: { label: "Medium", variant: "success-glass" },
+  low: { label: "Low", variant: "info-glass" },
+  informational: { label: "Info", variant: "info-glass" },
 };
 
 export function SeverityBadge({
@@ -57,27 +52,22 @@ export function SeverityBadge({
   severity: Finding["severity"];
   className?: string;
 }) {
+  const meta = severityMap[severity] ?? { label: severity, variant: "info-glass" as const };
   return (
-    <span
-      className={cn(
-        "inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide",
-        severityClasses[severity] ?? severityClasses.informational,
-        className
-      )}
-    >
-      {severityLabels[severity] ?? severity}
-    </span>
+    <Badge variant={meta.variant} className={cn("capitalize", className)}>
+      {meta.label}
+    </Badge>
   );
 }
 
 const confidenceMap: Record<
   Finding["confidence"],
-  { label: string; variant: "success" | "warning" | "neutral" | "info" }
+  { label: string; variant: "success-glass" | "warning-glass" | "neutral" | "info-glass" }
 > = {
-  confirmed: { label: "Confirmed", variant: "success" },
-  likely: { label: "Likely", variant: "warning" },
+  confirmed: { label: "Confirmed", variant: "success-glass" },
+  likely: { label: "Likely", variant: "warning-glass" },
   unconfirmed: { label: "Unconfirmed", variant: "neutral" },
-  informational: { label: "Informational", variant: "info" },
+  informational: { label: "Informational", variant: "info-glass" },
 };
 
 export function ConfidenceBadge({
@@ -97,14 +87,14 @@ export function ConfidenceBadge({
 
 const authorizationStatusMap: Record<
   string,
-  { label: string; variant: "neutral" | "primary" | "success" | "warning" | "danger" | "info" }
+  { label: string; variant: "neutral" | "primary-glass" | "success-glass" | "warning-glass" | "danger-glass" | "info-glass" }
 > = {
   draft: { label: "Draft", variant: "neutral" },
-  submitted: { label: "Submitted", variant: "info" },
-  under_review: { label: "Under review", variant: "primary" },
-  info_requested: { label: "Info requested", variant: "warning" },
-  approved: { label: "Approved", variant: "success" },
-  rejected: { label: "Rejected", variant: "danger" },
+  submitted: { label: "Submitted", variant: "info-glass" },
+  under_review: { label: "Under review", variant: "primary-glass" },
+  info_requested: { label: "Info requested", variant: "warning-glass" },
+  approved: { label: "Approved", variant: "success-glass" },
+  rejected: { label: "Rejected", variant: "danger-glass" },
   expired: { label: "Expired", variant: "neutral" },
 };
 

@@ -5,27 +5,31 @@ type AlertVariant = "info" | "success" | "warning" | "danger";
 
 const variants: Record<
   AlertVariant,
-  { icon: typeof Info; container: string; iconClass: string }
+  { icon: typeof Info; container: string; iconClass: string; border: string }
 > = {
   info: {
     icon: Info,
-    container: "border-info/30 bg-info/10",
-    iconClass: "text-info",
+    container: "glass-card bg-accentCool/10",
+    iconClass: "text-accentCool",
+    border: "border-accentCool/30",
   },
   success: {
     icon: CheckCircle2,
-    container: "border-success/30 bg-success/10",
+    container: "glass-card bg-success/10",
     iconClass: "text-success",
+    border: "border-success/30",
   },
   warning: {
     icon: AlertTriangle,
-    container: "border-warning/30 bg-warning/10",
-    iconClass: "text-warning",
+    container: "glass-card bg-accentWarm/10",
+    iconClass: "text-accentWarm",
+    border: "border-accentWarm/30",
   },
   danger: {
     icon: XCircle,
-    container: "border-danger/30 bg-danger/10",
-    iconClass: "text-danger",
+    container: "glass-card bg-destructive/10",
+    iconClass: "text-destructive",
+    border: "border-destructive/30",
   },
 };
 
@@ -48,16 +52,17 @@ export function Alert({
     <div
       role={variant === "danger" || variant === "warning" ? "alert" : "status"}
       className={cn(
-        "flex items-start gap-3 rounded-xl border px-4 py-3.5",
+        "flex items-start gap-3 rounded-xl px-4 py-3.5",
         meta.container,
+        meta.border,
         className
       )}
     >
       <Icon className={cn("mt-0.5 h-5 w-5 shrink-0", meta.iconClass)} aria-hidden="true" />
       <div className="min-w-0 flex-1">
-        {title ? <p className="text-sm font-semibold text-ink">{title}</p> : null}
+        {title ? <p className="text-sm font-semibold text-text">{title}</p> : null}
         {children ? (
-          <div className={cn("text-sm leading-relaxed text-muted", title && "mt-1")}>
+          <div className={cn("text-sm leading-relaxed text-text-muted", title && "mt-1")}>
             {children}
           </div>
         ) : null}

@@ -3,20 +3,36 @@ import { cn } from "@/lib/utils";
 
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   invalid?: boolean;
+  variant?: "default" | "glass";
+  size?: "sm" | "md" | "lg";
 }
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, invalid, ...props }, ref) => {
+  ({ className, invalid, variant = "default", size = "md", ...props }, ref) => {
+    const sizeClasses = {
+      sm: "h-20 px-2.5 py-1.5 text-body-xs",
+      md: "min-h-[96px] px-3 py-2.5 text-body-sm",
+      lg: "min-h-[120px] px-4 py-3 text-body-md",
+    };
+
+    const variantClasses = {
+      default: "bg-background border-border",
+      glass: "bg-surface/50 backdrop-blur-md border-border/50 hover:border-border/60 hover:bg-surface/60 focus-visible:border-accent focus-visible:ring-accent/30",
+    };
+
     return (
       <textarea
         ref={ref}
         aria-invalid={invalid || undefined}
         className={cn(
-          "min-h-[96px] w-full resize-y rounded-lg border border-line bg-canvas/80 px-3 py-2.5 text-sm leading-relaxed text-ink transition-colors",
-          "placeholder:text-subtle hover:border-line-strong",
-          "focus:border-accent/70 focus:outline-none focus:ring-2 focus:ring-accent/15",
+          "w-full resize-y rounded-lg",
+          "placeholder:text-text-subtle",
+          "transition-all duration-200 ease-smooth",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           "disabled:cursor-not-allowed disabled:opacity-50",
-          invalid && "border-danger/60 focus:border-danger/70 focus:ring-danger/15",
+          invalid && "border-destructive focus-visible:ring-destructive",
+          sizeClasses[size],
+          variantClasses[variant],
           className
         )}
         {...props}

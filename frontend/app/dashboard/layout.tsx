@@ -358,6 +358,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <Scan className="w-4 h-4 shrink-0" />
                 <span className="truncate">Launch Assessment</span>
               </Link>
+              <Link
+                href="/dashboard/capitalio"
+                className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm nav-item ${
+                  pathname === "/dashboard/capitalio"
+                    ? "nav-item-active"
+                    : "nav-item-idle"
+                }`}
+              >
+                <Activity className="w-4 h-4 shrink-0 text-[#C6F432]" />
+                <span className="truncate flex items-center justify-between flex-1">
+                  <span>Capitalio View</span>
+                  <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[#C6F432]/15 text-[#C6F432] font-semibold border border-[#C6F432]/30">PRO</span>
+                </span>
+              </Link>
             </div>
 
             <div className="space-y-1">

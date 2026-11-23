@@ -33,10 +33,10 @@ const variantStyles: Record<ToastVariant, { icon: typeof Info; className: string
 };
 
 const variantBorders: Record<ToastVariant, string> = {
-  success: "border-success/30",
-  error: "border-destructive/30",
-  warning: "border-accentWarm/30",
-  info: "border-accentCool/30",
+  success: "border-l-4 border-success",
+  error: "border-l-4 border-destructive",
+  warning: "border-l-4 border-accentWarm",
+  info: "border-l-4 border-accentCool",
 };
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
@@ -92,7 +92,7 @@ function ToastItem({
     <div
       role={item.variant === "error" || item.variant === "warning" ? "alert" : "status"}
       className={cn(
-        "pointer-events-auto flex items-start gap-3 rounded-xl border bg-surface-elevated p-4 shadow-elevation-3 animate-slide-up",
+        "pointer-events-auto flex items-start gap-3 rounded-xl glass-card-strong p-4 shadow-glass-lg animate-slide-up",
         borderClass
       )}
     >
@@ -107,7 +107,7 @@ function ToastItem({
         type="button"
         onClick={() => onDismiss(item.id)}
         aria-label="Dismiss notification"
-        className="rounded p-1 text-text-subtle transition-colors hover:bg-surface hover:text-text"
+        className="rounded p-1 text-text-subtle transition-colors hover:bg-surface/50 hover:text-text"
       >
         <X className="h-3.5 w-3.5" aria-hidden="true" />
       </button>
