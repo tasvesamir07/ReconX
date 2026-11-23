@@ -512,13 +512,24 @@
 
   @keyframes playheadScan {
     0% {
-      left: 15%;
+      left: 12%;
     }
     50% {
-      left: 78%;
+      left: 88%;
     }
     100% {
-      left: 15%;
+      left: 12%;
+    }
+  }
+
+  @keyframes trackPulse {
+    0%, 100% {
+      filter: drop-shadow(0 0 6px rgba(198, 244, 50, 0.35));
+      opacity: 0.92;
+    }
+    50% {
+      filter: drop-shadow(0 0 16px rgba(198, 244, 50, 0.75));
+      opacity: 1;
     }
   }
 
@@ -529,6 +540,10 @@
 
   .animate-needle-pulse {
     animation: needlePulse 2s ease-in-out infinite;
+  }
+
+  .animate-track-pulse {
+    animation: trackPulse 3s ease-in-out infinite;
   }
 
   .animate-draw-line {
@@ -543,7 +558,8 @@
   }
 
   .animate-playhead {
-    animation: playheadScan 8s ease-in-out infinite;
+    will-change: left;
+    animation: playheadScan 6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
   }
 
   /* Text gradient */

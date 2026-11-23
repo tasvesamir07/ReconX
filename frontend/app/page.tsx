@@ -107,14 +107,56 @@ export default function LandingPage() {
 
   // Card 1: Interactive Tabs
   const [activeTab, setActiveTab] = useState<"prs" | "probes">("prs");
+  const [isTabHovered, setIsTabHovered] = useState<boolean>(false);
 
   // Card 2: Interactive Auto-Fix Switch & Chart Scrubber
   const [autoFixOn, setAutoFixOn] = useState<boolean>(true);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+  const [displayScore, setDisplayScore] = useState<number>(0);
 
   // Card 3: Interactive Gantt Hover
   const [activeGanttPhase, setActiveGanttPhase] = useState<string | null>(null);
   const [isTimelinePlaying, setIsTimelinePlaying] = useState<boolean>(true);
+  const [playheadTime, setPlayheadTime] = useState<string>("11:00");
+
+  // Animated count-up for Review score
+  useEffect(() => {
+    const target = autoFixOn ? 94 : 88;
+    const duration = 1200;
+    const startTime = performance.now();
+
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      setDisplayScore(Math.round(ease * target));
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+    requestAnimationFrame(animate);
+  }, [autoFixOn]);
+
+  // Card 1: Periodic automatic tab cycle
+  useEffect(() => {
+    if (isTabHovered) return;
+    const interval = setInterval(() => {
+      setActiveTab((prev) => (prev === "prs" ? "probes" : "prs"));
+    }, 5500);
+    return () => clearInterval(interval);
+  }, [isTabHovered]);
+
+  // Card 3: Dynamic timeline time marker updates
+  useEffect(() => {
+    if (!isTimelinePlaying) return;
+    const timeSlots = ["09:45", "10:15", "10:45", "11:00", "11:30", "12:15", "12:45"];
+    let idx = 3;
+    const timer = setInterval(() => {
+      idx = (idx + 1) % timeSlots.length;
+      setPlayheadTime(timeSlots[idx]);
+    }, 1500);
+    return () => clearInterval(timer);
+  }, [isTimelinePlaying]);
 
   // Interactive Docs Tab in #docs section
   const [activeDocsTab, setActiveDocsTab] = useState<"cli" | "python" | "typescript">("cli");
@@ -352,11 +394,18 @@ export default function LandingPage() {
             {/* 3. The 3 Signature Northline Dark Cards Trio */}
             <div className="pt-16 sm:pt-20 grid grid-cols-1 lg:grid-cols-3 gap-5 text-left max-w-5xl mx-auto">
               {/* Card 1: Pull requests / Active Target Probes */}
-              <div className="dark-card rounded-2xl p-5 space-y-3.5 flex flex-col justify-between min-h-[320px] transition-all duration-300">
+              <div
+                className="dark-card rounded-2xl p-5 space-y-3.5 flex flex-col justify-between min-h-[320px] transition-all duration-300 hover:-translate-y-1.5 hover:border-[#C6F432]/40 hover:shadow-[0_20px_45px_-12px_rgba(0,0,0,0.95),0_0_24px_rgba(198,244,50,0.18)]"
+                onMouseEnter={() => setIsTabHovered(true)}
+                onMouseLeave={() => setIsTabHovered(false)}
+              >
                 <div>
                   <div className="flex items-center justify-between pb-2 border-b border-white/5">
                     <div className="flex items-center space-x-2 text-xs font-mono text-zinc-400">
-                      <span className="text-[#C6F432] animate-pulse">●</span>
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C6F432] opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#C6F432]" />
+                      </span>
                       <span className="font-semibold text-zinc-300">
                         {activeTab === "prs" ? "Pull requests" : "Active probes"}
                       </span>
@@ -366,16 +415,20 @@ export default function LandingPage() {
                     <div className="flex items-center space-x-1 bg-white/5 p-0.5 rounded-lg border border-white/10">
                       <button
                         onClick={() => setActiveTab("prs")}
-                        className={`text-[10px] font-mono px-2 py-0.5 rounded transition-colors ${
-                          activeTab === "prs" ? "bg-[#18181B] text-[#C6F432] font-bold" : "text-zinc-400 hover:text-white"
+                        className={`text-[10px] font-mono px-2 py-0.5 rounded transition-all ${
+                          activeTab === "prs"
+                            ? "bg-[#18181B] text-[#C6F432] font-bold shadow-[0_0_8px_rgba(198,244,50,0.25)]"
+                            : "text-zinc-400 hover:text-white"
                         }`}
                       >
                         PRs
                       </button>
                       <button
                         onClick={() => setActiveTab("probes")}
-                        className={`text-[10px] font-mono px-2 py-0.5 rounded transition-colors ${
-                          activeTab === "probes" ? "bg-[#18181B] text-[#C6F432] font-bold" : "text-zinc-400 hover:text-white"
+                        className={`text-[10px] font-mono px-2 py-0.5 rounded transition-all ${
+                          activeTab === "probes"
+                            ? "bg-[#18181B] text-[#C6F432] font-bold shadow-[0_0_8px_rgba(198,244,50,0.25)]"
+                            : "text-zinc-400 hover:text-white"
                         }`}
                       >
                         Probes
@@ -440,7 +493,7 @@ export default function LandingPage() {
                     ).map((row, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.02] border border-white/5 hover:border-white/20 hover:bg-white/[0.04] hover:translate-x-1 transition-all cursor-pointer"
+                        className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.02] border border-white/5 hover:border-[#C6F432]/30 hover:bg-[#C6F432]/5 hover:translate-x-1.5 transition-all duration-200 cursor-pointer"
                       >
                         <div className="flex items-center space-x-2.5 min-w-0">
                           <div className="w-6 h-6 rounded-full bg-zinc-800 border border-white/10 text-[10px] font-mono font-bold text-zinc-300 flex items-center justify-center shrink-0">
@@ -461,16 +514,22 @@ export default function LandingPage() {
                     <span className="w-1.5 h-1.5 rounded-full bg-[#C6F432] animate-ping" />
                     Target scope verified
                   </span>
-                  <span className="text-[#C6F432]">4 active workers</span>
+                  <span className="text-[#C6F432] flex items-center gap-1.5 font-semibold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C6F432] animate-pulse" />
+                    4 active workers
+                  </span>
                 </div>
               </div>
 
               {/* Card 2: Review Score with Interactive SVG Graph & Interactive Toggle */}
-              <div className="dark-card rounded-2xl p-6 space-y-4 flex flex-col justify-between min-h-[320px] transition-all duration-300">
+              <div className="dark-card rounded-2xl p-6 space-y-4 flex flex-col justify-between min-h-[320px] transition-all duration-300 hover:-translate-y-1.5 hover:border-[#C6F432]/40 hover:shadow-[0_20px_45px_-12px_rgba(0,0,0,0.95),0_0_24px_rgba(198,244,50,0.18)]">
                 <div>
                   <div className="flex items-center justify-between pb-1 border-b border-white/5">
                     <div className="flex items-center space-x-2 text-xs font-mono text-zinc-400">
-                      <span className="text-[#C6F432]">●</span>
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C6F432] opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#C6F432]" />
+                      </span>
                       <span className="font-semibold text-zinc-300">Review score</span>
                     </div>
 
@@ -496,7 +555,7 @@ export default function LandingPage() {
 
                   <div className="pt-3 flex items-baseline space-x-2">
                     <span className="text-5xl font-serif font-bold text-white tracking-tight leading-none transition-all">
-                      {hoverIndex !== null ? graphPoints[hoverIndex].score : autoFixOn ? 94 : 88}
+                      {hoverIndex !== null ? graphPoints[hoverIndex].score : displayScore || (autoFixOn ? 94 : 88)}
                     </span>
                     <span className="text-xs font-mono text-zinc-400">/ 100 repo health</span>
                   </div>
@@ -530,6 +589,10 @@ export default function LandingPage() {
                         d="M 0 65 Q 25 60 50 52 T 100 46 T 150 28 T 200 12 L 200 80 L 0 80 Z"
                         fill="url(#limeGradient)"
                       />
+
+                      {/* Live Radar Beacon at the leading tip (200, 12) */}
+                      <circle cx="200" cy="12" r="3.5" fill="#C6F432" />
+                      <circle cx="200" cy="12" r="9" fill="#C6F432" className="animate-ping opacity-60 pointer-events-none" />
 
                       {/* Interactive Scrubber Vert Line on Hover */}
                       {hoverIndex !== null && (
@@ -580,22 +643,27 @@ export default function LandingPage() {
               </div>
 
               {/* Card 3: Merge Timeline with Animated Gantt Playhead Needle */}
-              <div className="dark-card rounded-2xl p-5 space-y-4 flex flex-col justify-between min-h-[320px] transition-all duration-300">
+              <div className="dark-card rounded-2xl p-5 space-y-4 flex flex-col justify-between min-h-[320px] transition-all duration-300 hover:-translate-y-1.5 hover:border-[#C6F432]/40 hover:shadow-[0_20px_45px_-12px_rgba(0,0,0,0.95),0_0_24px_rgba(198,244,50,0.18)]">
                 <div>
                   <div className="flex items-center justify-between pb-1 border-b border-white/5">
                     <div className="flex items-center space-x-2 text-xs font-mono text-zinc-400">
-                      <span className="text-[#C6F432]">●</span>
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C6F432] opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#C6F432]" />
+                      </span>
                       <span className="font-semibold text-zinc-300">Merge timeline</span>
                     </div>
 
                     <button
                       type="button"
                       onClick={() => setIsTimelinePlaying(!isTimelinePlaying)}
-                      className="text-[10px] font-mono text-zinc-400 hover:text-white flex items-center gap-1 transition-colors"
+                      className="text-[10px] font-mono text-zinc-400 hover:text-white flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-white/5 hover:border-white/20 transition-all"
                       title="Toggle live playhead scanner"
                     >
-                      <Activity className={`w-3 h-3 ${isTimelinePlaying ? "text-[#C6F432]" : "text-zinc-500"}`} />
-                      <span>{isTimelinePlaying ? "Live scanner" : "Paused"}</span>
+                      <Activity className={`w-3 h-3 ${isTimelinePlaying ? "text-[#C6F432] animate-pulse" : "text-zinc-500"}`} />
+                      <span className={isTimelinePlaying ? "text-zinc-200" : "text-zinc-400"}>
+                        {isTimelinePlaying ? "Live scanner" : "Paused"}
+                      </span>
                     </button>
                   </div>
 
@@ -610,17 +678,20 @@ export default function LandingPage() {
 
                   {/* Gantt Timeline Tracks with Animated Luminous Lime Playhead Needle */}
                   <div className="relative space-y-2.5 py-1">
-                    {/* Glowing Playhead Needle */}
+                    {/* Glowing Sweeping Playhead Needle */}
                     <div
-                      className={`absolute top-0 bottom-0 w-[2px] bg-[#C6F432] shadow-[0_0_10px_#C6F432] z-10 pointer-events-none transition-all ${
-                        isTimelinePlaying ? "animate-needle-pulse left-[52%]" : "left-[52%]"
+                      className={`absolute top-0 bottom-0 z-20 pointer-events-none ${
+                        isTimelinePlaying ? "animate-playhead" : "left-[52%]"
                       }`}
+                      style={{ willChange: "left" }}
                       aria-hidden="true"
-                    />
-                    <div
-                      className="absolute -top-1 left-[52%] -translate-x-1/2 w-2 h-2 rounded-full bg-[#C6F432] shadow-[0_0_6px_#C6F432] z-20 pointer-events-none"
-                      aria-hidden="true"
-                    />
+                    >
+                      {/* Vertical Laser Beam */}
+                      <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[2px] bg-gradient-to-b from-[#C6F432] via-[#C6F432] to-[#C6F432]/20 shadow-[0_0_12px_#C6F432] animate-needle-pulse" />
+                      {/* Top Radar Node */}
+                      <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-[#C6F432] shadow-[0_0_8px_#C6F432]" />
+                      <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-[#C6F432] animate-ping opacity-75" />
+                    </div>
 
                     {/* Track 1: Scope & Recon */}
                     <div
@@ -629,7 +700,7 @@ export default function LandingPage() {
                       onMouseLeave={() => setActiveGanttPhase(null)}
                     >
                       <div className="w-[18%] bg-zinc-800/80 rounded-md h-3.5 group-hover:bg-zinc-700 transition-colors" />
-                      <div className="w-[42%] bg-[#C6F432] rounded-md h-3.5 shadow-[0_0_10px_rgba(198,244,50,0.3)] hover:scale-y-110 transition-transform" />
+                      <div className="w-[42%] bg-[#C6F432] rounded-md h-3.5 shadow-[0_0_10px_rgba(198,244,50,0.3)] animate-track-pulse hover:scale-y-110 transition-transform" />
                       <div className="w-[22%] bg-zinc-800/80 rounded-md h-3.5" />
                     </div>
 
@@ -640,7 +711,10 @@ export default function LandingPage() {
                       onMouseLeave={() => setActiveGanttPhase(null)}
                     >
                       <div className="w-[10%] bg-zinc-800/80 rounded-md h-3.5" />
-                      <div className="w-[50%] bg-[#C6F432] rounded-md h-3.5 shadow-[0_0_10px_rgba(198,244,50,0.3)] hover:scale-y-110 transition-transform" />
+                      <div
+                        className="w-[50%] bg-[#C6F432] rounded-md h-3.5 shadow-[0_0_10px_rgba(198,244,50,0.3)] animate-track-pulse hover:scale-y-110 transition-transform"
+                        style={{ animationDelay: "0.6s" }}
+                      />
                       <div className="w-[25%] bg-zinc-800/80 rounded-md h-3.5" />
                     </div>
 
@@ -652,7 +726,10 @@ export default function LandingPage() {
                     >
                       <div className="w-[28%] bg-zinc-800/80 rounded-md h-3.5" />
                       <div className="w-[15%] bg-zinc-800/80 rounded-md h-3.5" />
-                      <div className="w-[35%] bg-[#C6F432] rounded-md h-3.5 shadow-[0_0_10px_rgba(198,244,50,0.3)] hover:scale-y-110 transition-transform" />
+                      <div
+                        className="w-[35%] bg-[#C6F432] rounded-md h-3.5 shadow-[0_0_10px_rgba(198,244,50,0.3)] animate-track-pulse hover:scale-y-110 transition-transform"
+                        style={{ animationDelay: "1.2s" }}
+                      />
                     </div>
 
                     {/* Track 4: Evidence Sealing */}
@@ -662,7 +739,10 @@ export default function LandingPage() {
                       onMouseLeave={() => setActiveGanttPhase(null)}
                     >
                       <div className="w-[38%] bg-zinc-800/80 rounded-md h-3.5" />
-                      <div className="w-[28%] bg-[#C6F432] rounded-md h-3.5 shadow-[0_0_10px_rgba(198,244,50,0.3)] hover:scale-y-110 transition-transform" />
+                      <div
+                        className="w-[28%] bg-[#C6F432] rounded-md h-3.5 shadow-[0_0_10px_rgba(198,244,50,0.3)] animate-track-pulse hover:scale-y-110 transition-transform"
+                        style={{ animationDelay: "1.8s" }}
+                      />
                     </div>
                   </div>
                 </div>
@@ -671,7 +751,10 @@ export default function LandingPage() {
                   <span className="truncate text-zinc-400">
                     {activeGanttPhase ? activeGanttPhase : "Phase: Active verification"}
                   </span>
-                  <span className="text-[#C6F432] ml-2 shrink-0">11:00 playhead</span>
+                  <span className="text-[#C6F432] ml-2 shrink-0 font-semibold flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C6F432] animate-pulse" />
+                    {playheadTime} playhead
+                  </span>
                 </div>
               </div>
             </div>
