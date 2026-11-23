@@ -359,11 +359,11 @@
 
   /* Northline Aesthetic: Lime Beam, Fluted Lines & Dark Glass Pill */
   .bg-lime-beam {
-    background: radial-gradient(ellipse 70% 45% at 50% 65%, rgba(198, 244, 50, 0.20) 0%, rgba(11, 11, 12, 0) 100%);
+    background: radial-gradient(ellipse 75% 50% at 50% 55%, rgba(198, 244, 50, 0.32) 0%, rgba(198, 244, 50, 0.10) 45%, rgba(11, 11, 12, 0) 100%);
   }
 
   .bg-fluted-grid {
-    background-image: repeating-linear-gradient(90deg, transparent, transparent 36px, rgba(255, 255, 255, 0.018) 36px, rgba(255, 255, 255, 0.018) 37px);
+    background-image: repeating-linear-gradient(90deg, transparent, transparent 36px, rgba(255, 255, 255, 0.035) 36px, rgba(255, 255, 255, 0.035) 37px);
   }
 
   .glass-pill {
