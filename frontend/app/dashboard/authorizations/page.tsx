@@ -18,9 +18,14 @@ import {
   CheckCircle2,
   Eye,
   EyeOff,
+  Sparkles,
+  FileText,
 } from "lucide-react";
 import { apiRequest, ReconXApiError } from "@/lib/api-client";
 import { AuthorizationRequest, ApprovedAsset, User, Organization } from "@/types";
+import { DEMO_AUTHORIZATION_REQUESTS, DEMO_APPROVED_ASSETS, isSimulationActive } from "@/lib/demo-simulation";
+import { SimulationBanner } from "@/components/dashboard/simulation-banner";
+import { DnsVerificationModal, LoaCertificateModal } from "@/components/security/loa-modals";
 import { formatDateTime } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -38,6 +43,13 @@ export default function AuthorizationsPage() {
   const [requests, setRequests] = useState<AuthorizationRequest[]>([]);
   const [assets, setAssets] = useState<ApprovedAsset[]>([]);
   const [activeTab, setActiveTab] = useState<"authorizations" | "assets">("authorizations");
+
+  // Interactive Verification & Certificate Modals
+  const [dnsModalOpen, setDnsModalOpen] = useState(false);
+  const [dnsModalDomain, setDnsModalDomain] = useState("");
+  const [dnsModalCompany, setDnsModalCompany] = useState("");
+  const [loaModalOpen, setLoaModalOpen] = useState(false);
+  const [selectedLoaReq, setSelectedLoaReq] = useState<AuthorizationRequest | null>(null);
 
   // Submission modal state
   const [showModal, setShowModal] = useState(false);
@@ -69,8 +81,11 @@ export default function AuthorizationsPage() {
         apiRequest<Organization[]>("/organizations").catch(() => []),
       ]);
       setUser(sessionData.user);
-      setRequests(authData || []);
-      setAssets(assetData || []);
+      const isSim = isSimulationActive();
+      const finalAuth = (authData && authData.length > 0) ? authData : (isSim ? DEMO_AUTHORIZATION_REQUESTS : []);
+      const finalAssets = (assetData && assetData.length > 0) ? assetData : (isSim ? DEMO_APPROVED_ASSETS : []);
+      setRequests(finalAuth);
+      setAssets(finalAssets);
       setOrgs(orgsData || []);
     } catch (err: any) {
       if (err?.status === 401 || err?.statusCode === 401 || err?.code === "UNAUTHORIZED") {
@@ -78,6 +93,10 @@ export default function AuthorizationsPage() {
         return;
       }
       console.error("Failed to load authorization requests:", err);
+      if (isSimulationActive()) {
+        setRequests(DEMO_AUTHORIZATION_REQUESTS);
+        setAssets(DEMO_APPROVED_ASSETS);
+      }
     } finally {
       setFetching(false);
     }
@@ -241,7 +260,10 @@ export default function AuthorizationsPage() {
   };
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto animate-fade-in">
+    <div className="space-y-6 max-w-6xl mx-auto animate-fade-in">
+      {/* Simulation Engine Banner */}
+      <SimulationBanner onDataRefresh={loadData} />
+
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -250,10 +272,29 @@ export default function AuthorizationsPage() {
             Manage signed company authorization records, moderator-approved testing domains, and access control.
           </p>
         </div>
-        <Button variant="primary" size="sm" onClick={() => setShowModal(true)}>
-          <Plus className="w-4 h-4 mr-1.5" />
-          <span>Submit Authorization Scope</span>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setRequests(DEMO_AUTHORIZATION_REQUESTS);
+              setAssets(DEMO_APPROVED_ASSETS);
+              toast({
+                title: "Enterprise Scopes Loaded",
+                description: "Preloaded 3 signed LOA scopes and 4 approved assets.",
+                variant: "success",
+              });
+            }}
+            className="border-[#C6F432]/30 text-white hover:bg-[#C6F432]/10"
+          >
+            <Sparkles className="w-4 h-4 mr-1.5 text-[#C6F432]" />
+            <span>Preload Demo Scopes</span>
+          </Button>
+          <Button variant="primary" size="sm" onClick={() => setShowModal(true)}>
+            <Plus className="w-4 h-4 mr-1.5" />
+            <span>Submit Authorization Scope</span>
+          </Button>
+        </div>
       </div>
 
       {/* Workflow Explainer Banner */}
@@ -377,30 +418,49 @@ export default function AuthorizationsPage() {
             <EmptyState
               icon={FileCheck2}
               title="No Authorization Records Found"
-              description="Submit your company authorization letter to authorize target domains for assessment."
+              description="Submit your company authorization letter to authorize target domains for assessment, or preload sample scopes."
               action={
-                <Button variant="primary" size="sm" onClick={() => setShowModal(true)}>
-                  <Plus className="w-4 h-4 mr-1.5" />
-                  <span>Submit Authorization Request</span>
-                </Button>
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <Button variant="primary" size="sm" onClick={() => setShowModal(true)}>
+                    <Plus className="w-4 h-4 mr-1.5" />
+                    <span>Submit Authorization Request</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setRequests(DEMO_AUTHORIZATION_REQUESTS);
+                      setAssets(DEMO_APPROVED_ASSETS);
+                      toast({
+                        title: "Enterprise Scopes Loaded",
+                        description: "Sample LOA records and target assets loaded.",
+                        variant: "success",
+                      });
+                    }}
+                    className="border-[#C6F432]/30 text-white hover:bg-[#C6F432]/10"
+                  >
+                    <Sparkles className="w-4 h-4 mr-1.5 text-[#C6F432]" />
+                    <span>Load Enterprise Demo Scopes</span>
+                  </Button>
+                </div>
               }
             />
           ) : (
-            <div className="divide-y divide-line/60">
+            <div className="divide-y divide-white/5">
               {requests.map((req) => (
-                <div key={req.id} className="p-6 space-y-4 hover:bg-slate-50/50 transition">
+                <div key={req.id} className="p-6 space-y-4 hover:bg-white/[0.02] transition">
                   {/* Card Header */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-center space-x-3">
                       <span
-                        className={`px-2.5 py-0.5 rounded text-xs font-semibold capitalize ${
+                        className={`px-2.5 py-0.5 rounded text-xs font-semibold capitalize font-mono ${
                           req.status === "approved"
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-300"
+                            ? "bg-[#C6F432]/10 text-[#C6F432] border border-[#C6F432]/30"
                             : req.status === "revoked"
-                            ? "bg-rose-50 text-rose-700 border border-rose-300"
+                            ? "bg-rose-500/10 text-rose-400 border border-rose-500/30"
                             : req.status === "under_review" || req.status === "submitted"
-                            ? "bg-amber-50 text-amber-700 border border-amber-300"
-                            : "bg-slate-100 text-slate-700 border border-slate-300"
+                            ? "bg-amber-400/10 text-amber-400 border border-amber-400/30"
+                            : "bg-white/5 text-zinc-300 border border-white/10"
                         }`}
                       >
                         {req.status === "revoked" ? "Access Revoked" : req.status.replace("_", " ")}
@@ -409,10 +469,33 @@ export default function AuthorizationsPage() {
                     </div>
 
                     {/* Action Toolbar */}
-                    <div className="flex items-center space-x-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span className="text-xs text-muted mr-2 hidden md:inline">
                         Submitted: {formatDateTime(req.created_at)}
                       </span>
+
+                      {/* Interactive Proof Actions */}
+                      <button
+                        onClick={() => {
+                          setSelectedLoaReq(req);
+                          setLoaModalOpen(true);
+                        }}
+                        className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/5 hover:bg-white/10 text-zinc-200 hover:text-white border border-white/10 transition"
+                      >
+                        <FileCheck2 className="w-3.5 h-3.5 text-[#C6F432]" />
+                        <span>Signed LOA</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setDnsModalDomain(req.requested_scope.domains[0] || "acmedefense.com");
+                          setDnsModalCompany(req.company_name);
+                          setDnsModalOpen(true);
+                        }}
+                        className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/5 hover:bg-white/10 text-zinc-200 hover:text-white border border-white/10 transition"
+                      >
+                        <Globe className="w-3.5 h-3.5 text-[#C6F432]" />
+                        <span>DNS Challenge</span>
+                      </button>
 
                       {/* Privileged Governance Actions (Moderator / Admin ONLY with Password Re-Authentication) */}
                       {isGovernanceAdmin ? (
@@ -422,7 +505,7 @@ export default function AuthorizationsPage() {
                               variant="ghost"
                               size="sm"
                               onClick={() => openActionModal("revoke_auth", req)}
-                              className="text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-rose-200"
+                              className="text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 border border-rose-500/20"
                               title="Revoke testing access (Requires password)"
                             >
                               <ShieldOff className="w-3.5 h-3.5 mr-1" />
@@ -433,18 +516,14 @@ export default function AuthorizationsPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => openActionModal("delete_auth", req)}
-                            className="text-slate-400 hover:text-rose-600 hover:bg-rose-50"
+                            className="text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10"
                             title="Delete authorization record (Requires password)"
                           >
                             <Trash2 className="w-3.5 h-3.5 mr-1" />
                             <span>Delete</span>
                           </Button>
                         </>
-                      ) : (
-                        <span className="text-[11px] text-slate-400 font-mono italic">
-                          Authorized Scope
-                        </span>
-                      )}
+                      ) : null}
                     </div>
                   </div>
 
@@ -505,34 +584,53 @@ export default function AuthorizationsPage() {
             <EmptyState
               icon={Globe}
               title="No Authorized Assets Registered"
-              description="Approved target scopes will appear here once reviewed by Compliance."
+              description="Approved target scopes will appear here once reviewed by Compliance, or preload sample scopes."
               action={
-                <Button variant="primary" size="sm" onClick={() => setShowModal(true)}>
-                  <Plus className="w-4 h-4 mr-1.5" />
-                  <span>Submit Scope Authorization</span>
-                </Button>
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <Button variant="primary" size="sm" onClick={() => setShowModal(true)}>
+                    <Plus className="w-4 h-4 mr-1.5" />
+                    <span>Submit Scope Authorization</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setRequests(DEMO_AUTHORIZATION_REQUESTS);
+                      setAssets(DEMO_APPROVED_ASSETS);
+                      toast({
+                        title: "Enterprise Scopes Loaded",
+                        description: "Sample LOA records and target assets loaded.",
+                        variant: "success",
+                      });
+                    }}
+                    className="border-[#C6F432]/30 text-white hover:bg-[#C6F432]/10"
+                  >
+                    <Sparkles className="w-4 h-4 mr-1.5 text-[#C6F432]" />
+                    <span>Load Enterprise Demo Scopes</span>
+                  </Button>
+                </div>
               }
             />
           ) : (
-            <div className="divide-y divide-line/60">
+            <div className="divide-y divide-white/5">
               {assets.map((asset) => (
-                <div key={asset.id} className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50/50 transition">
+                <div key={asset.id} className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-white/[0.02] transition">
                   <div className="space-y-1.5 min-w-0">
                     <div className="flex items-center space-x-2.5">
-                      <Globe className="w-4 h-4 text-accent shrink-0" />
+                      <Globe className="w-4 h-4 text-[#C6F432] shrink-0" />
                       <span className="font-mono font-semibold text-ink text-sm truncate">
                         {asset.canonical_host}
                       </span>
                       <span
-                        className={`px-2 py-0.5 rounded text-[11px] font-semibold ${
+                        className={`px-2 py-0.5 rounded text-[11px] font-semibold font-mono ${
                           asset.status === "active"
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-300"
-                            : "bg-rose-50 text-rose-700 border border-rose-300"
+                            ? "bg-[#C6F432]/10 text-[#C6F432] border border-[#C6F432]/30"
+                            : "bg-rose-500/10 text-rose-400 border border-rose-500/30"
                         }`}
                       >
                         {asset.status === "active" ? "Active Scope" : "Revoked"}
                       </span>
-                      <span className="px-2 py-0.5 rounded text-[11px] bg-canvas border border-line text-muted font-mono">
+                      <span className="px-2 py-0.5 rounded text-[11px] bg-white/5 border border-white/10 text-zinc-300 font-mono">
                         {asset.scope_type === "wildcard_subdomains" ? "*.wildcard" : "exact_host"}
                       </span>
                     </div>
@@ -540,13 +638,13 @@ export default function AuthorizationsPage() {
                     <div className="flex flex-wrap items-center gap-3 text-xs text-muted">
                       <span>Expires: {formatDateTime(asset.expires_at)}</span>
                       {asset.revoked_at && (
-                        <span className="text-rose-600 font-medium">
+                        <span className="text-rose-400 font-medium font-mono">
                           Revoked at: {formatDateTime(asset.revoked_at)}
                         </span>
                       )}
                       <div className="flex items-center gap-1">
                         {asset.permitted_categories?.map((c) => (
-                          <span key={c} className="px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 font-mono text-[10px]">
+                          <span key={c} className="px-1.5 py-0.2 rounded bg-white/5 border border-white/10 text-zinc-300 font-mono text-[10px]">
                             {c}
                           </span>
                         ))}
@@ -554,37 +652,47 @@ export default function AuthorizationsPage() {
                     </div>
                   </div>
 
-                  {/* Asset Action Buttons (ONLY visible for Moderator / Org Admin) */}
-                  {isGovernanceAdmin ? (
-                    <div className="flex items-center space-x-2 shrink-0">
-                      {asset.status === "active" && (
+                  {/* Asset Action Buttons */}
+                  <div className="flex items-center space-x-2 shrink-0">
+                    <button
+                      onClick={() => {
+                        setDnsModalDomain(asset.canonical_host);
+                        setDnsModalCompany("Authorized Asset Scope");
+                        setDnsModalOpen(true);
+                      }}
+                      className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/5 hover:bg-white/10 text-zinc-200 hover:text-white border border-white/10 transition"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#C6F432]" />
+                      <span>DNSSEC Check</span>
+                    </button>
+
+                    {isGovernanceAdmin && (
+                      <>
+                        {asset.status === "active" && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openActionModal("revoke_asset", undefined, asset)}
+                            className="text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 border border-rose-500/20"
+                            title="Revoke asset testing rights (Requires password)"
+                          >
+                            <ShieldOff className="w-3.5 h-3.5 mr-1" />
+                            <span>Revoke</span>
+                          </Button>
+                        )}
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => openActionModal("revoke_asset", undefined, asset)}
-                          className="text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-rose-200"
-                          title="Revoke asset testing rights (Requires password)"
+                          onClick={() => openActionModal("delete_asset", undefined, asset)}
+                          className="text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10"
+                          title="Remove asset from ledger (Requires password)"
                         >
-                          <ShieldOff className="w-3.5 h-3.5 mr-1" />
-                          <span>Revoke</span>
+                          <Trash2 className="w-3.5 h-3.5 mr-1" />
+                          <span>Remove</span>
                         </Button>
-                      )}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => openActionModal("delete_asset", undefined, asset)}
-                        className="text-slate-400 hover:text-rose-600 hover:bg-rose-50"
-                        title="Remove asset from ledger (Requires password)"
-                      >
-                        <Trash2 className="w-3.5 h-3.5 mr-1" />
-                        <span>Remove</span>
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="text-[11px] text-slate-400 font-mono italic">
-                      Active Target Scope
-                    </div>
-                  )}
+                      </>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -820,6 +928,19 @@ export default function AuthorizationsPage() {
           </div>
         </form>
       </Dialog>
+
+      {/* Interactive Verification & Certificate Modals */}
+      <DnsVerificationModal
+        open={dnsModalOpen}
+        onOpenChange={setDnsModalOpen}
+        domain={dnsModalDomain}
+        companyName={dnsModalCompany}
+      />
+      <LoaCertificateModal
+        open={loaModalOpen}
+        onOpenChange={setLoaModalOpen}
+        request={selectedLoaReq}
+      />
     </div>
   );
 }

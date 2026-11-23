@@ -252,23 +252,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </div>
       ) : (
-        <div className="p-4 border-b border-slate-200/80 relative shrink-0">
+        <div className="p-4 border-b border-white/10 relative shrink-0">
           <button
             onClick={() => setOrgDropdownOpen(!orgDropdownOpen)}
-            className="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-slate-300 flex items-center justify-between transition text-left"
+            className="w-full p-2.5 rounded-xl border border-white/10 bg-[#18181B] hover:bg-[#202024] hover:border-white/20 flex items-center justify-between transition text-left"
           >
             <div className="flex items-center space-x-3 min-w-0">
-              <div className="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center text-xs font-bold shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-[#0B0B0C] border border-white/15 text-[#C6F432] flex items-center justify-center text-xs font-bold font-mono shrink-0">
                 {orgInitials}
               </div>
               <div className="min-w-0 flex-1">
-                <div className="text-xs sm:text-sm font-semibold text-slate-900 truncate">{orgName}</div>
-                <div className="text-[11px] text-slate-500 font-medium capitalize mt-0.5">
+                <div className="text-xs sm:text-sm font-bold text-white truncate">{orgName}</div>
+                <div className="text-[11px] text-zinc-400 font-mono font-medium capitalize mt-0.5">
                   {currentOrg ? (currentOrg.role || "Active Tenant") : "Solo Practitioner"}
                 </div>
               </div>
             </div>
-            <ChevronsUpDown className="w-4 h-4 text-slate-400 shrink-0 ml-1.5" />
+            <ChevronsUpDown className="w-4 h-4 text-zinc-400 shrink-0 ml-1.5" />
           </button>
 
           {orgDropdownOpen && (
@@ -641,6 +641,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
+            {/* Live Kali Telemetry Pod Pill */}
+            <div className="hidden xl:flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-zinc-300">
+              <span className="w-2 h-2 rounded-full bg-[#C6F432] animate-pulse" />
+              <span className="font-semibold text-white">4 Kali Nodes Active</span>
+              <span className="text-zinc-600">·</span>
+              <span className="text-[#C6F432]">TLS 1.3</span>
+              <span className="text-zinc-600">·</span>
+              <span className="text-zinc-400">18ms</span>
+            </div>
+
             {/* Theme Toggle Button (Skiper UI) */}
             <ThemeToggleButton3 className="size-8 p-1.5 text-zinc-400 hover:text-[#C6F432] transition-colors" />
 

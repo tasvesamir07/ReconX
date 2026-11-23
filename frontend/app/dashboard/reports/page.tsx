@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -16,9 +16,12 @@ import {
   CheckCircle2,
   AlertTriangle,
   Trash2,
+  Sparkles,
 } from "lucide-react";
 import { apiRequest } from "@/lib/api-client";
 import { Scan } from "@/types";
+import { DEMO_SCANS, isSimulationActive } from "@/lib/demo-simulation";
+import { SimulationBanner } from "@/components/dashboard/simulation-banner";
 import { formatDateTime } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -63,23 +66,29 @@ export default function ReportsArchivePage() {
     }
   };
 
-  useEffect(() => {
-    async function loadReports() {
-      try {
-        const scanList = await apiRequest<Scan[]>("/scans");
-        setScans(scanList);
-      } catch (err: any) {
-        if (err?.status === 401 || err?.statusCode === 401) {
-          router.replace("/login");
-          return;
-        }
-        console.error("Failed to load assessments archive:", err);
-      } finally {
-        setLoading(false);
+  const loadReports = useCallback(async () => {
+    try {
+      const scanList = await apiRequest<Scan[]>("/scans");
+      const isSim = isSimulationActive();
+      const finalScans = scanList && scanList.length > 0 ? scanList : isSim ? DEMO_SCANS : [];
+      setScans(finalScans);
+    } catch (err: any) {
+      if (err?.status === 401 || err?.statusCode === 401) {
+        router.replace("/login");
+        return;
       }
+      console.error("Failed to load assessments archive:", err);
+      if (isSimulationActive()) {
+        setScans(DEMO_SCANS);
+      }
+    } finally {
+      setLoading(false);
     }
-    loadReports();
   }, [router]);
+
+  useEffect(() => {
+    loadReports();
+  }, [loadReports]);
 
   const completedScans = scans.filter((s) =>
     ["completed", "partial", "cancelled", "running"].includes(s.status)
@@ -160,13 +169,16 @@ export default function ReportsArchivePage() {
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto animate-fade-in">
+      {/* Simulation Engine Banner */}
+      <SimulationBanner onDataRefresh={loadReports} />
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
             Assessment Reports & Evidence Archive
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1 max-w-2xl leading-relaxed">
             Permanent, tamper-evident repository of all security audit deliverables. Access, view, or download PDF reports and SHA-256 cryptographic evidence records at any time.
           </p>
         </div>
@@ -203,7 +215,25 @@ export default function ReportsArchivePage() {
           description={
             searchQuery
               ? `No assessments found matching "${searchQuery}".`
-              : "Completed security assessments will automatically generate formal ReportLab PDF deliverables and cryptographic evidence ledgers here."
+              : "Completed security assessments will automatically generate formal ReportLab PDF deliverables and cryptographic evidence ledgers here, or preload sample reports."
+          }
+          action={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setScans(DEMO_SCANS);
+                toast({
+                  title: "Enterprise Demo Deliverables Loaded",
+                  description: "Sample reports and cryptographic ledgers loaded.",
+                  variant: "success",
+                });
+              }}
+              className="border-[#C6F432]/30 text-white hover:bg-[#C6F432]/10"
+            >
+              <Sparkles className="w-4 h-4 mr-1.5 text-[#C6F432]" />
+              <span>Load Enterprise Demo Reports</span>
+            </Button>
           }
         />
       ) : (

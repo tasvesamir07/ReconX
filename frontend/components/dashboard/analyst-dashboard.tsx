@@ -6,6 +6,7 @@ import { PostureMetrics } from "@/components/dashboard/posture-metrics";
 import { AnalyticsCharts } from "@/components/dashboard/analytics-charts";
 import { PriorityFindings } from "@/components/dashboard/priority-findings";
 import { RecentAssessmentsTable } from "@/components/dashboard/recent-assessments-table";
+import { SimulationBanner } from "@/components/dashboard/simulation-banner";
 import CapitalioDashboardDemo from "@/components/watermelon/capitalio-dashboard/demo";
 import { LayoutGrid, Sparkles } from "lucide-react";
 
@@ -26,6 +27,9 @@ export function AnalystDashboard({ scans, assets, authorizations, metrics, onSca
 
   return (
     <div className="space-y-6 animate-in">
+      {/* Simulation Engine Banner */}
+      <SimulationBanner />
+
       {/* Capitalio Layout Switcher Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-2 border-b border-white/8">
         <div>

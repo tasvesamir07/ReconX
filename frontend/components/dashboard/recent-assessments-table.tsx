@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Trash2, Plus } from "lucide-react";
+import { ArrowRight, Trash2, Plus, Sparkles } from "lucide-react";
 import { Scan } from "@/types";
 import { apiRequest } from "@/lib/api-client";
+import { setSimulationActive } from "@/lib/demo-simulation";
 import { ConfirmDialog } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/toast";
 
@@ -129,7 +130,7 @@ export function RecentAssessmentsTable({ scans, isOversightRole, onScanDeleted }
           <p className="text-xs text-zinc-500 max-w-sm mx-auto">
             Launch a new assessment to begin testing authorized target scopes.
           </p>
-          <div className="pt-2">
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/dashboard/assessments/new"
               className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-[#C6F432] hover:bg-[#B5E327] text-[#0B0B0C] text-xs font-bold transition shadow-[0_0_15px_rgba(198,244,50,0.25)]"
@@ -137,6 +138,24 @@ export function RecentAssessmentsTable({ scans, isOversightRole, onScanDeleted }
               <Plus className="w-4 h-4" />
               <span>Launch First Scan</span>
             </Link>
+            <button
+              onClick={() => {
+                setSimulationActive(true);
+                toast({
+                  title: "Enterprise Demo Scans Loaded",
+                  description: "Simulated Kali Linux scans and telemetry loaded.",
+                  variant: "success",
+                });
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new Event("reconx_scan_created"));
+                }
+              }}
+              type="button"
+              className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs font-bold border border-[#C6F432]/30 transition shadow-sm"
+            >
+              <Sparkles className="w-4 h-4 text-[#C6F432]" />
+              <span>Load Enterprise Demo Scans</span>
+            </button>
           </div>
         </div>
       ) : (

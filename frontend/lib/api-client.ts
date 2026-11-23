@@ -5,6 +5,25 @@ const CSRF_HEADER = "X-CSRF-Token";
 const CSRF_STORAGE_KEY = "reconx_csrf_fallback";
 const UNSAFE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 
+interface CacheEntry<T = any> {
+  data: T;
+  timestamp: number;
+}
+const requestCache = new Map<string, CacheEntry>();
+const CACHE_TTL_MS = 6000; // 6s fast SWR in-memory cache for ultra-fast navigation
+
+export function clearApiCache(endpointPrefix?: string): void {
+  if (!endpointPrefix) {
+    requestCache.clear();
+    return;
+  }
+  for (const key of requestCache.keys()) {
+    if (key.includes(endpointPrefix)) {
+      requestCache.delete(key);
+    }
+  }
+}
+
 function resolveApiBaseUrl(): string {
   const raw = process.env.NEXT_PUBLIC_API_URL;
   if (raw && typeof raw === "string" && raw.trim()) {
@@ -118,6 +137,18 @@ export async function apiRequest<T = any>(
   if (UNSAFE_METHODS.has(method)) {
     const csrfToken = getCsrfToken();
     if (csrfToken) headers.set(CSRF_HEADER, csrfToken);
+    clearApiCache();
+  }
+
+  const cacheKey = `${method}:${url}`;
+  if (method === "GET" && options.cache !== "no-store") {
+    const cached = requestCache.get(cacheKey);
+    if (cached) {
+      const age = Date.now() - cached.timestamp;
+      if (age < CACHE_TTL_MS) {
+        return cached.data as T;
+      }
+    }
   }
 
   const timeoutMs = 45000; // 45s allows for Render free-tier cold starts
@@ -197,6 +228,10 @@ export async function apiRequest<T = any>(
       "HTTP_ERROR",
       res.statusText || `Request failed with status ${res.status}`
     );
+  }
+
+  if (method === "GET" && data !== null && data !== undefined) {
+    requestCache.set(cacheKey, { data, timestamp: Date.now() });
   }
 
   return data as T;

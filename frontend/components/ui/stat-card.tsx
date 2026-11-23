@@ -5,12 +5,12 @@ import { cn } from "@/lib/utils";
 type StatTone = "accent" | "success" | "warning" | "danger" | "info" | "neutral";
 
 const toneClasses: Record<StatTone, string> = {
-  accent: "bg-emerald-50 text-emerald-700 border border-emerald-200",
-  success: "bg-emerald-50 text-emerald-700 border border-emerald-200",
-  warning: "bg-amber-50 text-amber-700 border border-amber-200",
-  danger: "bg-red-50 text-red-700 border border-red-200",
-  info: "bg-sky-50 text-sky-700 border border-sky-200",
-  neutral: "bg-slate-50 text-slate-700 border border-slate-200",
+  accent: "bg-[#C6F432]/10 text-[#C6F432] border border-[#C6F432]/30",
+  success: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30",
+  warning: "bg-amber-500/10 text-amber-400 border border-amber-500/30",
+  danger: "bg-red-500/10 text-red-400 border border-red-500/30",
+  info: "bg-sky-500/10 text-sky-400 border border-sky-500/30",
+  neutral: "bg-white/5 text-zinc-300 border border-white/10",
 };
 
 export function StatCard({
