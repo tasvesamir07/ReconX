@@ -55,12 +55,37 @@ module.exports = {
         },
         subtle: "#64748B",
         elevated: "#F1F5F9",
+        // Fernwood-inspired Aesthetic Palette: Forest Green + Sand Beige + Electric Purple
+        forest: {
+          DEFAULT: "#1F3D2B",      // Forest Green primary
+          dark: "#14271C",         // Deep pine
+          darker: "#0C1911",       // Midnight forest
+          deep: "#0F2117",         // Deep background base
+          surface: "#254B35",      // Elevated dark surface
+          border: "rgba(232, 220, 196, 0.15)",
+        },
+        sand: {
+          DEFAULT: "#E8DCC4",      // Sand Beige primary
+          light: "#F5EFE6",        // Warm cream
+          card: "#E8DCC4",         // Signature Sand Beige Card
+          dark: "#D6C7A8",         // Muted sand
+          muted: "#8C8370",        // Secondary text on sand
+          text: "#1F3D2B",         // Deep forest green on sand
+        },
+        electric: {
+          DEFAULT: "#8B5CF6",      // Electric Purple
+          hover: "#7C3AED",        // Vivid purple hover
+          pressed: "#6D28D9",
+          light: "#A78BFA",        // Light violet
+          glow: "rgba(139, 92, 246, 0.45)",
+          soft: "rgba(139, 92, 246, 0.15)",
+        },
         accent: {
-          DEFAULT: "#059669",      // Emerald-600 primary brand
-          hover: "#047857",        // Emerald-700 hover state
-          pressed: "#065F46",      // Emerald-800 pressed state
-          soft: "#ECFDF5",         // Emerald-50 subtle backgrounds
-          glow: "rgba(5, 150, 105, 0.15)",
+          DEFAULT: "#8B5CF6",      // Electric Purple primary brand
+          hover: "#7C3AED",        // Vivid purple hover state
+          pressed: "#6D28D9",      // Deep purple pressed
+          soft: "#F5F3FF",         // Purple soft
+          glow: "rgba(139, 92, 246, 0.25)",
         },
         accentWarm: {
           DEFAULT: "#D97706",      // Amber-600 warning

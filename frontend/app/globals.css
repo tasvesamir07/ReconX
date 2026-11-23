@@ -357,6 +357,23 @@
     @apply bg-surface/80 backdrop-blur-xl border border-border/30;
   }
 
+  /* Fernwood Aesthetic: Dot Matrix & Bloom */
+  .bg-dot-matrix {
+    background-image: radial-gradient(rgba(232, 220, 196, 0.15) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .bg-purple-bloom {
+    background: radial-gradient(60% 60% at 50% 55%, rgba(139, 92, 246, 0.35) 0%, rgba(31, 61, 43, 0) 100%);
+  }
+
+  .glass-pill {
+    background: rgba(20, 39, 28, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(232, 220, 196, 0.16);
+  }
+
   /* Text gradient */
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-accent to-accentCool;

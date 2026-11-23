@@ -1,4 +1,22 @@
 import logging
+import os
+import sys
+
+# Ensure scanner tool directories are in PATH for worker execution
+_extra_bin_dirs = [
+    os.path.abspath("bin"),
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "bin")),
+    os.path.expanduser("~/.local/bin"),
+    os.path.expanduser("~/go/bin"),
+    "/usr/local/bin",
+]
+_current_path = os.environ.get("PATH", "")
+_path_elements = _current_path.split(os.pathsep)
+for _bd in _extra_bin_dirs:
+    if _bd not in _path_elements and os.path.isdir(_bd):
+        _path_elements.insert(0, _bd)
+os.environ["PATH"] = os.pathsep.join(_path_elements)
+
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware

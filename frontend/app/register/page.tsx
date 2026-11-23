@@ -68,27 +68,32 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="aurora min-h-screen flex items-center justify-center bg-slate-50 p-4 sm:p-6 antialiased">
-      <div className="w-full max-w-xl bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm">
+    <div className="min-h-screen flex items-center justify-center bg-forest-darker bg-dot-matrix p-4 sm:p-6 relative overflow-hidden font-sans selection:bg-electric selection:text-white">
+      {/* Ambient Purple Bloom */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-purple-bloom pointer-events-none blur-3xl opacity-75 -z-10"
+        aria-hidden="true"
+      />
+      <div className="w-full max-w-xl bg-sand text-forest rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl border border-sand/40 relative">
         {/* Navigation to Landing Page */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="flex items-center justify-between pb-3 border-b border-forest/15">
           <Link
             href="/"
-            className="inline-flex items-center space-x-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+            className="inline-flex items-center space-x-1.5 text-xs font-semibold text-forest/70 hover:text-forest transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Back to Home</span>
           </Link>
-          <span className="text-xs font-mono font-medium text-slate-400">ReconX Identity</span>
+          <span className="text-xs font-mono font-medium text-forest/60">ReconX Identity</span>
         </div>
 
         {/* Brand Header */}
         <div className="text-center space-y-1.5">
-          <div className="w-11 h-11 rounded-xl bg-black flex items-center justify-center text-white mx-auto shadow-sm">
-            <ShieldCheck className="w-6 h-6 text-emerald-400" aria-hidden="true" />
+          <div className="w-12 h-12 rounded-2xl bg-forest text-sand flex items-center justify-center mx-auto shadow-md">
+            <ShieldCheck className="w-6 h-6 text-electric-light" aria-hidden="true" />
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Create ReconX Account</h2>
-          <p className="text-xs sm:text-sm text-slate-500">
+          <h2 className="text-2xl font-serif font-bold text-forest tracking-tight">Create ReconX Account</h2>
+          <p className="text-xs sm:text-sm text-forest/75 font-sans">
             Select your account tier to begin authorized web security auditing
           </p>
         </div>

@@ -1,7 +1,25 @@
 import { ApiError } from "@/types";
 
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+function resolveApiBaseUrl(): string {
+  let raw = process.env.NEXT_PUBLIC_API_URL;
+  if (raw && typeof raw === "string") {
+    // Auto-correct stale Render service subdomains
+    raw = raw.replace(
+      "https://reconx-backend.onrender.com",
+      "https://reconx-backend-ljsn.onrender.com"
+    );
+    return raw.replace(/\/+$/, "");
+  }
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host !== "localhost" && host !== "127.0.0.1") {
+      return "https://reconx-backend-ljsn.onrender.com/api/v1";
+    }
+  }
+  return "http://localhost:8000/api/v1";
+}
+
+export const API_BASE_URL = resolveApiBaseUrl();
 
 const API_BASE = API_BASE_URL;
 
