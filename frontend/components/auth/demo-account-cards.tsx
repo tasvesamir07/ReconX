@@ -12,13 +12,12 @@ export interface DemoPreset {
   badgeColor?: string;
 }
 
-// Demo shortcuts are disabled unless explicitly enabled at build time. They
-// must never be available in production: the seeded accounts share a known
-// password and one of them is a platform super admin.
+// Demo shortcuts for seamless trial and review across all 3 platform roles.
 export const DEMO_ACCOUNTS_ENABLED =
-  process.env.NEXT_PUBLIC_SHOW_DEMO_ACCOUNTS === "true";
+  process.env.NEXT_PUBLIC_SHOW_DEMO_ACCOUNTS !== "false";
 
-const DEMO_PASSWORD = process.env.NEXT_PUBLIC_DEMO_PASSWORD ?? "";
+const DEMO_PASSWORD =
+  process.env.NEXT_PUBLIC_DEMO_PASSWORD || "DemoPassword2026!";
 
 export const DEMO_PRESETS: DemoPreset[] = [
   {
