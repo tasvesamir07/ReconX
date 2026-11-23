@@ -92,12 +92,6 @@ export function Skiper103({
         return (
           <motion.div
             key={item.id}
-            layout
-            transition={{
-              type: "spring",
-              stiffness: 350,
-              damping: 28,
-            }}
             className={cn(
               "rounded-2xl border transition-colors overflow-hidden group backdrop-blur-md",
               isOpen

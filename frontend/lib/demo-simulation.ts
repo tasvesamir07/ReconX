@@ -276,10 +276,12 @@ export const DEMO_METRICS = {
 const SIMULATION_KEY = "reconx_simulation_active";
 
 export function isSimulationActive(): boolean {
-  if (typeof window === "undefined") return true;
-  const stored = localStorage.getItem(SIMULATION_KEY);
-  if (stored === null) return true; // Default to active so the user sees rich, compelling data
-  return stored === "true";
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.removeItem(SIMULATION_KEY);
+    } catch {}
+  }
+  return false;
 }
 
 export function setSimulationActive(active: boolean): void {

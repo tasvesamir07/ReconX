@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Trash2, Plus, Sparkles } from "lucide-react";
+import { ArrowRight, Trash2, Plus } from "lucide-react";
 import { Scan } from "@/types";
 import { apiRequest } from "@/lib/api-client";
-import { setSimulationActive } from "@/lib/demo-simulation";
 import { ConfirmDialog } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/toast";
 
@@ -138,24 +137,6 @@ export function RecentAssessmentsTable({ scans, isOversightRole, onScanDeleted }
               <Plus className="w-4 h-4" />
               <span>Launch First Scan</span>
             </Link>
-            <button
-              onClick={() => {
-                setSimulationActive(true);
-                toast({
-                  title: "Enterprise Demo Scans Loaded",
-                  description: "Simulated Kali Linux scans and telemetry loaded.",
-                  variant: "success",
-                });
-                if (typeof window !== "undefined") {
-                  window.dispatchEvent(new Event("reconx_scan_created"));
-                }
-              }}
-              type="button"
-              className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs font-bold border border-[#C6F432]/30 transition shadow-sm"
-            >
-              <Sparkles className="w-4 h-4 text-[#C6F432]" />
-              <span>Load Enterprise Demo Scans</span>
-            </button>
           </div>
         </div>
       ) : (

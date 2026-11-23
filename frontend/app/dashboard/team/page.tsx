@@ -22,38 +22,6 @@ import { Card } from "@/components/ui/card";
 import { SkeletonTable } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { useToast } from "@/components/ui/toast";
-import { SimulationBanner } from "@/components/dashboard/simulation-banner";
-import { isSimulationActive } from "@/lib/demo-simulation";
-
-const DEMO_MEMBERS: OrgMember[] = [
-  {
-    id: "mem-01",
-    user_id: "usr-01",
-    email: "samir@acmedefense.com",
-    display_name: "Md. Tasve Al Samir",
-    role: "OWNER",
-    status: "active",
-    joined_at: "2026-11-01T10:00:00Z",
-  },
-  {
-    id: "mem-02",
-    user_id: "usr-02",
-    email: "elena.rostova@acmedefense.com",
-    display_name: "Dr. Elena Rostova",
-    role: "ADMIN",
-    status: "active",
-    joined_at: "2026-11-05T14:30:00Z",
-  },
-  {
-    id: "mem-03",
-    user_id: "usr-03",
-    email: "marcus.vance@acmedefense.com",
-    display_name: "Marcus Vance",
-    role: "ANALYST",
-    status: "active",
-    joined_at: "2026-11-12T09:15:00Z",
-  },
-];
 
 export default function TeamManagementPage() {
   const router = useRouter();
@@ -82,9 +50,9 @@ export default function TeamManagementPage() {
         setCurrentOrgId(activeId);
         const memberList = await apiRequest<OrgMember[]>(`/organizations/${activeId}/members`);
         const filtered = memberList.filter((m) => m.email !== "admin@reconx.local");
-        setMembers(filtered.length > 0 ? filtered : isSimulationActive() ? DEMO_MEMBERS : []);
-      } else if (isSimulationActive()) {
-        setMembers(DEMO_MEMBERS);
+        setMembers(filtered);
+      } else {
+        setMembers([]);
       }
     } catch (err: any) {
       if (err?.status === 401 || err?.statusCode === 401 || err?.code === "UNAUTHORIZED") {
@@ -92,9 +60,7 @@ export default function TeamManagementPage() {
         return;
       }
       console.error(err);
-      if (isSimulationActive()) {
-        setMembers(DEMO_MEMBERS);
-      }
+      setMembers([]);
     } finally {
       setFetching(false);
     }
@@ -234,9 +200,6 @@ export default function TeamManagementPage() {
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto animate-fade-in">
-      {/* Simulation Engine Banner */}
-      <SimulationBanner onDataRefresh={loadData} />
-
       {/* Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>

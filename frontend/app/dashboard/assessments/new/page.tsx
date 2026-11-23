@@ -23,7 +23,6 @@ import { Badge } from "@/components/ui/badge";
 import { SkeletonCard } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { useToast } from "@/components/ui/toast";
-import { Skiper8 } from "@/components/ui/skiper-ui";
 
 export default function NewAssessmentPage() {
   const router = useRouter();
@@ -289,19 +288,6 @@ export default function NewAssessmentPage() {
             </span>
           </Button>
         </form>
-      )}
-
-      {/* Skiper 8 Words Preloader during Scan Initialization */}
-      {loading && (
-        <Skiper8
-          words={[
-            "Scope Authorization Confirmed",
-            "Deterministic Policy Verified",
-            "Allocating Ephemeral Kali Sandbox",
-            "Sealing Initial Audit Hash",
-            "Assessment Dispatched!",
-          ]}
-        />
       )}
     </div>
   );

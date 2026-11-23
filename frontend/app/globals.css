@@ -3,7 +3,11 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  html {
+  scroll-behavior: smooth;
+}
+
+:root {
     color-scheme: dark;
     --focus-ring: 198 244 50;
     --sidebar-background: 240 5.9% 10%;
@@ -468,12 +472,12 @@
 
   @keyframes beamBreath {
     0%, 100% {
-      opacity: 0.65;
-      transform: translate(-50%, 0) scale(1);
+      opacity: 0.35;
+      transform: translate3d(-50%, 0, 0);
     }
     50% {
-      opacity: 0.95;
-      transform: translate(-50%, -8px) scale(1.06);
+      opacity: 0.60;
+      transform: translate3d(-50%, 0, 0);
     }
   }
 
@@ -499,10 +503,10 @@
 
   @keyframes floatSlow {
     0%, 100% {
-      transform: translateY(0px);
+      transform: translate3d(0, 0, 0);
     }
     50% {
-      transform: translateY(-5px);
+      transform: translate3d(0, -5px, 0);
     }
   }
 
@@ -519,6 +523,7 @@
   }
 
   .animate-beam-breath {
+    will-change: opacity;
     animation: beamBreath 7s ease-in-out infinite;
   }
 
@@ -533,6 +538,7 @@
   }
 
   .animate-float-slow {
+    will-change: transform;
     animation: floatSlow 5s ease-in-out infinite;
   }
 

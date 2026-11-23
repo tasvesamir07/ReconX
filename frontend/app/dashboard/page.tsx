@@ -4,13 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { apiRequest } from "@/lib/api-client";
 import { Scan as ScanType, ApprovedAsset, AuthorizationRequest, User } from "@/types";
-import {
-  DEMO_SCANS,
-  DEMO_APPROVED_ASSETS,
-  DEMO_AUTHORIZATION_REQUESTS,
-  DEMO_METRICS,
-  isSimulationActive,
-} from "@/lib/demo-simulation";
 import { Skeleton, SkeletonCard, SkeletonTable } from "@/components/ui/skeleton";
 
 import { AnalystDashboard } from "@/components/dashboard/analyst-dashboard";
@@ -28,18 +21,10 @@ export default function DashboardOverviewPage() {
     }
     return null;
   });
-  const [scans, setScans] = useState<ScanType[]>(() => {
-    return isSimulationActive() ? DEMO_SCANS : [];
-  });
-  const [assets, setAssets] = useState<ApprovedAsset[]>(() => {
-    return isSimulationActive() ? DEMO_APPROVED_ASSETS : [];
-  });
-  const [authorizations, setAuthorizations] = useState<AuthorizationRequest[]>(() => {
-    return isSimulationActive() ? DEMO_AUTHORIZATION_REQUESTS : [];
-  });
-  const [metrics, setMetrics] = useState<any>(() => {
-    return isSimulationActive() ? DEMO_METRICS : null;
-  });
+  const [scans, setScans] = useState<ScanType[]>([]);
+  const [assets, setAssets] = useState<ApprovedAsset[]>([]);
+  const [authorizations, setAuthorizations] = useState<AuthorizationRequest[]>([]);
+  const [metrics, setMetrics] = useState<any>(null);
   const [adminAuditEvents, setAdminAuditEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -67,34 +52,18 @@ export default function DashboardOverviewPage() {
           ? apiRequest<any[]>("/admin/audit-events").catch(() => [])
           : Promise.resolve([]),
       ]);
-      const isSim = isSimulationActive();
-      const finalScans = scansData && scansData.length > 0 ? scansData : isSim ? DEMO_SCANS : [];
-      const finalAssets = assetsData && assetsData.length > 0 ? assetsData : isSim ? DEMO_APPROVED_ASSETS : [];
-      const finalAuthz = authzData && authzData.length > 0 ? authzData : isSim ? DEMO_AUTHORIZATION_REQUESTS : [];
-      const finalMetrics =
-        metricsData && metricsData.posture_score !== undefined && scansData && scansData.length > 0
-          ? metricsData
-          : isSim
-          ? DEMO_METRICS
-          : metricsData;
 
-      setScans(finalScans);
-      setAssets(finalAssets);
-      setAuthorizations(finalAuthz);
-      setMetrics(finalMetrics);
-      setAdminAuditEvents(auditData);
+      setScans(scansData || []);
+      setAssets(assetsData || []);
+      setAuthorizations(authzData || []);
+      setMetrics(metricsData || null);
+      setAdminAuditEvents(auditData || []);
     } catch (err: any) {
       if (err?.status === 401 || err?.statusCode === 401 || err?.code === "UNAUTHORIZED") {
         router.replace("/login");
         return;
       }
       console.error("Failed to load dashboard metrics:", err);
-      if (isSimulationActive()) {
-        setScans(DEMO_SCANS);
-        setAssets(DEMO_APPROVED_ASSETS);
-        setAuthorizations(DEMO_AUTHORIZATION_REQUESTS);
-        setMetrics(DEMO_METRICS);
-      }
     } finally {
       if (isInitial) setLoading(false);
     }

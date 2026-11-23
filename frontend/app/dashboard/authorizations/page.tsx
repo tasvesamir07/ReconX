@@ -23,8 +23,6 @@ import {
 } from "lucide-react";
 import { apiRequest, ReconXApiError } from "@/lib/api-client";
 import { AuthorizationRequest, ApprovedAsset, User, Organization } from "@/types";
-import { DEMO_AUTHORIZATION_REQUESTS, DEMO_APPROVED_ASSETS, isSimulationActive } from "@/lib/demo-simulation";
-import { SimulationBanner } from "@/components/dashboard/simulation-banner";
 import { DnsVerificationModal, LoaCertificateModal } from "@/components/security/loa-modals";
 import { formatDateTime } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
@@ -81,11 +79,8 @@ export default function AuthorizationsPage() {
         apiRequest<Organization[]>("/organizations").catch(() => []),
       ]);
       setUser(sessionData.user);
-      const isSim = isSimulationActive();
-      const finalAuth = (authData && authData.length > 0) ? authData : (isSim ? DEMO_AUTHORIZATION_REQUESTS : []);
-      const finalAssets = (assetData && assetData.length > 0) ? assetData : (isSim ? DEMO_APPROVED_ASSETS : []);
-      setRequests(finalAuth);
-      setAssets(finalAssets);
+      setRequests(authData || []);
+      setAssets(assetData || []);
       setOrgs(orgsData || []);
     } catch (err: any) {
       if (err?.status === 401 || err?.statusCode === 401 || err?.code === "UNAUTHORIZED") {
@@ -93,10 +88,6 @@ export default function AuthorizationsPage() {
         return;
       }
       console.error("Failed to load authorization requests:", err);
-      if (isSimulationActive()) {
-        setRequests(DEMO_AUTHORIZATION_REQUESTS);
-        setAssets(DEMO_APPROVED_ASSETS);
-      }
     } finally {
       setFetching(false);
     }
@@ -261,9 +252,6 @@ export default function AuthorizationsPage() {
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto animate-fade-in">
-      {/* Simulation Engine Banner */}
-      <SimulationBanner onDataRefresh={loadData} />
-
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -273,23 +261,6 @@ export default function AuthorizationsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setRequests(DEMO_AUTHORIZATION_REQUESTS);
-              setAssets(DEMO_APPROVED_ASSETS);
-              toast({
-                title: "Enterprise Scopes Loaded",
-                description: "Preloaded 3 signed LOA scopes and 4 approved assets.",
-                variant: "success",
-              });
-            }}
-            className="border-[#C6F432]/30 text-white hover:bg-[#C6F432]/10"
-          >
-            <Sparkles className="w-4 h-4 mr-1.5 text-[#C6F432]" />
-            <span>Preload Demo Scopes</span>
-          </Button>
           <Button variant="primary" size="sm" onClick={() => setShowModal(true)}>
             <Plus className="w-4 h-4 mr-1.5" />
             <span>Submit Authorization Scope</span>
@@ -424,23 +395,6 @@ export default function AuthorizationsPage() {
                   <Button variant="primary" size="sm" onClick={() => setShowModal(true)}>
                     <Plus className="w-4 h-4 mr-1.5" />
                     <span>Submit Authorization Request</span>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      setRequests(DEMO_AUTHORIZATION_REQUESTS);
-                      setAssets(DEMO_APPROVED_ASSETS);
-                      toast({
-                        title: "Enterprise Scopes Loaded",
-                        description: "Sample LOA records and target assets loaded.",
-                        variant: "success",
-                      });
-                    }}
-                    className="border-[#C6F432]/30 text-white hover:bg-[#C6F432]/10"
-                  >
-                    <Sparkles className="w-4 h-4 mr-1.5 text-[#C6F432]" />
-                    <span>Load Enterprise Demo Scopes</span>
                   </Button>
                 </div>
               }
@@ -584,29 +538,12 @@ export default function AuthorizationsPage() {
             <EmptyState
               icon={Globe}
               title="No Authorized Assets Registered"
-              description="Approved target scopes will appear here once reviewed by Compliance, or preload sample scopes."
+              description="Approved target scopes will appear here once reviewed by Compliance."
               action={
                 <div className="flex flex-wrap items-center justify-center gap-3">
                   <Button variant="primary" size="sm" onClick={() => setShowModal(true)}>
                     <Plus className="w-4 h-4 mr-1.5" />
                     <span>Submit Scope Authorization</span>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      setRequests(DEMO_AUTHORIZATION_REQUESTS);
-                      setAssets(DEMO_APPROVED_ASSETS);
-                      toast({
-                        title: "Enterprise Scopes Loaded",
-                        description: "Sample LOA records and target assets loaded.",
-                        variant: "success",
-                      });
-                    }}
-                    className="border-[#C6F432]/30 text-white hover:bg-[#C6F432]/10"
-                  >
-                    <Sparkles className="w-4 h-4 mr-1.5 text-[#C6F432]" />
-                    <span>Load Enterprise Demo Scopes</span>
                   </Button>
                 </div>
               }
