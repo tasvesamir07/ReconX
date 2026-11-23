@@ -163,7 +163,7 @@ export default function LandingPage() {
   return (
     <div
       id="top"
-      className="min-h-screen flex flex-col bg-[#0B0B0C] text-white font-sans selection:bg-[#C6F432] selection:text-[#0B0B0C] relative overflow-x-hidden antialiased"
+      className="min-h-screen flex flex-col bg-transparent text-white font-sans selection:bg-[#C6F432] selection:text-[#0B0B0C] relative overflow-x-hidden antialiased"
     >
       {/* Subtle Vertical Fluted Grid Lines */}
       <div className="absolute inset-0 bg-fluted-grid pointer-events-none opacity-45 -z-10" aria-hidden="true" />

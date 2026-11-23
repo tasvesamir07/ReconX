@@ -576,8 +576,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   );
 
   return (
-    <div className="min-h-screen flex bg-[#0B0B0C] text-white font-sans antialiased relative">
-      <MouseSpotlight />
+    <div className="min-h-screen flex bg-transparent text-white font-sans antialiased relative">
       {/* Background Fluted Lines & Ambient Lime Beam */}
       <div className="fixed inset-0 bg-fluted-grid pointer-events-none opacity-25 z-0" aria-hidden="true" />
       <div

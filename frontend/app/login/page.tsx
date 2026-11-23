@@ -71,7 +71,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0B0B0C] p-4 sm:p-6 relative overflow-hidden font-sans selection:bg-[#C6F432] selection:text-[#0B0B0C]">
+    <div className="min-h-screen flex items-center justify-center bg-transparent p-4 sm:p-6 relative overflow-hidden font-sans selection:bg-[#C6F432] selection:text-[#0B0B0C]">
       {/* Background Fluted Lines & Ambient Lime Beam */}
       <div className="absolute inset-0 bg-fluted-grid pointer-events-none opacity-40 -z-10" aria-hidden="true" />
       <div
