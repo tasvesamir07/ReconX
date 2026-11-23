@@ -62,6 +62,7 @@ export default function RegisterPage() {
           phone_number: phoneNumber.trim() || null,
           account_type: accountType,
           organization_name: accountType === "moderator" ? organizationName.trim() : null,
+          captcha_token: captchaToken || undefined,
         }),
       });
       router.push(`/verify-email?email=${encodeURIComponent(email.trim().toLowerCase())}`);
@@ -279,6 +280,8 @@ export default function RegisterPage() {
               </button>
             </div>
           </div>
+
+          <TurnstileWidget onToken={setCaptchaToken} />
 
           <button
             type="submit"

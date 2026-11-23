@@ -6,8 +6,8 @@ const isDev = process.env.NODE_ENV !== "production";
 // script-src unless a nonce-based CSP is implemented. 'unsafe-eval' is only
 // enabled for local development tooling.
 const scriptSrc = isDev
-  ? "'self' 'unsafe-inline' 'unsafe-eval'"
-  : "'self' 'unsafe-inline'";
+  ? "'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com"
+  : "'self' 'unsafe-inline' https://challenges.cloudflare.com";
 
 const contentSecurityPolicy = [
   "default-src 'self'",
@@ -15,7 +15,8 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "connect-src 'self' https://reconx-backend-ljsn.onrender.com",
+  "connect-src 'self' https://reconx-backend-ljsn.onrender.com https://challenges.cloudflare.com",
+  "frame-src https://challenges.cloudflare.com",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
