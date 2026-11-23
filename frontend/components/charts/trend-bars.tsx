@@ -8,7 +8,7 @@ export interface TrendPoint {
 export function TrendBars({ data }: { data: TrendPoint[] }) {
   if (data.length === 0) {
     return (
-      <div className="flex h-40 items-center justify-center text-sm text-subtle">
+      <div className="flex h-40 items-center justify-center text-xs text-zinc-500 font-mono">
         No scan activity recorded yet.
       </div>
     );
@@ -38,7 +38,7 @@ export function TrendBars({ data }: { data: TrendPoint[] }) {
           y1={chartBottom}
           x2={width}
           y2={chartBottom}
-          stroke="#e2e8f0"
+          stroke="rgba(255, 255, 255, 0.12)"
           strokeWidth="1"
         />
         {data.map((point, index) => {
@@ -50,7 +50,7 @@ export function TrendBars({ data }: { data: TrendPoint[] }) {
               ? `${point.date}: no scans`
               : `${point.date}: ${point.total} scan${point.total === 1 ? "" : "s"}, ${point.completed} completed`;
           return (
-            <g key={point.date}>
+            <g key={point.date} className="group/bar cursor-pointer">
               <title>{label}</title>
               <rect
                 x={x}
@@ -58,8 +58,8 @@ export function TrendBars({ data }: { data: TrendPoint[] }) {
                 width={barWidth}
                 height={Math.max(totalHeight, point.total > 0 ? 3 : 0)}
                 rx="3"
-                fill="#f1f5f9"
-                stroke="#e2e8f0"
+                fill="rgba(255, 255, 255, 0.08)"
+                stroke="rgba(255, 255, 255, 0.15)"
                 strokeWidth="1"
               />
               {point.completed > 0 ? (
@@ -69,8 +69,8 @@ export function TrendBars({ data }: { data: TrendPoint[] }) {
                   width={barWidth}
                   height={Math.max(completedHeight, 3)}
                   rx="3"
-                  fill="#059669"
-                  opacity="0.9"
+                  fill="#C6F432"
+                  opacity="0.95"
                 />
               ) : null}
               {index % labelEvery === 0 ? (
@@ -79,7 +79,8 @@ export function TrendBars({ data }: { data: TrendPoint[] }) {
                   y={height - 8}
                   textAnchor="middle"
                   fontSize="9"
-                  fill="#64748b"
+                  fill="#71717A"
+                  fontFamily="monospace"
                 >
                   {formatDay(point.date)}
                 </text>
@@ -88,14 +89,14 @@ export function TrendBars({ data }: { data: TrendPoint[] }) {
           );
         })}
       </svg>
-      <div className="mt-2 flex items-center gap-4 text-[11px] text-subtle">
+      <div className="mt-2 flex items-center gap-4 text-[11px] text-zinc-400 font-mono">
         <span className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-sm bg-accent" aria-hidden="true" />
-          Completed
+          <span className="h-2 w-2 rounded-sm bg-[#C6F432]" aria-hidden="true" />
+          <span>Completed</span>
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-sm bg-[#f1f5f9] border border-[#cbd5e1]" aria-hidden="true" />
-          Total scans
+          <span className="h-2 w-2 rounded-sm bg-white/10 border border-white/20" aria-hidden="true" />
+          <span>Total scans</span>
         </span>
       </div>
     </div>

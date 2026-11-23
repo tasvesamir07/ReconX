@@ -171,22 +171,22 @@ export default function ReportsArchivePage() {
           </p>
         </div>
         <div className="flex items-center space-x-2 shrink-0">
-          <span className="text-xs font-mono font-semibold text-slate-700 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg">
+          <span className="text-xs font-mono font-semibold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg">
             {completedScans.length} Recorded Deliverables
           </span>
         </div>
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="flex items-center justify-between gap-3 p-3 rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="flex items-center justify-between gap-3 p-3 rounded-xl dark-card border border-white/10 shadow-sm">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search reports by target domain, resolved IP, or preset..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-transparent focus:outline-none placeholder:text-slate-400 text-slate-800"
+            className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-transparent focus:outline-none placeholder:text-zinc-500 text-white font-sans"
           />
         </div>
       </div>
@@ -207,10 +207,10 @@ export default function ReportsArchivePage() {
           }
         />
       ) : (
-        <div className="rounded-2xl border border-slate-200/90 bg-white shadow-sm overflow-hidden">
+        <div className="rounded-2xl border border-white/10 dark-card shadow-2xl overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-800 min-w-[800px]">
-              <thead className="bg-slate-50/90 text-slate-500 border-b border-slate-200/90 font-semibold text-xs uppercase tracking-wider">
+            <table className="w-full text-left text-sm text-zinc-200 min-w-[800px]">
+              <thead className="bg-white/[0.02] text-zinc-400 border-b border-white/10 font-semibold text-xs uppercase tracking-wider font-mono">
                 <tr>
                   <th className="px-5 py-3.5">Target Scope</th>
                   <th className="px-5 py-3.5">Audit Date & Time</th>
@@ -220,7 +220,7 @@ export default function ReportsArchivePage() {
                   <th className="px-5 py-3.5 text-right">Deliverables</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-white/5">
                 {filteredScans.map((scan) => {
                   const dateStr = scan.finished_at || scan.started_at || scan.created_at;
                   const formattedDate = new Date(dateStr).toLocaleString("en-US", {
@@ -233,32 +233,32 @@ export default function ReportsArchivePage() {
                   });
 
                   return (
-                    <tr key={scan.id} className="hover:bg-slate-50/70 transition">
+                    <tr key={scan.id} className="hover:bg-white/5 transition">
                       <td className="px-5 py-4">
-                        <div className="font-mono font-bold text-xs sm:text-sm text-slate-900 truncate max-w-xs">
+                        <div className="font-mono font-bold text-xs sm:text-sm text-white truncate max-w-xs">
                           {scan.target_url}
                         </div>
-                        <div className="font-mono text-[11px] text-slate-500 mt-0.5">
+                        <div className="font-mono text-[11px] text-zinc-500 mt-0.5">
                           {scan.resolved_ip || "Public IPv4"} · ID: {scan.id.slice(0, 8)}
                         </div>
                       </td>
-                      <td className="px-5 py-4 text-xs font-mono text-slate-600">
+                      <td className="px-5 py-4 text-xs font-mono text-zinc-400">
                         <div className="flex items-center space-x-1.5">
-                          <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <Calendar className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
                           <span>{formattedDate}</span>
                         </div>
                       </td>
                       <td className="px-5 py-4">
-                        <span className="inline-block px-2.5 py-0.5 rounded-md text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200 capitalize font-mono">
+                        <span className="inline-block px-2.5 py-0.5 rounded-md text-xs font-semibold bg-white/5 text-zinc-300 border border-white/10 capitalize font-mono">
                           {scan.preset}
                         </span>
                       </td>
                       <td className="px-5 py-4">
                         <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border font-mono ${
                             scan.finding_count > 0
-                              ? "bg-amber-50 text-amber-800 border-amber-200"
-                              : "bg-emerald-50 text-emerald-800 border-emerald-200"
+                              ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
+                              : "bg-[#C6F432]/10 text-[#C6F432] border border-[#C6F432]/30"
                           }`}
                         >
                           {scan.finding_count} Finding{scan.finding_count === 1 ? "" : "s"}
@@ -266,16 +266,16 @@ export default function ReportsArchivePage() {
                       </td>
                       <td className="px-5 py-4">
                         <span
-                          className={`inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border capitalize ${
+                          className={`inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border capitalize font-mono ${
                             scan.status === "completed"
-                              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                              ? "bg-[#C6F432]/10 text-[#C6F432] border border-[#C6F432]/30"
                               : scan.status === "running"
-                              ? "bg-blue-50 text-blue-700 border-blue-200"
-                              : "bg-slate-100 text-slate-700 border-slate-200"
+                              ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"
+                              : "bg-white/5 text-zinc-400 border-white/10"
                           }`}
                         >
                           {scan.status === "completed" && (
-                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                            <CheckCircle2 className="w-3 h-3 text-[#C6F432]" />
                           )}
                           <span>{scan.status}</span>
                         </span>
@@ -284,7 +284,7 @@ export default function ReportsArchivePage() {
                         <div className="flex items-center justify-end space-x-2">
                           <Link
                             href={`/dashboard/assessments/${scan.id}`}
-                            className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition shadow-sm"
+                            className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-lg border border-white/15 bg-white/5 hover:bg-white/10 text-white text-xs font-semibold transition shadow-sm"
                             title="View interactive assessment report"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
@@ -293,7 +293,7 @@ export default function ReportsArchivePage() {
                           <button
                             onClick={() => handleDownloadPdf(scan.id)}
                             disabled={downloadingId === scan.id}
-                            className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-lg border border-slate-900 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition shadow-sm disabled:opacity-50"
+                            className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-lg border border-[#C6F432]/40 bg-[#C6F432] hover:bg-[#B5E327] text-[#0B0B0C] text-xs font-bold transition shadow-sm disabled:opacity-50"
                             title="Download official ReportLab PDF deliverable"
                           >
                             <Download className="w-3.5 h-3.5" />
@@ -301,7 +301,7 @@ export default function ReportsArchivePage() {
                           </button>
                           <button
                             onClick={() => setDeleteTargetId(scan.id)}
-                            className="inline-flex items-center space-x-1 px-2 py-1.5 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold transition shadow-sm"
+                            className="inline-flex items-center space-x-1 px-2 py-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-semibold transition shadow-sm"
                             title="Delete this assessment deliverable"
                           >
                             <Trash2 className="w-3.5 h-3.5" />

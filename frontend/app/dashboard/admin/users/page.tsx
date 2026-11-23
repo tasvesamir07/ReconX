@@ -134,50 +134,50 @@ export default function AdminUsersDirectoryPage() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-5 rounded-2xl border border-slate-200/90 bg-white shadow-sm flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-600">
+        <div className="p-5 rounded-2xl border border-white/10 dark-card shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold">Total Platform Users</span>
-            <Users className="w-4 h-4 text-emerald-600" />
+            <Users className="w-4 h-4 text-[#C6F432]" />
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 mt-3">
+          <div className="text-2xl font-bold font-mono text-white mt-3">
             {users.length} Users
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Across all role categories</div>
+          <div className="text-[11px] text-zinc-500 mt-1 font-mono">Across all role categories</div>
         </div>
 
-        <div className="p-5 rounded-2xl border border-slate-200/90 bg-white shadow-sm flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-600">
+        <div className="p-5 rounded-2xl border border-white/10 dark-card shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold">Active Operators</span>
-            <CheckCircle2 className="w-4 h-4 text-cyan-600" />
+            <CheckCircle2 className="w-4 h-4 text-cyan-400" />
           </div>
-          <div className="text-2xl font-bold font-mono text-emerald-600 mt-3">
+          <div className="text-2xl font-bold font-mono text-[#C6F432] mt-3">
             {activeUsersCount} Active
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Verified and authorized to operate</div>
+          <div className="text-[11px] text-zinc-500 mt-1 font-mono">Verified and authorized to operate</div>
         </div>
 
-        <div className="p-5 rounded-2xl border border-slate-200/90 bg-white shadow-sm flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-600">
+        <div className="p-5 rounded-2xl border border-white/10 dark-card shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold">Suspended / Flagged</span>
-            <ShieldAlert className="w-4 h-4 text-red-600" />
+            <ShieldAlert className="w-4 h-4 text-red-500" />
           </div>
-          <div className="text-2xl font-bold font-mono text-red-600 mt-3">
+          <div className="text-2xl font-bold font-mono text-red-500 mt-3">
             {suspendedUsersCount} Suspended
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Immediate access revoked</div>
+          <div className="text-[11px] text-zinc-500 mt-1 font-mono">Immediate access revoked</div>
         </div>
       </div>
 
       {/* Search Bar */}
-      <div className="flex items-center justify-between gap-3 p-3 rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="flex items-center justify-between gap-3 p-3 rounded-xl border border-white/10 dark-card shadow-sm">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search users by name, email, or role..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-transparent focus:outline-none placeholder:text-slate-400 text-slate-800"
+            className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-transparent focus:outline-none placeholder:text-zinc-500 text-white font-sans"
           />
         </div>
       </div>
@@ -194,10 +194,10 @@ export default function AdminUsersDirectoryPage() {
           description="Registered platform operators will appear here."
         />
       ) : (
-        <div className="rounded-2xl border border-slate-200/90 bg-white shadow-sm overflow-hidden">
+        <div className="rounded-2xl border border-white/10 dark-card shadow-2xl overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-800 min-w-[850px]">
-              <thead className="bg-slate-50/90 text-slate-500 border-b border-slate-200/90 font-semibold text-xs uppercase tracking-wider">
+            <table className="w-full text-left text-sm text-zinc-200 min-w-[850px]">
+              <thead className="bg-white/[0.02] text-zinc-400 border-b border-white/10 font-semibold text-xs uppercase tracking-wider font-mono">
                 <tr>
                   <th className="px-5 py-3.5">Operator Identity</th>
                   <th className="px-5 py-3.5">Platform Role</th>

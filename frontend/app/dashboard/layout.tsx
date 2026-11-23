@@ -31,6 +31,7 @@ import {
 import { apiRequest } from "@/lib/api-client";
 import { User, Organization } from "@/types";
 import { CommandPalette } from "@/components/command-palette";
+import { MouseSpotlight } from "@/components/ui/mouse-spotlight";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -126,10 +127,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   };
 
   if (loading) {
-    // Skeleton shell mirrors the real layout so the page feels instant
+    // Skeleton shell mirrors the real Northline dark layout
     return (
-      <div className="min-h-screen flex bg-slate-50/50" aria-busy="true" aria-label="Loading workspace">
-        <aside className="hidden md:flex w-72 flex-col shrink-0 h-screen sticky top-0 bg-white border-r border-slate-200 p-5 space-y-5">
+      <div className="min-h-screen flex bg-[#0B0B0C] text-white" aria-busy="true" aria-label="Loading workspace">
+        <aside className="hidden md:flex w-72 flex-col shrink-0 h-screen sticky top-0 bg-[#121214] border-r border-white/10 p-5 space-y-5">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl skeleton" />
             <div className="h-5 w-28 rounded-md skeleton" />
@@ -142,7 +143,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </aside>
         <div className="flex-1 min-w-0">
-          <div className="h-16 border-b border-slate-200/80 bg-white px-4 sm:px-8 flex items-center">
+          <div className="h-16 border-b border-white/10 bg-[#0B0B0C] px-4 sm:px-8 flex items-center">
             <div className="h-4 w-56 rounded-md skeleton" />
           </div>
           <div className="p-4 sm:p-6 lg:p-8 space-y-6 route-enter">
@@ -270,8 +271,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </button>
 
           {orgDropdownOpen && (
-            <div className="absolute left-4 right-4 top-16 z-50 rounded-2xl bg-white border border-slate-200 shadow-xl p-2 space-y-1 animate-in">
-              <div className="text-[10px] uppercase font-bold text-slate-400 px-3 py-1.5 tracking-wider">
+            <div className="absolute left-4 right-4 top-16 z-50 rounded-2xl bg-[#18181B] border border-white/10 shadow-2xl p-2 space-y-1 animate-in">
+              <div className="text-[10px] uppercase font-bold text-zinc-400 px-3 py-1.5 tracking-wider font-mono">
                 Select Workspace Mode
               </div>
               {/* Personal / Freelancer Mode */}
@@ -282,15 +283,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 }}
                 className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition text-left ${
                   currentOrg === null
-                    ? "bg-slate-100 text-slate-900 font-semibold"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                    ? "bg-white/10 text-white font-semibold"
+                    : "text-zinc-400 hover:text-white hover:bg-white/5"
                 }`}
               >
                 <div className="flex items-center space-x-2 truncate">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                  <span className="w-2 h-2 rounded-full bg-[#C6F432] shrink-0" />
                   <span className="truncate">Personal Workspace (Freelancer)</span>
                 </div>
-                {currentOrg === null && <Check className="w-4 h-4 shrink-0 ml-2 text-emerald-600" />}
+                {currentOrg === null && <Check className="w-4 h-4 shrink-0 ml-2 text-[#C6F432]" />}
               </button>
 
               {/* Organization list */}
@@ -303,19 +304,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition text-left ${
                     currentOrg?.id === org.id
-                      ? "bg-slate-100 text-slate-900 font-semibold"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                      ? "bg-white/10 text-white font-semibold"
+                      : "text-zinc-400 hover:text-white hover:bg-white/5"
                   }`}
                 >
                   <span className="truncate">{org.name}</span>
-                  {currentOrg?.id === org.id && <Check className="w-4 h-4 shrink-0 ml-2 text-emerald-600" />}
+                  {currentOrg?.id === org.id && <Check className="w-4 h-4 shrink-0 ml-2 text-[#C6F432]" />}
                 </button>
               ))}
 
-              <div className="border-t border-slate-100 pt-1.5 mt-1">
+              <div className="border-t border-white/10 pt-1.5 mt-1">
                 <Link
                   href="/dashboard/team"
-                  className="w-full block px-3 py-1.5 rounded-xl text-xs font-semibold text-emerald-700 hover:bg-emerald-50 transition"
+                  className="w-full block px-3 py-1.5 rounded-xl text-xs font-semibold text-[#C6F432] hover:bg-white/5 transition"
                 >
                   Manage Team Members →
                 </Link>
@@ -575,7 +576,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   );
 
   return (
-    <div className="min-h-screen flex bg-[#0B0B0C] text-white font-sans antialiased">
+    <div className="min-h-screen flex bg-[#0B0B0C] text-white font-sans antialiased relative">
+      <MouseSpotlight />
+      {/* Background Fluted Lines & Ambient Lime Beam */}
+      <div className="fixed inset-0 bg-fluted-grid pointer-events-none opacity-25 z-0" aria-hidden="true" />
+      <div
+        className="fixed top-20 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-lime-beam pointer-events-none blur-3xl opacity-35 z-0 animate-beam-breath"
+        aria-hidden="true"
+      />
+
       {/* Desktop Sticky Sidebar */}
       <aside className="hidden md:flex w-72 flex-col shrink-0 h-screen sticky top-0 bg-[#121214] border-r border-white/10 z-30">
         <SidebarContent />

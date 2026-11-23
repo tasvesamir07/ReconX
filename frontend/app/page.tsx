@@ -165,16 +165,6 @@ export default function LandingPage() {
       id="top"
       className="min-h-screen flex flex-col bg-[#0B0B0C] text-white font-sans selection:bg-[#C6F432] selection:text-[#0B0B0C] relative overflow-x-hidden antialiased"
     >
-      {/* Dynamic Mouse-Tracking Spotlight Glow (Follows cursor smoothly) */}
-      <div
-        className="pointer-events-none fixed inset-0 z-0 transition-opacity duration-500 ease-out"
-        style={{
-          opacity: isMouseActive ? 1 : 0,
-          background: `radial-gradient(650px circle at ${mousePos.x}px ${mousePos.y}px, rgba(198, 244, 50, 0.14), transparent 75%)`,
-        }}
-        aria-hidden="true"
-      />
-
       {/* Subtle Vertical Fluted Grid Lines */}
       <div className="absolute inset-0 bg-fluted-grid pointer-events-none opacity-45 -z-10" aria-hidden="true" />
 

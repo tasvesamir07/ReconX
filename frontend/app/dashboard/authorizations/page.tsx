@@ -287,7 +287,7 @@ export default function AuthorizationsPage() {
         <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between border-t border-line text-xs gap-2">
           <div className="flex items-center space-x-2">
             <span className="text-muted">Current Role:</span>
-            <span className="font-semibold text-ink font-mono bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+            <span className="font-semibold text-white font-mono bg-white/5 px-2 py-0.5 rounded border border-white/10">
               {user?.platform_role === "SUPER_ADMIN"
                 ? "Platform Super Admin"
                 : user?.platform_role === "MODERATOR"
@@ -297,8 +297,8 @@ export default function AuthorizationsPage() {
                 : "Security Analyst"}
             </span>
             {!isGovernanceAdmin && (
-              <span className="text-[11px] text-muted flex items-center space-x-1">
-                <Lock className="w-3 h-3 text-slate-400" />
+              <span className="text-[11px] text-zinc-400 flex items-center space-x-1">
+                <Lock className="w-3 h-3 text-zinc-500" />
                 <span>(Read-Only Scope Inventory)</span>
               </span>
             )}
@@ -307,7 +307,7 @@ export default function AuthorizationsPage() {
           {(user?.platform_role === "MODERATOR" || user?.platform_role === "SUPER_ADMIN") && (
             <Link
               href="/dashboard/moderator"
-              className="inline-flex items-center space-x-1.5 text-accent hover:text-accent-strong font-medium"
+              className="inline-flex items-center space-x-1.5 text-[#C6F432] hover:text-[#B5E327] font-medium"
             >
               <span>Go to Moderator Review Queue</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -317,19 +317,19 @@ export default function AuthorizationsPage() {
       </Card>
 
       {/* Segmented Tab Navigation */}
-      <div className="flex items-center justify-between border-b border-line pb-2">
+      <div className="flex items-center justify-between border-b border-white/10 pb-2">
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setActiveTab("authorizations")}
             className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition ${
               activeTab === "authorizations"
-                ? "bg-slate-900 text-white shadow-sm"
-                : "text-muted hover:text-ink hover:bg-canvas"
+                ? "bg-[#C6F432] text-[#0B0B0C] font-bold shadow-sm"
+                : "text-zinc-400 hover:text-white hover:bg-white/5"
             }`}
           >
             <FileCheck2 className="w-4 h-4" />
             <span>Authorization Records</span>
-            <span className="ml-1.5 px-1.5 py-0.2 rounded-full text-[10px] bg-white/20 text-current">
+            <span className="ml-1.5 px-1.5 py-0.2 rounded-full text-[10px] bg-black/20 text-current">
               {requests.length}
             </span>
           </button>
@@ -337,13 +337,13 @@ export default function AuthorizationsPage() {
             onClick={() => setActiveTab("assets")}
             className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition ${
               activeTab === "assets"
-                ? "bg-slate-900 text-white shadow-sm"
-                : "text-muted hover:text-ink hover:bg-canvas"
+                ? "bg-[#C6F432] text-[#0B0B0C] font-bold shadow-sm"
+                : "text-zinc-400 hover:text-white hover:bg-white/5"
             }`}
           >
             <Globe className="w-4 h-4" />
             <span>Authorized Assets Ledger</span>
-            <span className="ml-1.5 px-1.5 py-0.2 rounded-full text-[10px] bg-white/20 text-current">
+            <span className="ml-1.5 px-1.5 py-0.2 rounded-full text-[10px] bg-black/20 text-current">
               {assets.length}
             </span>
           </button>

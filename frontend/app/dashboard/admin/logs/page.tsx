@@ -235,59 +235,59 @@ export default function AdminLogsPage() {
 
       {/* 2. Top Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <div className="p-5 rounded-2xl border border-slate-200/90 bg-white shadow-sm flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-600">
+        <div className="p-5 rounded-2xl border border-white/10 dark-card shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold">Total Assessments Executed</span>
-            <Terminal className="w-4 h-4 text-emerald-600" />
+            <Terminal className="w-4 h-4 text-[#C6F432]" />
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 mt-3">
+          <div className="text-2xl font-bold font-mono text-white mt-3">
             {executions.length} Scans
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Multi-tenant execution history</div>
+          <div className="text-[11px] text-zinc-500 mt-1 font-mono">Multi-tenant execution history</div>
         </div>
 
-        <div className="p-5 rounded-2xl border border-slate-200/90 bg-white shadow-sm flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-600">
+        <div className="p-5 rounded-2xl border border-white/10 dark-card shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold">Currently Active Workers</span>
-            <Activity className="w-4 h-4 text-cyan-600" />
+            <Activity className="w-4 h-4 text-cyan-400" />
           </div>
-          <div className="text-2xl font-bold font-mono text-cyan-600 mt-3">
+          <div className="text-2xl font-bold font-mono text-[#C6F432] mt-3">
             {executions.filter((e) => ["running", "queued", "provisioning"].includes(e.status)).length} Active
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Kali Linux sandboxes live</div>
+          <div className="text-[11px] text-zinc-500 mt-1 font-mono">Kali Linux sandboxes live</div>
         </div>
 
-        <div className="p-5 rounded-2xl border border-slate-200/90 bg-white shadow-sm flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-600">
+        <div className="p-5 rounded-2xl border border-white/10 dark-card shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold">Security Audit Events</span>
-            <Shield className="w-4 h-4 text-purple-600" />
+            <Shield className="w-4 h-4 text-purple-400" />
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 mt-3">
+          <div className="text-2xl font-bold font-mono text-white mt-3">
             {auditEvents.length} Events
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Cryptographic compliance trail</div>
+          <div className="text-[11px] text-zinc-500 mt-1 font-mono">Cryptographic compliance trail</div>
         </div>
 
-        <div className="p-5 rounded-2xl border border-slate-200/90 bg-white shadow-sm flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-600">
+        <div className="p-5 rounded-2xl border border-white/10 dark-card shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold">Active Operators Tracked</span>
-            <User className="w-4 h-4 text-amber-600" />
+            <User className="w-4 h-4 text-amber-400" />
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 mt-3">
+          <div className="text-2xl font-bold font-mono text-white mt-3">
             {new Set(executions.map((e) => e.operator.email).filter(Boolean)).size} Operators
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Analysts & Solo Practitioners</div>
+          <div className="text-[11px] text-zinc-500 mt-1 font-mono">Analysts & Solo Practitioners</div>
         </div>
       </div>
 
       {/* 3. Tab Switcher */}
-      <div className="flex items-center space-x-2 border-b border-slate-200 pb-px">
+      <div className="flex items-center space-x-2 border-b border-white/10 pb-px">
         <button
           onClick={() => setActiveTab("executions")}
           className={`flex items-center space-x-2 px-4 py-2.5 text-xs sm:text-sm font-semibold border-b-2 transition ${
             activeTab === "executions"
-              ? "border-slate-900 text-slate-900"
-              : "border-transparent text-slate-500 hover:text-slate-900 hover:border-slate-300"
+              ? "border-[#C6F432] text-[#C6F432]"
+              : "border-transparent text-zinc-400 hover:text-white hover:border-white/20"
           }`}
         >
           <Terminal className="w-4 h-4" />
@@ -297,8 +297,8 @@ export default function AdminLogsPage() {
           onClick={() => setActiveTab("audit")}
           className={`flex items-center space-x-2 px-4 py-2.5 text-xs sm:text-sm font-semibold border-b-2 transition ${
             activeTab === "audit"
-              ? "border-slate-900 text-slate-900"
-              : "border-transparent text-slate-500 hover:text-slate-900 hover:border-slate-300"
+              ? "border-[#C6F432] text-[#C6F432]"
+              : "border-transparent text-zinc-400 hover:text-white hover:border-white/20"
           }`}
         >
           <Shield className="w-4 h-4" />
@@ -309,7 +309,7 @@ export default function AdminLogsPage() {
       {/* 4. Search and Filters */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
           <input
             type="text"
             placeholder={
@@ -319,13 +319,13 @@ export default function AdminLogsPage() {
             }
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 bg-white text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 transition"
+            className="w-full pl-10 pr-4 py-2 rounded-xl border border-white/10 bg-[#18181B] text-xs sm:text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-[#C6F432]/40 transition"
           />
         </div>
 
         {activeTab === "executions" && (
           <div className="flex items-center space-x-2">
-            <span className="text-xs font-semibold text-slate-500">Status:</span>
+            <span className="text-xs font-semibold text-zinc-400">Status:</span>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}

@@ -266,14 +266,14 @@
   .toast-warning { @apply border-accentWarm/30; }
   .toast-info { @apply border-accentCool/30; }
 
-  /* Skeleton */
+  /* Skeleton - Northline Dark Surface */
   .skeleton {
-    @apply relative overflow-hidden bg-slate-200/60 animate-pulse-soft;
+    @apply relative overflow-hidden bg-white/5 border border-white/5 rounded-xl animate-pulse-soft;
   }
 
   .skeleton::after {
     content: "";
-    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/70 to-transparent animate-shimmer;
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer;
   }
 
   /* Skip link - visually hidden until focused via keyboard */

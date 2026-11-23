@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Trash2 } from "lucide-react";
+import { ArrowRight, Trash2, Plus } from "lucide-react";
 import { Scan } from "@/types";
 import { apiRequest } from "@/lib/api-client";
 import { ConfirmDialog } from "@/components/ui/dialog";
@@ -71,32 +71,32 @@ export function RecentAssessmentsTable({ scans, isOversightRole, onScanDeleted }
     switch (status) {
       case "running":
         return (
-          <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#C6F432]/10 text-[#C6F432] border border-[#C6F432]/30">
+            <span className="w-2 h-2 rounded-full bg-[#C6F432] animate-pulse" />
             <span>Running</span>
           </span>
         );
       case "completed":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[#C6F432]/10 text-[#C6F432] border border-[#C6F432]/30">
             Completed
           </span>
         );
       case "failed":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/30">
             Failed
           </span>
         );
       case "cancelled":
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-zinc-400 border border-white/10">
             Cancelled
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-zinc-400 border border-white/10">
             {status}
           </span>
         );
@@ -104,36 +104,45 @@ export function RecentAssessmentsTable({ scans, isOversightRole, onScanDeleted }
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200/90 bg-white shadow-sm overflow-hidden">
+    <div className="dark-card rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
       {/* Table Header Bar */}
-      <div className="p-6 border-b border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="p-6 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h3 className="font-bold text-base sm:text-lg text-slate-900">Recent Assessments</h3>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+          <h3 className="font-bold text-base sm:text-lg text-white">Recent Assessments</h3>
+          <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
             Authorized scans dispatched to isolated Kali Linux workers
           </p>
         </div>
         <Link
           href="/dashboard"
-          className="inline-flex items-center space-x-2 text-xs sm:text-sm font-semibold text-slate-700 hover:text-slate-900 border border-slate-200 rounded-xl px-4 py-2 hover:bg-slate-50 transition w-fit shadow-sm"
+          className="inline-flex items-center space-x-2 text-xs sm:text-sm font-semibold text-zinc-300 hover:text-white border border-white/15 bg-white/5 hover:bg-white/10 rounded-xl px-4 py-2 transition w-fit shadow-sm"
         >
           <span>View All</span>
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4 text-[#C6F432]" />
         </Link>
       </div>
 
       {/* Table Content with Comfortable Sizing */}
       {rows.length === 0 ? (
-        <div className="p-12 text-center text-slate-500 text-sm">
-          <p className="font-semibold text-slate-800">No assessments found</p>
-          <p className="text-xs text-slate-400 mt-1">
+        <div className="p-12 text-center text-zinc-400 text-sm space-y-4">
+          <p className="font-semibold text-white text-base">No assessments found</p>
+          <p className="text-xs text-zinc-500 max-w-sm mx-auto">
             Launch a new assessment to begin testing authorized target scopes.
           </p>
+          <div className="pt-2">
+            <Link
+              href="/dashboard/assessments/new"
+              className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-[#C6F432] hover:bg-[#B5E327] text-[#0B0B0C] text-xs font-bold transition shadow-[0_0_15px_rgba(198,244,50,0.25)]"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Launch First Scan</span>
+            </Link>
+          </div>
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-800 min-w-[750px]">
-            <thead className="bg-slate-50/80 text-slate-500 border-b border-slate-200/80 font-semibold text-xs uppercase tracking-wider">
+          <table className="w-full text-left text-sm text-zinc-200 min-w-[750px]">
+            <thead className="bg-white/[0.02] text-zinc-400 border-b border-white/10 font-semibold text-xs uppercase tracking-wider font-mono">
               <tr>
                 <th className="px-6 py-4">Target Scope</th>
                 <th className="px-6 py-4">Preset</th>
@@ -143,33 +152,33 @@ export function RecentAssessmentsTable({ scans, isOversightRole, onScanDeleted }
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-white/5">
               {rows.map((row) => (
-                <tr key={row.id} className="hover:bg-slate-50/80 transition">
+                <tr key={row.id} className="hover:bg-white/5 transition">
                   <td className="px-6 py-4">
-                    <div className="font-mono font-bold text-sm text-slate-900 break-words max-w-sm select-all">{row.url}</div>
-                    <div className="font-mono text-xs text-slate-400 mt-1">{row.meta}</div>
+                    <div className="font-mono font-bold text-sm text-white break-words max-w-sm select-all">{row.url}</div>
+                    <div className="font-mono text-xs text-zinc-500 mt-1">{row.meta}</div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="inline-block px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                    <span className="inline-block px-2.5 py-1 rounded-md text-xs font-semibold bg-white/5 text-zinc-300 border border-white/10 font-mono">
                       {row.preset}
                     </span>
                   </td>
                   <td className="px-6 py-4">{renderStatusBadge(row.status)}</td>
-                  <td className="px-6 py-4 font-mono font-medium text-slate-600 text-sm">{row.budget}</td>
-                  <td className="px-6 py-4 text-slate-500 font-mono text-xs">{row.started}</td>
+                  <td className="px-6 py-4 font-mono font-medium text-zinc-400 text-sm">{row.budget}</td>
+                  <td className="px-6 py-4 text-zinc-500 font-mono text-xs">{row.started}</td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end space-x-2">
                       <Link
                         href={`/dashboard/assessments/${row.id}`}
-                        className="inline-flex items-center space-x-1.5 text-xs sm:text-sm font-semibold text-slate-800 hover:text-emerald-700 hover:underline"
+                        className="inline-flex items-center space-x-1.5 text-xs sm:text-sm font-semibold text-zinc-300 hover:text-[#C6F432] hover:underline"
                       >
                         <span>Telemetry</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </Link>
                       <button
                         onClick={() => setDeleteTargetId(row.id)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-red-700 hover:bg-red-50 transition"
+                        className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-white/5 transition"
                         title="Delete assessment"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

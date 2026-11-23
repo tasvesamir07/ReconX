@@ -150,46 +150,46 @@ export default function UserProfilePage() {
       </div>
 
       {/* Main Profile Header Card */}
-      <div className="rounded-2xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-slate-100">
+      <div className="rounded-2xl border border-white/10 dark-card p-6 sm:p-8 shadow-2xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-white/10">
           <div className="flex items-center space-x-4">
             <div className="relative">
               {avatarUrl ? (
                 <img
                   src={avatarUrl}
                   alt={displayName}
-                  className="w-16 h-16 rounded-2xl object-cover border-2 border-slate-900 shadow-md"
+                  className="w-16 h-16 rounded-2xl object-cover border-2 border-[#C6F432]/40 shadow-md"
                 />
               ) : (
-                <div className="w-16 h-16 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold text-xl shadow-md shrink-0">
+                <div className="w-16 h-16 rounded-2xl bg-[#18181B] text-[#C6F432] border border-white/15 flex items-center justify-center font-bold text-xl shadow-md shrink-0">
                   {initials}
                 </div>
               )}
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h2 className="text-lg sm:text-xl font-bold text-slate-900">{displayName || user?.display_name}</h2>
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center space-x-1">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                <h2 className="text-lg sm:text-xl font-bold text-white">{displayName || user?.display_name}</h2>
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#C6F432]/10 text-[#C6F432] border border-[#C6F432]/30 flex items-center space-x-1 font-mono">
+                  <CheckCircle2 className="w-3 h-3 text-[#C6F432]" />
                   <span>Active</span>
                 </span>
               </div>
-              <p className="text-xs sm:text-sm text-slate-500 font-mono mt-0.5">{user?.email}</p>
+              <p className="text-xs sm:text-sm text-zinc-400 font-mono mt-0.5">{user?.email}</p>
               <div className="flex items-center space-x-2 mt-2">
-                <span className="px-2 py-0.5 rounded-md text-xs font-mono font-bold bg-slate-100 text-slate-800 border border-slate-200 uppercase">
+                <span className="px-2 py-0.5 rounded-md text-xs font-mono font-bold bg-white/5 text-zinc-300 border border-white/10 uppercase">
                   {roleLabel}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="sm:text-right text-xs text-slate-500 font-mono space-y-1">
+          <div className="sm:text-right text-xs text-zinc-400 font-mono space-y-1">
             <div>
-              <span className="text-slate-400">Account ID: </span>
+              <span className="text-zinc-500">Account ID: </span>
               <span>{user?.id.slice(0, 12)}...</span>
             </div>
             <div>
-              <span className="text-slate-400">Registered: </span>
+              <span className="text-zinc-500">Registered: </span>
               <span>
                 {user?.created_at
                   ? new Date(user.created_at).toLocaleDateString("en-US", {
@@ -201,8 +201,8 @@ export default function UserProfilePage() {
               </span>
             </div>
             <div>
-              <span className="text-slate-400">Email Verification: </span>
-              <span className="text-emerald-700 font-semibold">Verified</span>
+              <span className="text-zinc-500">Email Verification: </span>
+              <span className="text-[#C6F432] font-semibold">Verified</span>
             </div>
           </div>
         </div>
@@ -211,7 +211,7 @@ export default function UserProfilePage() {
         <form onSubmit={handleSaveProfile} className="mt-6 space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
                 Full Name / Display Name
               </label>
               <input
@@ -219,30 +219,30 @@ export default function UserProfilePage() {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="e.g. Alex Vance"
-                className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 transition"
+                className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-white/10 bg-[#18181B] focus:border-[#C6F432]/50 focus:outline-none focus:ring-1 focus:ring-[#C6F432]/30 text-white transition"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
                 Direct Phone Number (For Emergency Alerts)
               </label>
               <div className="relative">
-                <Phone className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Phone className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
                 <input
                   type="tel"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   placeholder="+1 (555) 234-5678"
-                  className="w-full pl-9 pr-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 transition"
+                  className="w-full pl-9 pr-3.5 py-2 text-xs sm:text-sm rounded-xl border border-white/10 bg-[#18181B] focus:border-[#C6F432]/50 focus:outline-none focus:ring-1 focus:ring-[#C6F432]/30 text-white transition"
                 />
               </div>
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
               Avatar Image URL
             </label>
             <input
@@ -250,18 +250,18 @@ export default function UserProfilePage() {
               value={avatarUrl}
               onChange={(e) => setAvatarUrl(e.target.value)}
               placeholder="https://example.com/avatar.jpg"
-              className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 transition font-mono"
+              className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-white/10 bg-[#18181B] focus:border-[#C6F432]/50 focus:outline-none focus:ring-1 focus:ring-[#C6F432]/30 text-white transition font-mono"
             />
             {/* Quick avatar presets */}
             <div className="flex items-center space-x-2 mt-2">
-              <span className="text-[11px] text-slate-400">Quick avatars:</span>
+              <span className="text-[11px] text-zinc-500 font-mono">Quick avatars:</span>
               <div className="flex items-center space-x-1.5">
                 {AVATAR_PRESETS.map((preset, idx) => (
                   <button
                     key={idx}
                     type="button"
                     onClick={() => setAvatarUrl(preset)}
-                    className="w-6 h-6 rounded-full overflow-hidden border border-slate-300 hover:scale-110 transition shrink-0"
+                    className="w-6 h-6 rounded-full overflow-hidden border border-white/20 hover:border-[#C6F432] transition shrink-0"
                     title={`Select preset ${idx + 1}`}
                   >
                     <img src={preset} alt="preset" className="w-full h-full object-cover" />
@@ -272,7 +272,7 @@ export default function UserProfilePage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
               Professional Bio & Security Focus
             </label>
             <textarea
@@ -280,7 +280,7 @@ export default function UserProfilePage() {
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="e.g. Lead Penetration Tester specialized in OWASP Top 10, Cloud Infrastructure, and TLS Security Audits."
-              className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 transition"
+              className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-white/10 bg-[#18181B] focus:border-[#C6F432]/50 focus:outline-none focus:ring-1 focus:ring-[#C6F432]/30 text-white transition"
             />
           </div>
 
@@ -288,7 +288,7 @@ export default function UserProfilePage() {
             <button
               type="submit"
               disabled={updating}
-              className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold transition disabled:opacity-50 shadow-sm"
+              className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-[#C6F432] hover:bg-[#B5E327] text-[#0B0B0C] text-xs sm:text-sm font-bold transition disabled:opacity-50 shadow-[0_0_15px_rgba(198,244,50,0.25)]"
             >
               <Save className="w-4 h-4" />
               <span>{updating ? "Saving Details..." : "Save Profile Details"}</span>
@@ -298,45 +298,45 @@ export default function UserProfilePage() {
       </div>
 
       {/* Organization Memberships & Mode */}
-      <div className="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-sm space-y-4">
+      <div className="rounded-2xl border border-white/10 dark-card p-6 shadow-2xl space-y-4">
         <div className="flex items-center space-x-2">
-          <Building className="w-5 h-5 text-slate-700" />
-          <h3 className="font-bold text-base text-slate-900">Workspace & Tenant Affiliations</h3>
+          <Building className="w-5 h-5 text-zinc-300" />
+          <h3 className="font-bold text-base text-white">Workspace & Tenant Affiliations</h3>
         </div>
 
         {user?.platform_role === "SUPER_ADMIN" ? (
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-700 flex items-center justify-between">
+          <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm text-zinc-300 flex items-center justify-between">
             <div>
-              <div className="font-semibold text-slate-900">Platform Root Operator</div>
-              <div className="text-xs text-slate-500 mt-0.5">
+              <div className="font-semibold text-white">Platform Root Operator</div>
+              <div className="text-xs text-zinc-400 mt-0.5">
                 Super Admin operates globally without attachment to any single corporate tenant.
               </div>
             </div>
-            <span className="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-slate-900 text-white">
+            <span className="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-[#C6F432] text-[#0B0B0C]">
               Global Oversight
             </span>
           </div>
         ) : orgs.length === 0 ? (
-          <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200 text-xs sm:text-sm text-emerald-900 flex items-center justify-between">
+          <div className="p-4 rounded-xl bg-[#C6F432]/10 border border-[#C6F432]/30 text-xs sm:text-sm text-zinc-200 flex items-center justify-between">
             <div>
-              <div className="font-semibold">Personal Workspace (Freelancer / Solo Mode)</div>
-              <div className="text-xs text-emerald-700 mt-0.5">
+              <div className="font-semibold text-[#C6F432]">Personal Workspace (Freelancer / Solo Mode)</div>
+              <div className="text-xs text-zinc-400 mt-0.5">
                 Active in individual practitioner mode. You can execute assessments against approved personal scopes.
               </div>
             </div>
-            <span className="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-emerald-700 text-white">
+            <span className="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-[#C6F432] text-[#0B0B0C]">
               Solo Analyst
             </span>
           </div>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-white/5">
             {orgs.map((org) => (
               <div key={org.id} className="py-3 flex items-center justify-between">
                 <div>
-                  <div className="text-sm font-bold text-slate-900">{org.name}</div>
-                  <div className="text-xs font-mono text-slate-500">Slug: {org.slug}</div>
+                  <div className="text-sm font-bold text-white">{org.name}</div>
+                  <div className="text-xs font-mono text-zinc-400">Slug: {org.slug}</div>
                 </div>
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-slate-100 text-slate-700 border border-slate-200 uppercase">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-white/5 text-zinc-300 border border-white/10 uppercase">
                   Role: {org.role || "Member"}
                 </span>
               </div>
@@ -347,37 +347,37 @@ export default function UserProfilePage() {
 
       {/* Cryptographic Footprint Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-5 rounded-2xl border border-slate-200/90 bg-white shadow-sm">
-          <div className="flex items-center space-x-2 text-slate-600 text-xs font-semibold">
-            <Scan className="w-4 h-4 text-emerald-600" />
+        <div className="p-5 rounded-2xl border border-white/10 dark-card shadow-sm">
+          <div className="flex items-center space-x-2 text-zinc-400 text-xs font-semibold">
+            <Scan className="w-4 h-4 text-[#C6F432]" />
             <span>Assessments Executed</span>
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 mt-3">
+          <div className="text-2xl font-bold font-mono text-white mt-3">
             {scans.length}
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Bound to immutable audit ledger</div>
+          <div className="text-[11px] text-zinc-500 mt-1">Bound to immutable audit ledger</div>
         </div>
 
-        <div className="p-5 rounded-2xl border border-slate-200/90 bg-white shadow-sm">
-          <div className="flex items-center space-x-2 text-slate-600 text-xs font-semibold">
-            <FileCheck2 className="w-4 h-4 text-cyan-600" />
+        <div className="p-5 rounded-2xl border border-white/10 dark-card shadow-sm">
+          <div className="flex items-center space-x-2 text-zinc-400 text-xs font-semibold">
+            <FileCheck2 className="w-4 h-4 text-cyan-400" />
             <span>Reports Generated</span>
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 mt-3">
+          <div className="text-2xl font-bold font-mono text-white mt-3">
             {scans.filter((s) => s.has_report || s.status === "completed").length}
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Available for permanent retrieval</div>
+          <div className="text-[11px] text-zinc-500 mt-1">Available for permanent retrieval</div>
         </div>
 
-        <div className="p-5 rounded-2xl border border-slate-200/90 bg-white shadow-sm">
-          <div className="flex items-center space-x-2 text-slate-600 text-xs font-semibold">
-            <ShieldCheck className="w-4 h-4 text-purple-600" />
+        <div className="p-5 rounded-2xl border border-white/10 dark-card shadow-sm">
+          <div className="flex items-center space-x-2 text-zinc-400 text-xs font-semibold">
+            <ShieldCheck className="w-4 h-4 text-[#C6F432]" />
             <span>Security Standing</span>
           </div>
-          <div className="text-2xl font-bold font-mono text-emerald-600 mt-3">
+          <div className="text-2xl font-bold font-mono text-[#C6F432] mt-3">
             100%
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Zero policy or SSRF violations</div>
+          <div className="text-[11px] text-zinc-500 mt-1">Zero policy or SSRF violations</div>
         </div>
       </div>
     </div>

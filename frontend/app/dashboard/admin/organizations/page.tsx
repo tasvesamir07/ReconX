@@ -119,50 +119,50 @@ export default function AdminOrganizationsDirectoryPage() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-5 rounded-2xl border border-slate-200/90 bg-white shadow-sm flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-600">
+        <div className="p-5 rounded-2xl border border-white/10 dark-card shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold">Registered Organizations</span>
-            <Building className="w-4 h-4 text-emerald-600" />
+            <Building className="w-4 h-4 text-[#C6F432]" />
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 mt-3">
+          <div className="text-2xl font-bold font-mono text-white mt-3">
             {orgs.length} Tenants
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Multi-tenant isolated workspaces</div>
+          <div className="text-[11px] text-zinc-500 mt-1 font-mono">Multi-tenant isolated workspaces</div>
         </div>
 
-        <div className="p-5 rounded-2xl border border-slate-200/90 bg-white shadow-sm flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-600">
+        <div className="p-5 rounded-2xl border border-white/10 dark-card shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold">Total Organization Members</span>
-            <Users className="w-4 h-4 text-cyan-600" />
+            <Users className="w-4 h-4 text-cyan-400" />
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 mt-3">
+          <div className="text-2xl font-bold font-mono text-white mt-3">
             {totalMembers} Operators
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Analysts, Admins, & Viewers</div>
+          <div className="text-[11px] text-zinc-500 mt-1 font-mono">Analysts, Admins, & Viewers</div>
         </div>
 
-        <div className="p-5 rounded-2xl border border-slate-200/90 bg-white shadow-sm flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-600">
+        <div className="p-5 rounded-2xl border border-white/10 dark-card shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold">Assessments Dispatched</span>
-            <Scan className="w-4 h-4 text-purple-600" />
+            <Scan className="w-4 h-4 text-[#C6F432]" />
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 mt-3">
+          <div className="text-2xl font-bold font-mono text-white mt-3">
             {totalScans} Scans
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Across all organizational scopes</div>
+          <div className="text-[11px] text-zinc-500 mt-1 font-mono">Across all organizational scopes</div>
         </div>
       </div>
 
       {/* Search Bar */}
-      <div className="flex items-center justify-between gap-3 p-3 rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="flex items-center justify-between gap-3 p-3 rounded-xl border border-white/10 dark-card shadow-sm">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search organizations by name or slug..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-transparent focus:outline-none placeholder:text-slate-400 text-slate-800"
+            className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-transparent focus:outline-none placeholder:text-zinc-500 text-white font-sans"
           />
         </div>
       </div>
@@ -179,10 +179,10 @@ export default function AdminOrganizationsDirectoryPage() {
           description="Organizations created by users will appear here with complete member listings and telemetry."
         />
       ) : (
-        <div className="rounded-2xl border border-slate-200/90 bg-white shadow-sm overflow-hidden">
+        <div className="rounded-2xl border border-white/10 dark-card shadow-2xl overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-800 min-w-[750px]">
-              <thead className="bg-slate-50/90 text-slate-500 border-b border-slate-200/90 font-semibold text-xs uppercase tracking-wider">
+            <table className="w-full text-left text-sm text-zinc-200 min-w-[750px]">
+              <thead className="bg-white/[0.02] text-zinc-400 border-b border-white/10 font-semibold text-xs uppercase tracking-wider font-mono">
                 <tr>
                   <th className="px-5 py-3.5">Organization</th>
                   <th className="px-5 py-3.5">Slug</th>

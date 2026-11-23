@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { MouseSpotlight } from "@/components/ui/mouse-spotlight";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -106,7 +107,8 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-background font-sans text-text antialiased">
+      <body className="min-h-screen bg-background font-sans text-text antialiased relative">
+        <MouseSpotlight />
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>

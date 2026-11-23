@@ -55,14 +55,14 @@ export function AnalyticsCharts({ postureScore, severityCounts, trend }: Analyti
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
       {/* 1. Posture Score Card */}
-      <div className="p-6 rounded-2xl border border-slate-200/90 bg-white shadow-sm flex flex-col justify-between hover:shadow-md transition">
+      <div className="dark-card p-6 rounded-2xl flex flex-col justify-between hover:border-white/20 transition-all group">
         <div>
           <div className="flex items-start justify-between">
             <div>
-              <h3 className="font-bold text-base text-slate-900">Posture Score</h3>
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">Overall security hygiene</p>
+              <h3 className="font-bold text-base text-white">Posture Score</h3>
+              <p className="text-xs text-zinc-400 mt-0.5">Overall security hygiene</p>
             </div>
-            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#C6F432]/10 text-[#C6F432] border border-[#C6F432]/30 font-mono">
               {grade}
             </span>
           </div>
@@ -76,7 +76,7 @@ export function AnalyticsCharts({ postureScore, severityCounts, trend }: Analyti
                   cy="70"
                   r={radius}
                   fill="none"
-                  stroke="#E2E8F0"
+                  stroke="rgba(255, 255, 255, 0.08)"
                   strokeWidth="11"
                 />
                 <circle
@@ -84,19 +84,19 @@ export function AnalyticsCharts({ postureScore, severityCounts, trend }: Analyti
                   cy="70"
                   r={radius}
                   fill="none"
-                  stroke="#0F172A"
+                  stroke="#C6F432"
                   strokeWidth="11"
                   strokeLinecap="round"
                   strokeDasharray={circumference}
                   strokeDashoffset={progressOffset}
-                  className="transition-all duration-500"
+                  className="transition-all duration-700 ease-out"
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-4xl font-bold font-mono text-slate-900 tracking-tight">
+                <span className="text-4xl font-bold font-mono text-white tracking-tight">
                   {score}
                 </span>
-                <span className="text-xs font-semibold uppercase text-slate-400 font-mono mt-0.5">
+                <span className="text-xs font-semibold uppercase text-zinc-500 font-mono mt-0.5">
                   / 100
                 </span>
               </div>
@@ -104,42 +104,42 @@ export function AnalyticsCharts({ postureScore, severityCounts, trend }: Analyti
           </div>
         </div>
 
-        <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs sm:text-sm">
-          <span className="text-slate-500 font-medium">
+        <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs">
+          <span className="text-zinc-400 font-mono">
             {totalFindings} confirmed {totalFindings === 1 ? "finding" : "findings"}
           </span>
           {totalFindings === 0 ? (
-            <span className="text-emerald-600 font-semibold font-mono">100% Secure</span>
+            <span className="text-[#C6F432] font-semibold font-mono">100% Secure</span>
           ) : (
-            <span className="text-slate-600 font-semibold font-mono">{score}/100 Rating</span>
+            <span className="text-zinc-300 font-semibold font-mono">{score}/100 Rating</span>
           )}
         </div>
       </div>
 
       {/* 2. Severity Breakdown Card */}
-      <div className="p-6 rounded-2xl border border-slate-200/90 bg-white shadow-sm flex flex-col justify-between hover:shadow-md transition">
+      <div className="dark-card p-6 rounded-2xl flex flex-col justify-between hover:border-white/20 transition-all group">
         <div>
           <div className="flex items-start justify-between">
             <div>
-              <h3 className="font-bold text-base text-slate-900">Severity Breakdown</h3>
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">Confirmed vulnerabilities</p>
+              <h3 className="font-bold text-base text-white">Severity Breakdown</h3>
+              <p className="text-xs text-zinc-400 mt-0.5">Confirmed vulnerabilities</p>
             </div>
-            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-zinc-300 border border-white/10 font-mono">
               {totalFindings} total
             </span>
           </div>
 
           {/* Segmented Horizontal Progress Bar */}
-          <div className="mt-6 mb-6 h-3 w-full bg-slate-100 rounded-full flex overflow-hidden gap-0.5">
+          <div className="mt-6 mb-6 h-3 w-full bg-white/10 rounded-full flex overflow-hidden gap-0.5">
             {totalFindings === 0 ? (
-              <div className="w-full bg-emerald-100 h-full rounded-full" title="Zero vulnerabilities reported" />
+              <div className="w-full bg-[#C6F432]/30 h-full rounded-full" title="Zero vulnerabilities reported" />
             ) : (
               <>
                 <div style={{ width: `${(critical / totalFindings) * 100}%` }} className="bg-red-500 h-full rounded-l-full" />
                 <div style={{ width: `${(high / totalFindings) * 100}%` }} className="bg-orange-500 h-full" />
                 <div style={{ width: `${(medium / totalFindings) * 100}%` }} className="bg-amber-500 h-full" />
-                <div style={{ width: `${(low / totalFindings) * 100}%` }} className="bg-emerald-600 h-full" />
-                <div style={{ width: `${(info / totalFindings) * 100}%` }} className="bg-slate-400 h-full rounded-r-full" />
+                <div style={{ width: `${(low / totalFindings) * 100}%` }} className="bg-emerald-500 h-full" />
+                <div style={{ width: `${(info / totalFindings) * 100}%` }} className="bg-zinc-500 h-full rounded-r-full" />
               </>
             )}
           </div>
@@ -147,53 +147,53 @@ export function AnalyticsCharts({ postureScore, severityCounts, trend }: Analyti
           {/* List of Severities */}
           <div className="space-y-2.5 text-xs sm:text-sm">
             <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-2.5 text-slate-700">
+              <span className="flex items-center space-x-2.5 text-zinc-300">
                 <span className="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0" />
                 <span className="font-medium">Critical</span>
               </span>
-              <span className="font-mono font-bold text-slate-900 text-sm">{critical}</span>
+              <span className="font-mono font-bold text-white text-sm">{critical}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-2.5 text-slate-700">
+              <span className="flex items-center space-x-2.5 text-zinc-300">
                 <span className="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0" />
                 <span className="font-medium">High</span>
               </span>
-              <span className="font-mono font-bold text-slate-900 text-sm">{high}</span>
+              <span className="font-mono font-bold text-white text-sm">{high}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-2.5 text-slate-700">
+              <span className="flex items-center space-x-2.5 text-zinc-300">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0" />
                 <span className="font-medium">Medium</span>
               </span>
-              <span className="font-mono font-bold text-slate-900 text-sm">{medium}</span>
+              <span className="font-mono font-bold text-white text-sm">{medium}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-2.5 text-slate-700">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 shrink-0" />
+              <span className="flex items-center space-x-2.5 text-zinc-300">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
                 <span className="font-medium">Low</span>
               </span>
-              <span className="font-mono font-bold text-slate-900 text-sm">{low}</span>
+              <span className="font-mono font-bold text-white text-sm">{low}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-2.5 text-slate-700">
-                <span className="w-2.5 h-2.5 rounded-full bg-slate-400 shrink-0" />
+              <span className="flex items-center space-x-2.5 text-zinc-300">
+                <span className="w-2.5 h-2.5 rounded-full bg-zinc-500 shrink-0" />
                 <span className="font-medium">Info</span>
               </span>
-              <span className="font-mono font-bold text-slate-900 text-sm">{info}</span>
+              <span className="font-mono font-bold text-white text-sm">{info}</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* 3. 14-Day Activity Trend Card */}
-      <div className="p-6 rounded-2xl border border-slate-200/90 bg-white shadow-sm flex flex-col justify-between hover:shadow-md transition">
+      <div className="dark-card p-6 rounded-2xl flex flex-col justify-between hover:border-white/20 transition-all group">
         <div>
           <div className="flex items-start justify-between">
             <div>
-              <h3 className="font-bold text-base text-slate-900">14-Day Activity Trend</h3>
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">Assessments completed per day</p>
+              <h3 className="font-bold text-base text-white">14-Day Activity Trend</h3>
+              <p className="text-xs text-zinc-400 mt-0.5">Assessments completed per day</p>
             </div>
-            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200 font-mono">
+            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-zinc-300 border border-white/10 font-mono">
               {totalTrendScans} {totalTrendScans === 1 ? "scan" : "scans"}
             </span>
           </div>
@@ -204,7 +204,7 @@ export function AnalyticsCharts({ postureScore, severityCounts, trend }: Analyti
           </div>
         </div>
 
-        <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-mono">
+        <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-zinc-500 font-mono">
           <span>{startDate}</span>
           <span>{midDate}</span>
           <span>{endDate}</span>
